@@ -1,4 +1,4 @@
-package globalConsts;
+package consts;
 
 public class globalConsts {
 
