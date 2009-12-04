@@ -1,4 +1,4 @@
-package ElGamal;
+package consts;
 
 public class ElGamal {
 
