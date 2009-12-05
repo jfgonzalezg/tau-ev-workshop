@@ -99,12 +99,10 @@ public class Server {
 					Object receivedObject = Sinput.readObject();
 					System.out.println("Server: received object's classname: " + receivedObject.getClass().getName());
 					receivedObjects.add(receivedObject);
-/*
-					String str = (String) Sinput.readObject();
+					String str = (String) receivedObject;
 					str = str.toUpperCase();
 					Soutput.writeObject(str);
 					Soutput.flush();
-*/
 				} catch (IOException e) {
 					System.out.println("Server: Exception reading/writing Streams: " + e);
 					return;
