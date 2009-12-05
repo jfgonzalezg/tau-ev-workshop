@@ -6,29 +6,64 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
-/**
- * This is to help people to write Client server application I tried to make it
- * as simple as possible... the client connect to the server the client send a
- * String to the server the server returns it in UPPERCASE thats all
- */
+import consts.GlobalConsts;
+
 public class Server {
 
-	public enum ObjectType {
-		STRING,
-		ELGAMAL,
+	private class Address {
+		public InetAddress getAddress() {
+			return address;
+		}
+
+		public int getPort() {
+			return port;
+		}
+
+		InetAddress address;
+		int port;
+
+		private Address(InetAddress address, int port) {
+			this.address = address;
+			this.port = port;
+		}
+	}
+
+	public class Message {
+		Address address;
+		Object message;
+
+		private Message(InetAddress address, int port, Object message) {
+			this.address = new Address(address, port);
+			this.message = message;
+		}
+
+		public InetAddress getAddress() {
+			return address.getAddress();
+		}
+
+		public int getPort() {
+			return address.getPort();
+		}
+
+		public Object getMessage() {
+			return message;
+		}
 	}
 
 	// the socket used by the server
 	private ServerSocket serverSocket;
 	public ServerThread serverThread;
-	private List<Object> receivedObjects;
+	private List<Message> receivedObjects;
+	private Vector<Address> knownClients;
 
 	// server constructor
 	public Server(int port) {
 		// create the server's socket
 		try {
-			receivedObjects = new ArrayList<Object>();
+			receivedObjects = new ArrayList<Message>();
+			knownClients = new Vector<Address>(GlobalConsts.PARTIES_AMOUNT);
 			serverSocket = new ServerSocket(port);
 			serverSocket.setSoTimeout(1000);
 			System.out.println("Server: Server waiting for client on port " + serverSocket.getLocalPort());
@@ -39,17 +74,29 @@ public class Server {
 	}
 
 	/**
-	 * @param type - the type of the wanted object which should have been received
 	 * @return the oldest object received of this type, or null if no such object
 	 */
-	public Object getReceivedObject(ObjectType type) {
-		// TODO - implement according to the given type
-		// TODO - switch on type and go over the list
-		return null;
-	}
-
-	public List<Object> getReceivedObjects() {
-		return receivedObjects;
+	public Message getReceivedObject() {
+		boolean shouldWait = false;
+		synchronized(receivedObjects) {
+			if (receivedObjects.isEmpty()) {
+				shouldWait = true;
+			}
+		}
+		if (shouldWait) {
+			try {
+				wait(2000);
+			} catch (InterruptedException e) {
+				System.out.println(e);
+			}
+		}
+		synchronized(receivedObjects) {
+			if (receivedObjects.isEmpty()) {
+				return null;
+			} else {
+				return receivedObjects.get(0);
+			}
+		}
 	}
 
 	public void close() {
@@ -98,7 +145,11 @@ public class Server {
 				try {
 					Object receivedObject = Sinput.readObject();
 					System.out.println("Server: received object's classname: " + receivedObject.getClass().getName());
-					receivedObjects.add(receivedObject);
+					Message message = new Message(socket.getInetAddress(), socket.getPort(), receivedObject);
+					synchronized(receivedObjects) {
+						receivedObjects.add(message);
+						receivedObjects.notifyAll();
+					}
 					String str = (String) receivedObject;
 					str = str.toUpperCase();
 					Soutput.writeObject(str);
