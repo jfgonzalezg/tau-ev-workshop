@@ -4,6 +4,8 @@ package tcp;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is to help people to write Client server application I tried to make it
@@ -12,21 +14,42 @@ import java.net.*;
  */
 public class Server {
 
+	public enum ObjectType {
+		STRING,
+		ELGAMAL,
+	}
+
 	// the socket used by the server
 	private ServerSocket serverSocket;
 	public ServerThread serverThread;
+	private List<Object> receivedObjects;
 
 	// server constructor
 	public Server(int port) {
 		// create the server's socket
 		try {
+			receivedObjects = new ArrayList<Object>();
 			serverSocket = new ServerSocket(port);
-			serverSocket.setSoTimeout(3000);
+			serverSocket.setSoTimeout(1000);
 			System.out.println("Server: Server waiting for client on port " + serverSocket.getLocalPort());
 			serverThread = new ServerThread();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
+	}
+
+	/**
+	 * @param type - the type of the wanted object which should have been received
+	 * @return the oldest object received of this type, or null if no such object
+	 */
+	public Object getReceivedObject(ObjectType type) {
+		// TODO - implement according to the given type
+		// TODO - switch on type and go over the list
+		return null;
+	}
+
+	public List<Object> getReceivedObjects() {
+		return receivedObjects;
 	}
 
 	public void close() {
@@ -73,10 +96,15 @@ public class Server {
 				System.out.println("Server: Thread waiting for a String from the Client");
 				// read a String (which is an object)
 				try {
+					Object receivedObject = Sinput.readObject();
+					System.out.println("Server: received object's classname: " + receivedObject.getClass().getName());
+					receivedObjects.add(receivedObject);
+/*
 					String str = (String) Sinput.readObject();
 					str = str.toUpperCase();
 					Soutput.writeObject(str);
 					Soutput.flush();
+*/
 				} catch (IOException e) {
 					System.out.println("Server: Exception reading/writing Streams: " + e);
 					return;

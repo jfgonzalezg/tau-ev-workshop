@@ -31,7 +31,16 @@ public class Elections {
 		Server server = new Server(1500);
 		Client client = new Client("localhost", 1500);
 		client.send("igelka");
-		System.out.println(client.toString());
+/*		try {
+			Class [] classParm = null;
+			Object [] objectParm = null;
+			String name = "Client";
+			Class cl = Class.forName(name);
+			java.lang.reflect.Constructor co = cl.getConstructor(classParm);
+			co.newInstance(objectParm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
 		server.close();
 	}
 
