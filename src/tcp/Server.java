@@ -13,20 +13,20 @@ import consts.GlobalConsts;
 public class Server {
 
 	private class Address {
-		public InetAddress getAddress() {
-			return address;
-		}
-
-		public int getPort() {
-			return port;
-		}
-
 		InetAddress address;
 		int port;
 
 		private Address(InetAddress address, int port) {
 			this.address = address;
 			this.port = port;
+		}
+
+		public InetAddress getAddress() {
+			return address;
+		}
+
+		public int getPort() {
+			return port;
 		}
 	}
 
@@ -71,6 +71,10 @@ public class Server {
 		} catch (IOException e) {
 			System.out.println(e);
 		}
+	}
+
+	public void setPartyNum(InetAddress address, int port, int num) {
+		knownClients.add(num, new Address(address, port));
 	}
 
 	/**
