@@ -7,8 +7,8 @@ import java.io.*;
 
 public class Client {
 
-	ObjectInputStream Sinput; // to read the socker
-	ObjectOutputStream Soutput; // towrite on the socket
+	ObjectInputStream Sinput; // to read the socket
+	ObjectOutputStream Soutput; // to write on the socket
 	Socket socket;
 
 	// Constructor connection receiving a socket number
@@ -62,9 +62,5 @@ public class Client {
 			Soutput.close();
 		} catch (Exception e) {
 		}
-	}
-
-	public static void main(String[] arg) {
-		new Client("localhost", 1500);
 	}
 }
