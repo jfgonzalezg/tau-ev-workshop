@@ -1,6 +1,6 @@
-package elgamal;
+package globals;
 
-public class TesterElGamal {
+public class TestGlobalConsts {
 
 	public static void main(String[] args) {
 	}

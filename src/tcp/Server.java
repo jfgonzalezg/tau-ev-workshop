@@ -5,20 +5,27 @@ package tcp;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
-
-import consts.GlobalConsts;
 
 public class Server {
 
-	private class Address {
-		InetAddress address;
-		int port;
+	public class Message {
+		private int connectionNumber;
+		private InetAddress address;
+		private int port;
+		private Object message;
 
-		private Address(InetAddress address, int port) {
+		private Message(int connectionNumber, InetAddress address, int port, Object message) {
+			this.connectionNumber = connectionNumber;
 			this.address = address;
 			this.port = port;
+			this.message = message;
+		}
+
+		public int getConnectionNumber() {
+			return connectionNumber;
 		}
 
 		public InetAddress getAddress() {
@@ -28,24 +35,6 @@ public class Server {
 		public int getPort() {
 			return port;
 		}
-	}
-
-	public class Message {
-		Address address;
-		Object message;
-
-		private Message(InetAddress address, int port, Object message) {
-			this.address = new Address(address, port);
-			this.message = message;
-		}
-
-		public InetAddress getAddress() {
-			return address.getAddress();
-		}
-
-		public int getPort() {
-			return address.getPort();
-		}
 
 		public Object getMessage() {
 			return message;
@@ -53,28 +42,75 @@ public class Server {
 	}
 
 	// the socket used by the server
-	private ServerSocket serverSocket;
-	public ServerThread serverThread;
+	private List<ConnectionHandlerThread> connectionThreads;
+	private HashMap<Integer, ConnectionHandlerThread> knownClients;
 	private List<Message> receivedObjects;
-	private Vector<Address> knownClients;
+	private ServerSocket serverSocket;
+	private ServerThread serverThread;
 
 	// server constructor
 	public Server(int port) {
+		connectionThreads = new ArrayList<ConnectionHandlerThread>();
+		knownClients = new HashMap<Integer, ConnectionHandlerThread>();
+		receivedObjects = new ArrayList<Message>();
 		// create the server's socket
 		try {
-			receivedObjects = new ArrayList<Message>();
-			knownClients = new Vector<Address>(GlobalConsts.PARTIES_AMOUNT);
 			serverSocket = new ServerSocket(port);
-			serverSocket.setSoTimeout(1000);
-			System.out.println("Server: Server waiting for client on port " + serverSocket.getLocalPort());
+			serverSocket.setSoTimeout(globals.GlobalConsts.CONNECTION_TIMEOUT);
+			System.out.println("Server: Server waiting for clients on port " + serverSocket.getLocalPort());
 			serverThread = new ServerThread();
 		} catch (IOException e) {
 			System.out.println(e);
 		}
 	}
 
-	public void setPartyNum(InetAddress address, int port, int num) {
-		knownClients.add(num, new Address(address, port));
+	public void finalize() throws Throwable {
+		super.finalize();
+		// we only close all threads and connections, the garbage collector will take care of the rest
+		close();
+	}
+
+	private boolean send(ConnectionHandlerThread thread, Object toSend) {
+		if (thread == null) {
+			return false;
+		}
+		synchronized(thread) {
+			if (!thread.canSend()) {
+				return false;
+			}
+			try {
+				thread.Soutput.writeObject(toSend);
+				thread.Soutput.flush();
+			} catch (IOException e) {
+				System.out.println(e);
+			}
+		}
+		return true;
+	}
+
+	public boolean send(int connectionNumber, Object toSend) {
+		return send(knownClients.get(connectionNumber), toSend);
+	}
+
+	public void broadcast(Object toSend) {
+		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+		while (iter.hasNext()) {
+			send(iter.next(), toSend);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void closeConnectionThread(ConnectionHandlerThread thread) {
+		if (thread == null) {
+			return;
+		}
+		thread.stop();
+		thread.closeConnection();
+	}
+
+	private void addConnection(ConnectionHandlerThread thread) {
+		connectionThreads.add(thread);
+		closeConnectionThread(knownClients.put(thread.connectionNumber, thread));
 	}
 
 	/**
@@ -89,7 +125,7 @@ public class Server {
 		}
 		if (shouldWait) {
 			try {
-				wait(2000);
+				receivedObjects.wait(2 * globals.GlobalConsts.CONNECTION_TIMEOUT);
 			} catch (InterruptedException e) {
 				System.out.println(e);
 			}
@@ -103,8 +139,106 @@ public class Server {
 		}
 	}
 
+	public List<Integer> getConnectionNumbers() {
+		List<Integer> result = new ArrayList<Integer>();
+		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+		while (iter.hasNext()) {
+			result.add(iter.next().connectionNumber);
+		}
+		return result;
+	}
+
 	public void close() {
 		serverThread.finish();
+		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+		while (iter.hasNext()) {
+			closeConnectionThread(iter.next());
+		}
+	}
+
+	private class ConnectionHandlerThread extends Thread {
+		// the socket where to listen/talk
+		Socket socket;
+		ObjectInputStream Sinput;
+		ObjectOutputStream Soutput;
+		int connectionNumber = -1;
+
+		ConnectionHandlerThread(Socket socket, ObjectInputStream Sinput, ObjectOutputStream Soutput) {
+			this.socket = socket;
+			this.Sinput = Sinput;
+			this.Soutput = Soutput;
+			start();
+		}
+
+		public void closeConnection() {
+			synchronized(this) {
+				try {
+					Soutput.close();
+					Sinput.close();
+					socket.close();
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+
+		public boolean canSend() {
+			return !socket.isOutputShutdown();
+		}
+
+		public boolean canReceive() {
+			return !socket.isInputShutdown();
+		}
+
+		public void run() {
+			if (!canReceive()) {
+				return;
+			}
+			try {
+				// predefined handshake - get connection number
+				connectionNumber = ((Integer) Sinput.readObject()).intValue();
+				// now set the socket's timeout for infinite read
+				socket.setSoTimeout(globals.GlobalConsts.CONNECTION_TIMEOUT);
+			} catch (Exception e) {
+				System.out.println(e);
+				System.out.println("Server: connection from " + socket.getInetAddress() + ":" + socket.getPort() + " error - failed to get connection number. exiting.");
+				closeConnection();
+				return;
+			}
+			System.out.println("Server: new connection id is " + connectionNumber);
+			while (true) {
+				if (!canReceive()) {
+					break;
+				}
+				try {
+					System.out.println("Server: Retrying to read object from client " + connectionNumber);
+					Object receivedObject = Sinput.readObject();
+					System.out.println("Server: connection " + connectionNumber + " received object's classname: " + receivedObject.getClass().getName());
+					Message message = new Message(connectionNumber, socket.getInetAddress(), socket.getPort(), receivedObject);
+					synchronized(receivedObjects) {
+						receivedObjects.add(message);
+						receivedObjects.notifyAll();
+					}
+				} catch (EOFException e) {
+					try {
+						sleep(3 * globals.GlobalConsts.CONNECTION_TIMEOUT);
+					} catch (InterruptedException e1) {
+						System.out.println(e1);
+					}
+					continue;
+				} catch (IOException e) {
+					System.out.println("Server: Exception reading/writing Streams: " + e);
+					System.out.println("Server: connection " + connectionNumber + " is existing upon exception");
+					break;
+				} catch (ClassNotFoundException e) {
+					System.out.println(e);
+					System.out.println("Server: connection " + connectionNumber + " is existing upon exception");
+					break;
+				}
+			}
+			System.out.println("Server: connection " + connectionNumber + " closing successfully");
+			closeConnection();
+		}
 	}
 
 	private class ServerThread extends Thread {
@@ -119,6 +253,14 @@ public class Server {
 		}
 
 		public void finish() {
+			done = true;
+			while(done) {
+				try {
+					sleep(globals.GlobalConsts.CONNECTION_TIMEOUT);
+				} catch (InterruptedException e) {
+					System.out.println(e);
+				}
+			}
 			done = true;
 		}
 
@@ -144,34 +286,14 @@ public class Server {
 					System.out.println("Server: Exception creating new Input/output Streams: " + e);
 					return;
 				}
-				System.out.println("Server: Thread waiting for a String from the Client");
-				// read a String (which is an object)
-				try {
-					Object receivedObject = Sinput.readObject();
-					System.out.println("Server: received object's classname: " + receivedObject.getClass().getName());
-					Message message = new Message(socket.getInetAddress(), socket.getPort(), receivedObject);
-					synchronized(receivedObjects) {
-						receivedObjects.add(message);
-						receivedObjects.notifyAll();
-					}
-					String str = (String) receivedObject;
-					str = str.toUpperCase();
-					Soutput.writeObject(str);
-					Soutput.flush();
-				} catch (IOException e) {
-					System.out.println("Server: Exception reading/writing Streams: " + e);
-					return;
-				}
-				// will surely not happen with a String
-				catch (ClassNotFoundException o) {
-				} finally {
-					try {
-						Soutput.close();
-						Sinput.close();
-					} catch (Exception e) {
-					}
-				}
+				addConnection(new ConnectionHandlerThread(socket, Sinput, Soutput));
 			}
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				System.out.println(e);
+			}
+			done = false;
 		}
 	}
 }
