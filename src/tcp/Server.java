@@ -99,12 +99,10 @@ public class Server {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void closeConnectionThread(ConnectionHandlerThread thread) {
 		if (thread == null) {
 			return;
 		}
-		thread.stop();
 		thread.closeConnection();
 	}
 
@@ -171,8 +169,13 @@ public class Server {
 		}
 
 		public void closeConnection() {
+			if (socket.isClosed()) {
+				return;
+			}
 			synchronized(this) {
 				try {
+					socket.shutdownInput();
+					socket.shutdownOutput();
 					Soutput.close();
 					Sinput.close();
 					socket.close();
@@ -206,10 +209,7 @@ public class Server {
 				return;
 			}
 			System.out.println("Server: new connection id is " + connectionNumber);
-			while (true) {
-				if (!canReceive()) {
-					break;
-				}
+			while (canReceive()) {
 				try {
 					System.out.println("Server: Retrying to read object from client " + connectionNumber);
 					Object receivedObject = Sinput.readObject();
