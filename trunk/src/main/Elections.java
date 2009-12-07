@@ -24,23 +24,11 @@ public class Elections {
 		return null;
 	}
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		Server server = new Server(1500);
-		Client client = new Client("localhost", 1500);
+		Client client = new Client("localhost", 1500, 3);
 		client.send("igelka");
-/*		try {
-			Class [] classParm = null;
-			Object [] objectParm = null;
-			String name = "Client";
-			Class cl = Class.forName(name);
-			java.lang.reflect.Constructor co = cl.getConstructor(classParm);
-			co.newInstance(objectParm);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		client.close();
 		server.close();
 	}
 

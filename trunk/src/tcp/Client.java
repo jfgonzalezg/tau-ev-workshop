@@ -10,9 +10,11 @@ public class Client {
 	ObjectInputStream Sinput; // to read the socket
 	ObjectOutputStream Soutput; // to write on the socket
 	Socket socket;
+	int connectionNumber;
 
 	// Constructor connection receiving a socket number
-	public Client(String hostname, int port) {
+	public Client(String hostname, int port,int connectionNumber) {
+		this.connectionNumber = connectionNumber;
 		// we use "localhost" as host name, the server is on the same machine
 		// but you can put the "real" server name or IP address
 		try {
@@ -31,36 +33,41 @@ public class Client {
 			System.out.println("Client: Exception creating new Input/output Streams: " + e);
 			return;
 		}
+		send(new Integer(connectionNumber)); // predefined handshake
 	}
 
-	public void send(String object) {
-		// now that I have my connection
-		String test = "aBcDeFgHiJkLmNoPqRsTuVwXyZ";
-		if (object != null) {
-			test = object;
-		}
+	public void send(Object object) {
 		// send the string to the server
-		System.out.println("Client: Client sending \"" + test + "\" to server");
+		System.out.println("Client: Client sending \"" + object + "\" to server");
 		try {
-			Soutput.writeObject(test);
+			Soutput.writeObject(object);
 			Soutput.flush();
 		} catch (IOException e) {
 			System.out.println("Client: Error writting to the socket: " + e);
 			return;
 		}
-		// read back the answer from the server
-		String response;
-		try {
-			response = (String) Sinput.readObject();
-			System.out.println("Client: Read back from server: " + response);
-		} catch (Exception e) {
-			System.out.println("Client: Problem reading back from server: " + e);
-		}
+	}
 
+	public boolean isConnected() {
+		return (canSend() && canReceive());
+	}
+
+	public boolean canSend() {
+		return !socket.isOutputShutdown();
+	}
+
+	public boolean canReceive() {
+		return !socket.isInputShutdown();
+	}
+
+	public void close() {
 		try {
-			Sinput.close();
 			Soutput.close();
+			Sinput.close();
+			socket.close();
 		} catch (Exception e) {
+			System.out.println(e);
 		}
 	}
+
 }
