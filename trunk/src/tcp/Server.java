@@ -226,6 +226,9 @@ public class Server {
 						System.out.println(e1);
 					}
 					continue;
+				} catch (SocketTimeoutException e) {
+					System.out.println("Server: connection " + connectionNumber + "'s socket has reached timeout. retrying.");
+					continue;
 				} catch (IOException e) {
 					System.out.println("Server: Exception reading/writing Streams: " + e);
 					System.out.println("Server: connection " + connectionNumber + " is existing upon exception");
