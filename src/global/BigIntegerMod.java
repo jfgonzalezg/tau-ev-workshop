@@ -1,14 +1,16 @@
 package global;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class BigIntegerMod {
+public class BigIntegerMod implements Serializable {
 
-	// TODO - NOTE - use this - global.Consts.CERTAINTY
-
+	private static final long serialVersionUID = 5269651515363770906L;
 	private BigInteger value;
 	private BigInteger mod;
+
+	// TODO - NOTE - use this - global.Consts.CERTAINTY
 
 	// create a random big integer mod
 	public BigIntegerMod(BigInteger mod) {
