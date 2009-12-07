@@ -1,6 +1,6 @@
-package globals;
+package global;
 
-public class TestGlobalConsts {
+public class TestConsts {
 
 	public static void main(String[] args) {
 	}

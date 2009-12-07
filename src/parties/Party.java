@@ -1,5 +1,6 @@
 package parties;
 
+import global.Consts;
 import tcp.Client;
 
 public class Party {
@@ -9,7 +10,7 @@ public class Party {
 
 	public Party(int partyNumber) {
 		this.partyNumber = partyNumber;
-		this.client = new Client(globals.GlobalConsts.PARTIES_MANAGER_HOSTNAME, globals.GlobalConsts.PARTIES_MANAGER_PORT, this.partyNumber);
+		this.client = new Client(Consts.PARTIES_MANAGER_HOSTNAME, Consts.PARTIES_MANAGER_PORT, this.partyNumber);
 	}
 
 	public boolean isConnected() {

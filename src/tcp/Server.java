@@ -2,6 +2,8 @@ package tcp;
 
 //The server code Server.java:
 
+import global.Consts;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -56,11 +58,11 @@ public class Server {
 		// create the server's socket
 		try {
 			serverSocket = new ServerSocket(port);
-			serverSocket.setSoTimeout(globals.GlobalConsts.CONNECTION_TIMEOUT);
-			System.out.println("Server: Server waiting for clients on port " + serverSocket.getLocalPort());
+			serverSocket.setSoTimeout(global.Consts.CONNECTION_TIMEOUT);
+			Consts.log("Server: Server waiting for clients on port " + serverSocket.getLocalPort(), Consts.DebugOutput.STDOUT);
 			serverThread = new ServerThread();
 		} catch (IOException e) {
-			System.out.println(e);
+			Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 		}
 	}
 
@@ -82,7 +84,7 @@ public class Server {
 				thread.Soutput.writeObject(toSend);
 				thread.Soutput.flush();
 			} catch (IOException e) {
-				System.out.println(e);
+				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
 		}
 		return true;
@@ -123,9 +125,9 @@ public class Server {
 		}
 		if (shouldWait) {
 			try {
-				receivedObjects.wait(2 * globals.GlobalConsts.CONNECTION_TIMEOUT);
+				receivedObjects.wait(2 * global.Consts.CONNECTION_TIMEOUT);
 			} catch (InterruptedException e) {
-				System.out.println(e);
+				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
 		}
 		synchronized(receivedObjects) {
@@ -180,7 +182,7 @@ public class Server {
 					Sinput.close();
 					socket.close();
 				} catch (Exception e) {
-					System.out.println(e);
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 				}
 			}
 		}
@@ -201,19 +203,18 @@ public class Server {
 				// predefined handshake - get connection number
 				connectionNumber = ((Integer) Sinput.readObject()).intValue();
 				// now set the socket's timeout for infinite read
-				socket.setSoTimeout(globals.GlobalConsts.CONNECTION_TIMEOUT);
+				socket.setSoTimeout(global.Consts.CONNECTION_TIMEOUT);
 			} catch (Exception e) {
-				System.out.println(e);
-				System.out.println("Server: connection from " + socket.getInetAddress() + ":" + socket.getPort() + " error - failed to get connection number. exiting.");
+				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				Consts.log("Server: connection from " + socket.getInetAddress() + ":" + socket.getPort() + " error - failed to get connection number. exiting.", Consts.DebugOutput.STDERR);
 				closeConnection();
 				return;
 			}
-			System.out.println("Server: new connection id is " + connectionNumber);
+			Consts.log("Server: new connection id is " + connectionNumber, Consts.DebugOutput.STDOUT);
 			while (canReceive()) {
 				try {
-					System.out.println("Server: Retrying to read object from client " + connectionNumber);
 					Object receivedObject = Sinput.readObject();
-					System.out.println("Server: connection " + connectionNumber + " received object's classname: " + receivedObject.getClass().getName());
+					Consts.log("Server: connection " + connectionNumber + " received object's classname: " + receivedObject.getClass().getName(), Consts.DebugOutput.STDOUT);
 					Message message = new Message(connectionNumber, socket.getInetAddress(), socket.getPort(), receivedObject);
 					synchronized(receivedObjects) {
 						receivedObjects.add(message);
@@ -221,25 +222,30 @@ public class Server {
 					}
 				} catch (EOFException e) {
 					try {
-						sleep(3 * globals.GlobalConsts.CONNECTION_TIMEOUT);
+						try {
+							sleep(3 * socket.getSoTimeout());
+						} catch (SocketException e1) {
+							Consts.log(e1.toString(), Consts.DebugOutput.STDERR);
+						}
 					} catch (InterruptedException e1) {
-						System.out.println(e1);
+						Consts.log(e1.toString(), Consts.DebugOutput.STDERR);
 					}
+					Consts.log("Server: Retrying to read object from client " + connectionNumber, Consts.DebugOutput.STDERR);
 					continue;
 				} catch (SocketTimeoutException e) {
-					System.out.println("Server: connection " + connectionNumber + "'s socket has reached timeout. retrying.");
+					Consts.log("Server: connection " + connectionNumber + "'s socket has reached timeout. retrying.", Consts.DebugOutput.STDERR);
 					continue;
 				} catch (IOException e) {
-					System.out.println("Server: Exception reading/writing Streams: " + e);
-					System.out.println("Server: connection " + connectionNumber + " is existing upon exception");
+					Consts.log("Server: Exception reading/writing Streams: " + e, Consts.DebugOutput.STDERR);
+					Consts.log("Server: connection " + connectionNumber + " is existing upon exception", Consts.DebugOutput.STDERR);
 					break;
 				} catch (ClassNotFoundException e) {
-					System.out.println(e);
-					System.out.println("Server: connection " + connectionNumber + " is existing upon exception");
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+					Consts.log("Server: connection " + connectionNumber + " is existing upon exception", Consts.DebugOutput.STDERR);
 					break;
 				}
 			}
-			System.out.println("Server: connection " + connectionNumber + " closing successfully");
+			Consts.log("Server: connection " + connectionNumber + " closing successfully", Consts.DebugOutput.STDOUT);
 			closeConnection();
 		}
 	}
@@ -259,9 +265,13 @@ public class Server {
 			done = true;
 			while(done) {
 				try {
-					sleep(globals.GlobalConsts.CONNECTION_TIMEOUT);
+					try {
+						sleep(serverSocket.getSoTimeout());
+					} catch (IOException e) {
+						Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+					}
 				} catch (InterruptedException e) {
-					System.out.println(e);
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 				}
 			}
 			done = true;
@@ -271,13 +281,13 @@ public class Server {
 			while (!done) {
 				try {
 					socket = serverSocket.accept(); // accept connection
-					System.out.println("Server: New client asked for a connection");
+					Consts.log("Server: New client asked for a connection", Consts.DebugOutput.STDOUT);
 					/* Creating both Data Stream */
-					System.out.println("Server: Thread trying to create Object Input/Output Streams");
+					Consts.log("Server: Thread trying to create Object Input/Output Streams", Consts.DebugOutput.STDOUT);
 				} catch (SocketTimeoutException e) {
 					continue;
 				} catch (IOException e) {
-					System.out.println(e);
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 					continue;
 				}
 				try {
@@ -286,7 +296,7 @@ public class Server {
 					Soutput.flush();
 					Sinput = new ObjectInputStream(socket.getInputStream());
 				} catch (IOException e) {
-					System.out.println("Server: Exception creating new Input/output Streams: " + e);
+					Consts.log("Server: Exception creating new Input/output Streams: " + e, Consts.DebugOutput.STDERR);
 					return;
 				}
 				addConnection(new ConnectionHandlerThread(socket, Sinput, Soutput));
@@ -294,7 +304,7 @@ public class Server {
 			try {
 				serverSocket.close();
 			} catch (IOException e) {
-				System.out.println(e);
+				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
 			done = false;
 		}
