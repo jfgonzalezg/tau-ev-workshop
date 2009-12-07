@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import tcp.Server;
 import tcp.Client;
@@ -28,6 +29,8 @@ public class Elections {
 		Server server = new Server(1500);
 		Client client = new Client("localhost", 1500, 3);
 		client.send("igelka");
+		BigInteger bigint = new BigInteger("0");
+		client.send(bigint);
 		client.close();
 		server.close();
 	}

@@ -1,4 +1,4 @@
-package globals;
+package global;
 
 import java.math.BigInteger;
 import java.util.Random;

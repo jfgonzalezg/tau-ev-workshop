@@ -2,6 +2,8 @@ package tcp;
 
 //The client code Client.java:
 
+import global.Consts;
+
 import java.net.*;
 import java.io.*;
 
@@ -20,17 +22,17 @@ public class Client {
 		try {
 			socket = new Socket(hostname, port);
 		} catch (Exception e) {
-			System.out.println("Client: Error connectiong to server:" + e);
+			Consts.log("Client: Error connectiong to server:" + e, Consts.DebugOutput.STDERR);
 			return;
 		}
-		System.out.println("Client: Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
+		Consts.log("Client: Connection accepted " + socket.getInetAddress() + ":" + socket.getPort(), Consts.DebugOutput.STDOUT);
 
 		/* Creating both Data Stream */
 		try {
 			Sinput = new ObjectInputStream(socket.getInputStream());
 			Soutput = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			System.out.println("Client: Exception creating new Input/output Streams: " + e);
+			Consts.log("Client: Exception creating new Input/output Streams: " + e, Consts.DebugOutput.STDERR);
 			return;
 		}
 		send(new Integer(connectionNumber)); // predefined handshake
@@ -38,12 +40,12 @@ public class Client {
 
 	public void send(Object object) {
 		// send the string to the server
-		System.out.println("Client: Client sending \"" + object + "\" to server");
+		Consts.log("Client: Client sending \"" + object + "\" to server", Consts.DebugOutput.STDOUT);
 		try {
 			Soutput.writeObject(object);
 			Soutput.flush();
 		} catch (IOException e) {
-			System.out.println("Client: Error writting to the socket: " + e);
+			Consts.log("Client: Error writting to the socket: " + e, Consts.DebugOutput.STDERR);
 			return;
 		}
 	}
@@ -66,7 +68,7 @@ public class Client {
 			Sinput.close();
 			socket.close();
 		} catch (Exception e) {
-			System.out.println(e);
+			Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 		}
 	}
 
