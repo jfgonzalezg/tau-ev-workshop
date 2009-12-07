@@ -14,8 +14,8 @@ public class Consts {
 		FILE
 	}
 
-	public static final boolean DEBUG_MODE = true;
-	public static final String LOG_FILE = "Elections_Log.txt";
+	private static final boolean DEBUG_MODE = true;
+	private static final String LOG_FILE = "Elections_Log.txt";
 	private static BufferedWriter outputFile = null;
 
 	public static final int PARTIES_AMOUNT = 40;
@@ -25,12 +25,13 @@ public class Consts {
 	public static final String PARTIES_MANAGER_HOSTNAME = "localhost";
 	public static final int PARTIES_MANAGER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
-	public static final BigInteger p = null; // TODO - fix initialization
-	public static final BigInteger q = getQ(p); // TODO - fix initialization
-	public static final BigInteger G = null; // TODO - fix initialization
+	public static final BigInteger TWO = BigInteger.valueOf(2);
+
+	public static final BigInteger q = getRandomLargePrimeQ();
+	public static final BigInteger p = getP(q);
+	public static final BigIntegerMod G = calculateG();
 
 	public static void log(String message, DebugOutput logger) {
-		logger = DebugOutput.FILE;
 		switch (logger) {
 			case STDOUT : {
 				System.out.println(message);
@@ -57,28 +58,34 @@ public class Consts {
 		}
 	}
 
-	public static BigInteger getRandomLargePrimeQ() {
-		BigInteger q;
-		BigInteger p;
-		do {
-			q = new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
+	private static BigInteger getRandomLargePrimeQ() {
+		BigInteger q = getRandomLargePrime();
+		BigInteger p = getP(q);
+		while (!isPrime(p)) {
+			q = q.nextProbablePrime();
 			p = getP(q);
-		} while (!isPrime(p));
+		}
 		return q;
 	}
 
-	public static BigInteger getRandomLargePrimeP() {
-		return getP(getRandomLargePrimeQ());
+	private static BigInteger getP(BigInteger q) {
+		// p = 2*q + 1;
+		return q.multiply(TWO).add(BigInteger.ONE);
 	}
 
-	private static BigInteger getQ(BigInteger p) {
-		// TODO - q = (p-1)/2;
-		return null;
+	private static BigIntegerMod calculateG() {
+		Random random = new Random();
+		BigInteger lowerBound = TWO;
+		BigInteger upperBound = p.subtract(TWO);
+		BigInteger result;
+		do {
+			result = new BigInteger(p.bitLength(), random);
+		} while ((result.compareTo(lowerBound) < 0) || (result.compareTo(upperBound) > 0));
+		return new BigIntegerMod(result, p);
 	}
 
-	private static BigInteger getP(BigInteger p) {
-		// TODO - p = 2*q + 1;
-		return null;
+	private static BigInteger getRandomLargePrime() {
+		return new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
 	}
 
 	public static BigInteger getQ() {
@@ -89,9 +96,12 @@ public class Consts {
 		return p;
 	}
 
+	public static BigIntegerMod getG() {
+		return G;
+	}
+
 	public static boolean isPrime(BigInteger n) {
-		// TODO - implement
-		return false;
+		return n.isProbablePrime(CERTAINTY);
 	}
 
 }
