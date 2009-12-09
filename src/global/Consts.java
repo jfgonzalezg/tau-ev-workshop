@@ -68,7 +68,7 @@ public class Consts {
 			System.out.print(".");
 			q = new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
 			p = getP(q);
-		} while (!isPrime(p));
+		} while (!Utils.isPrime(p));
 		System.out.println("");
 		return q;
 		*/
@@ -100,10 +100,6 @@ public class Consts {
 
 	public static BigIntegerMod getG() {
 		return G;
-	}
-
-	public static boolean isPrime(BigInteger n) {
-		return n.isProbablePrime(CERTAINTY);
 	}
 
 }
