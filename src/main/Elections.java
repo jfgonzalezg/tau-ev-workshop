@@ -1,5 +1,7 @@
 package main;
 
+import global.Consts;
+
 import java.io.IOException;
 import java.math.BigInteger;
 
@@ -26,6 +28,10 @@ public class Elections {
 	}
 
 	public static void main(String[] args) {
+		System.out.println("Initializing global consts. This might take a few minutes (of 100% CPU usage)...");
+		System.out.println("Generated P = " + Consts.getP());
+		System.out.println("Generated Q = " + Consts.getQ());
+		System.out.println("Generated G = " + Consts.getG());
 		Server server = new Server(1500);
 		Client client = new Client("localhost", 1500, 3);
 		client.send("igelka");

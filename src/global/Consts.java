@@ -22,6 +22,7 @@ public class Consts {
 	public static final int VOTERS_AMOUNT = 400;
 	public static final int BITS_AMOUNT = 1024;
 	public static final int CERTAINTY = 100;
+	public static final int THRESHOLD = PARTIES_AMOUNT*2/3;
 	public static final String PARTIES_MANAGER_HOSTNAME = "localhost";
 	public static final int PARTIES_MANAGER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
@@ -62,6 +63,7 @@ public class Consts {
 		BigInteger q = getRandomLargePrime();
 		BigInteger p = getP(q);
 		while (!isPrime(p)) {
+			System.out.println("Got a probabl prime Q but P is not prime... Retrying");
 			q = q.nextProbablePrime();
 			p = getP(q);
 		}

@@ -139,11 +139,12 @@ public class Server {
 		}
 	}
 
-	public List<Integer> getConnectionNumbers() {
-		List<Integer> result = new ArrayList<Integer>();
+	public int[] getConnectionNumbers() {
+		int[] result = new int[connectionThreads.size()];
+		int i = 0;
 		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
 		while (iter.hasNext()) {
-			result.add(iter.next().connectionNumber);
+			result[i++] = iter.next().connectionNumber;
 		}
 		return result;
 	}
@@ -157,7 +158,6 @@ public class Server {
 	}
 
 	private class ConnectionHandlerThread extends Thread {
-		// the socket where to listen/talk
 		Socket socket;
 		ObjectInputStream Sinput;
 		ObjectOutputStream Soutput;
@@ -251,7 +251,6 @@ public class Server {
 	}
 
 	private class ServerThread extends Thread {
-		// the socket where to listen/talk
 		Socket socket;
 		ObjectInputStream Sinput;
 		ObjectOutputStream Soutput;
@@ -280,10 +279,8 @@ public class Server {
 		public void run() {
 			while (!done) {
 				try {
-					socket = serverSocket.accept(); // accept connection
+					socket = serverSocket.accept();
 					Consts.log("Server: New client asked for a connection", Consts.DebugOutput.STDOUT);
-					/* Creating both Data Stream */
-					Consts.log("Server: Thread trying to create Object Input/Output Streams", Consts.DebugOutput.STDOUT);
 				} catch (SocketTimeoutException e) {
 					continue;
 				} catch (IOException e) {
@@ -291,7 +288,8 @@ public class Server {
 					continue;
 				}
 				try {
-					// create output first
+					// create I/O data streams
+					Consts.log("Server: Thread trying to create Object Input/Output Streams", Consts.DebugOutput.STDOUT);
 					Soutput = new ObjectOutputStream(socket.getOutputStream());
 					Soutput.flush();
 					Sinput = new ObjectInputStream(socket.getInputStream());
