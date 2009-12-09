@@ -60,14 +60,18 @@ public class Consts {
 	}
 
 	private static BigInteger getRandomLargePrimeQ() {
-		BigInteger q = getRandomLargePrime();
-		BigInteger p = getP(q);
-		while (!isPrime(p)) {
-			System.out.println("Got a probabl prime Q but P is not prime... Retrying");
-			q = q.nextProbablePrime();
+		return new BigInteger("102878210466625684448564152718275770164400015795599081323142484261174204395771542931556573005457548994300390542836390656590342719190546003475313704107511340660051255130886898195350488634781241593291629806029940967099127171111741121800016354471000128327690358673195988965015732141003244933469931582512668226603");
+		/* TODO - bring back these lines instead of the line above
+		BigInteger q = null;
+		BigInteger p = null;
+		do {
+			System.out.print(".");
+			q = new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
 			p = getP(q);
-		}
+		} while (!isPrime(p));
+		System.out.println("");
 		return q;
+		*/
 	}
 
 	private static BigInteger getP(BigInteger q) {
@@ -84,10 +88,6 @@ public class Consts {
 			result = new BigInteger(p.bitLength(), random);
 		} while ((result.compareTo(lowerBound) < 0) || (result.compareTo(upperBound) > 0));
 		return new BigIntegerMod(result, p);
-	}
-
-	private static BigInteger getRandomLargePrime() {
-		return new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
 	}
 
 	public static BigInteger getQ() {

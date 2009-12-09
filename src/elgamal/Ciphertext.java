@@ -4,8 +4,8 @@ import global.BigIntegerMod;
 
 public class Ciphertext {
 
-	private BigIntegerMod ak;
-	private BigIntegerMod k;
+	private BigIntegerMod ak; // TODO - verify mod p everywhere
+	private BigIntegerMod k; // TODO - verify mod p everywhere
 
 	public Ciphertext(BigIntegerMod ak, BigIntegerMod k) {
 		this.ak = ak;

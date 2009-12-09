@@ -1,5 +1,7 @@
 package threshold;
 
+import java.math.BigInteger;
+
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 
@@ -7,18 +9,13 @@ public interface IThresholdCryptosystem {
 
 	/**
 	 * The implementing class will be threshold.ThresholdCryptosystem
-	 * The following will be the constructor of threshold.ThresholdCryptosystem
+	 * The following 2 will be the constructors of threshold.ThresholdCryptosystem
 
 	public ThresholdCryptosystem();
+	public ThresholdCryptosystem(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g);
 
+	 * Note that the first one will use the global consts
 	 */
-
-
-	/**
-	 * Generates a mutual public key for a mutual encryption
-	 * @return the generated public key, where (public key).getMod()==Consts.getQ()
-	 */
-	public BigIntegerMod generateMutualPublicKey();
 
 	/**
 	 * Decrypts the given ciphertext by using THRESHOLD parties
@@ -34,5 +31,30 @@ public interface IThresholdCryptosystem {
 	 * @return the decrypted message
 	 */
 	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int threshold);
+
+	/**
+	 * @return the parties amount of this object
+	 */
+	public int getPartiesAmount();
+
+	/**
+	 * @return the threshold of this object
+	 */
+	public int getThreshold();
+
+	/**
+	 * @return the prime p of this object
+	 */
+	public BigInteger getP();
+
+	/**
+	 * @return the generator g of this object, where g.getMod()==Consts.getP()
+	 */
+	public BigIntegerMod getG();
+
+	/**
+	 * @return the mutual public key of this object, where (private key).getMod()==Consts.getQ()
+	 */
+	public BigIntegerMod getMutualPublicKey();
 
 }

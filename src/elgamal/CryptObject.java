@@ -4,9 +4,9 @@ import global.BigIntegerMod;
 
 public class CryptObject {
 
-	private BigIntegerMod text;
+	private BigIntegerMod text; // TODO - verify mod p everywhere
 	private Ciphertext ciphertext;
-	private BigIntegerMod r;
+	private BigIntegerMod r; // TODO - verify mod q everywhere
 //	private ZKP zkp; TODO
 
 	public CryptObject() {
