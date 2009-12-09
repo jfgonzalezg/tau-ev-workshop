@@ -26,7 +26,8 @@ public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 
 	// create a big integer mod using the given value
 	public BigIntegerMod(BigInteger value, BigInteger mod) {
-		// TODO - implement
+		this.value = value;
+		this.mod = mod;
 	}
 
 	public BigInteger getValue() {

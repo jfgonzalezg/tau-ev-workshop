@@ -1,5 +1,7 @@
 package threshold;
 
+import java.math.BigInteger;
+
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import global.Consts;
@@ -7,14 +9,55 @@ import global.Consts.DebugOutput;
 
 public class ThresholdCryptosystem implements IThresholdCryptosystem {
 
+	private int partiesAmount;
+	private int threshold;
+	private BigInteger p; 
+	private BigIntegerMod g;
+	private BigIntegerMod mutualPublicKey;
+
 	public ThresholdCryptosystem() {
-		// TODO - see which global consts can and should be used in this class
-		// for example - P,G,THRESHOLD,PARTIES_AMOUNT,PARTIES_MANAGER_PORT,CONNECTION_TIMEOUT etc
+		applyConstructor(Consts.PARTIES_AMOUNT, Consts.THRESHOLD, Consts.getP(), Consts.getG());
 	}
 
-	public BigIntegerMod generateMutualPublicKey() {
-		// TODO - generate mutual public key
+	public ThresholdCryptosystem(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g) {
+		applyConstructor(partiesAmount, threshold, p, g);
+	}
+
+	private void applyConstructor(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g) {
+		this.partiesAmount = partiesAmount;
+		this.threshold = threshold;
+		this.p = p;
+		this.g = g;
+		this.mutualPublicKey = generateMutualPublicKey();
+	}
+
+	/**
+	 * Generates a mutual public key for a mutual encryption
+	 * @return the generated public key, where (public key).getMod()==Consts.getQ()
+	 */
+	private BigIntegerMod generateMutualPublicKey() {
+		// TODO - implement
 		return null;
+	}
+
+	public int getPartiesAmount() {
+		return partiesAmount;
+	}
+
+	public int getThreshold() {
+		return threshold;
+	}
+
+	public BigInteger getP() {
+		return p;
+	}
+
+	public BigIntegerMod getG() {
+		return g;
+	}
+
+	public BigIntegerMod getMutualPublicKey() {
+		return mutualPublicKey;
 	}
 
 	public BigIntegerMod decryptMutually(Ciphertext ciphertext) {
