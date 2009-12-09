@@ -2,30 +2,12 @@ package main;
 
 import global.Consts;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 import tcp.Server;
 import tcp.Client;
 
 public class Elections {
-
-	/**
-	 * Runs another process according to the given command
-	 * for example - command="java Server.jar"
-	 * @param command - the command which runs the wanted process
-	 * @return the created process, of null upon exception
-	 */
-	public static Process runProcess(String command) {
-		try {
-			return Runtime.getRuntime().exec(command);
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			// what you want
-		}
-		return null;
-	}
 
 	public static void main(String[] args) {
 		System.out.println("Initializing global consts");

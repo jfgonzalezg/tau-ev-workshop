@@ -17,4 +17,16 @@ public class Party {
 		return client.isConnected();
 	}
 
+	// TODO - find out which command line runs the party as a process, and then call Utils.runProcess(command line)
+	public static void main(String[] args) {
+		if (args.length > 0) {
+			int i = Integer.parseInt(args[0]);
+			if (i >= 0) {
+				new Party(i);
+			}
+		} else {
+			new Party(-1);
+		}
+	}
+
 }
