@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class BigIntegerMod implements Serializable {
+public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 
 	private static final long serialVersionUID = 5269651515363770906L;
 	private BigInteger value;
