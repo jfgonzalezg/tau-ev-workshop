@@ -1,4 +1,4 @@
-package threshold;
+package threshold.parties;
 
 import global.Consts;
 import tcp.Client;
