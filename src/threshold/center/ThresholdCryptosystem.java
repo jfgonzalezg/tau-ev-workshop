@@ -2,6 +2,8 @@ package threshold.center;
 
 import java.math.BigInteger;
 
+import threshold.IThresholdCryptosystem;
+
 
 import elgamal.Ciphertext;
 import global.BigIntegerMod;

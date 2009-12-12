@@ -1,4 +1,4 @@
-package threshold.center;
+package threshold;
 
 import java.math.BigInteger;
 
