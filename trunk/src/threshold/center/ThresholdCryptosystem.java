@@ -1,6 +1,7 @@
-package threshold;
+package threshold.center;
 
 import java.math.BigInteger;
+
 
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
