@@ -10,8 +10,6 @@ public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 	private BigInteger value;
 	private BigInteger mod;
 
-	// TODO - NOTE - use this - global.Consts.CERTAINTY
-
 	// create a random big integer mod
 	public BigIntegerMod(BigInteger mod) {
 		this.mod = mod;
