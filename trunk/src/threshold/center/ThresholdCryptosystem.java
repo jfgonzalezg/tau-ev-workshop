@@ -67,14 +67,14 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return decryptMutually(ciphertext, Consts.THRESHOLD);
 	}
 
-	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int threshold) {
-		if (threshold < Consts.THRESHOLD) {
-			Consts.log("Trying to mutually decrypt using too few parties (" + threshold + " < " + Consts.THRESHOLD + ")", DebugOutput.STDERR);
+	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int parties_to_use) {
+		if (parties_to_use < Consts.THRESHOLD) {
+			Consts.log("Trying to mutually decrypt using too few parties (" + parties_to_use + " < " + Consts.THRESHOLD + ")", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		if (threshold > Consts.PARTIES_AMOUNT) {
-			Consts.log("Trying to mutually decrypt using more parties than exist (" + threshold + " > " + Consts.PARTIES_AMOUNT + ")", DebugOutput.STDERR);
+		if (parties_to_use > Consts.PARTIES_AMOUNT) {
+			Consts.log("Trying to mutually decrypt using more parties than exist (" + parties_to_use + " > " + Consts.PARTIES_AMOUNT + ")", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
