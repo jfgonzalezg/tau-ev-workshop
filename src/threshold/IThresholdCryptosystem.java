@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
+// import global.Consts;
 
 public interface IThresholdCryptosystem {
 
@@ -27,10 +28,11 @@ public interface IThresholdCryptosystem {
 	/**
 	 * Decrypts the given ciphertext by using the threshold parties
 	 * @param ciphertext - the ciphertext to decrypt
-	 * @param threshold - the amount of parties to use for the mutual decryption
+	 * @param parties_to_use - the amount of parties to use for the mutual decryption
+	 * 		where Consts.THRESHOLD < parties_to_use < Consts.PARTIES_AMOUNT
 	 * @return the decrypted message
 	 */
-	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int threshold);
+	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int parties_to_use);
 
 	/**
 	 * @return the parties amount of this object
