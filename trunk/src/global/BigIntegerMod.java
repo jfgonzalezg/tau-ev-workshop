@@ -20,14 +20,20 @@ public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 		}
 		do {
 			value = new BigInteger(this.mod.bitLength(), new Random());
-		} while (value.compareTo(this.mod) >= 0);
-
+		} while (value.compareTo(BigInteger.ZERO) <= 0);
+		value = value.mod(mod);
 	}
 
 	// create a big integer mod using the given value
 	public BigIntegerMod(BigInteger value, BigInteger mod) {
-		this.value = value;
 		this.mod = mod;
+		if (this.mod.compareTo(BigInteger.ZERO) <= 0) {
+			throw new IllegalArgumentException("mod <= 0");
+		}
+		if (value.compareTo(BigInteger.ZERO) <= 0) {
+			throw new IllegalArgumentException("value <= 0");
+		}
+		this.value = value.mod(mod);
 	}
 
 	public BigInteger getValue() {
@@ -65,7 +71,7 @@ public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 
 	public BigIntegerMod substract(BigIntegerMod substracter) {
 		verifyMod(substracter, "substract");
-		return new BigIntegerMod(mod, value.subtract(substracter.value));
+		return new BigIntegerMod(mod, value.subtract(substracter.value).add(mod));
 	}
 
 	public BigIntegerMod pow(BigInteger exponent) {
