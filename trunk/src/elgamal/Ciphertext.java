@@ -4,28 +4,28 @@ import global.BigIntegerMod;
 
 public class Ciphertext {
 
-	private BigIntegerMod ak; // TODO - verify mod p everywhere
-	private BigIntegerMod k; // TODO - verify mod p everywhere
+	private BigIntegerMod a; // TODO - verify mod p everywhere
+	private BigIntegerMod b; // represents k*m = (public_key^r)*m // TODO - verify mod p everywhere
 
-	public Ciphertext(BigIntegerMod ak, BigIntegerMod k) {
-		this.ak = ak;
-		this.k = k;
+	public Ciphertext(BigIntegerMod a, BigIntegerMod b) {
+		this.a = a;
+		this.b = b;
 	}
 
-	public BigIntegerMod getAk() {
-		return ak;
+	public BigIntegerMod getA() {
+		return a;
 	}
 
-	public BigIntegerMod getK() {
-		return k;
+	public BigIntegerMod getB() {
+		return b;
 	}
 
-	protected void setAk(BigIntegerMod ak) {
-		this.ak = ak;
+	protected void setA(BigIntegerMod a) {
+		this.a = a;
 	}
 
-	protected void setK(BigIntegerMod k) {
-		this.k = k;
+	protected void setK(BigIntegerMod b) {
+		this.b = b;
 	}
 
 }

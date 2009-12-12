@@ -23,8 +23,8 @@ public class Consts {
 	public static final int BITS_AMOUNT = 1024;
 	public static final int CERTAINTY = 100;
 	public static final int THRESHOLD = PARTIES_AMOUNT*2/3;
-	public static final String PARTIES_MANAGER_HOSTNAME = "localhost";
-	public static final int PARTIES_MANAGER_PORT = 7777;
+	public static final String THRESHOLD_CENTER_HOSTNAME = "localhost";
+	public static final int THRESHOLD_CENTER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
 	public static final BigInteger TWO = BigInteger.valueOf(2);
 

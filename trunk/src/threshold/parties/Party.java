@@ -10,7 +10,7 @@ public class Party {
 
 	public Party(int partyNumber) {
 		this.partyNumber = partyNumber;
-		this.client = new Client(Consts.PARTIES_MANAGER_HOSTNAME, Consts.PARTIES_MANAGER_PORT, this.partyNumber);
+		this.client = new Client(Consts.THRESHOLD_CENTER_HOSTNAME, Consts.THRESHOLD_CENTER_PORT, this.partyNumber);
 	}
 
 	public boolean isConnected() {
