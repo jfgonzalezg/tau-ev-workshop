@@ -27,10 +27,12 @@ public class CryptObject {
 		return r;
 	}
 
-	public BigIntegerMod getZKP() {
-		// TODO - return zkp;
-		return null;
+/*
+	TODO
+	public ZKP getZKP() {
+		return zkp;
 	}
+*/
 
 	protected void setText(BigIntegerMod text) {
 		this.text = text;

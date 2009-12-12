@@ -9,7 +9,7 @@ public class PartiesManager {
 	private int[] partiesNumbers;
 
 	public PartiesManager() {
-		server = new Server(Consts.PARTIES_MANAGER_PORT);
+		server = new Server(Consts.THRESHOLD_CENTER_PORT);
 		partiesNumbers = server.getConnectionNumbers();
 		server.send(partiesNumbers[0], null); // TODO - remove this line
 	}
