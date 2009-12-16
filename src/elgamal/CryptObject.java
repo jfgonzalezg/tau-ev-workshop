@@ -13,6 +13,14 @@ public class CryptObject {
 		this.text = null;
 		this.ciphertext = null;
 		this.r = null;
+		// TODO - ZKP
+	}
+
+	protected CryptObject(BigIntegerMod text, Ciphertext ciphertext, BigIntegerMod r) {
+		this.text = text;
+		this.ciphertext = ciphertext;
+		this.r = r;
+		// TODO - ZKP
 	}
 
 	public BigIntegerMod getText() {
