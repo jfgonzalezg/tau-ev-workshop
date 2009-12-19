@@ -18,7 +18,7 @@ public class MixCenter
 		int n=Consts.VOTERS_AMOUNT;
 		int[] result = new int[n]; //pi
 		Random generator = new Random();
-		for(int i=0;i<n-1;i++)
+		for(int i=0;i<n-1;i++) //initialize the permutation array.
 		{
 			result[i]=i;
 		}
