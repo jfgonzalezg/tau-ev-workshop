@@ -31,7 +31,7 @@ public class MixCenter
 	 */
 	public CryptObject[] PermutateAndReecncrypt(CryptObject[] A, int[] pi)
 	{
-		ElGamal gamal=new ElGamal(publicKey)
+		ElGamal gamal=new ElGamal(publicKey);
 		int n=Consts.VOTERS_AMOUNT;
 		CryptObject[] B=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
