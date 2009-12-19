@@ -26,13 +26,15 @@ public class MixCenter
 		}
 		return result;
 	}
-	
+	/*
+	 * permutate and re-encrypt A according to pi and using ElGamal module.
+	 */
 	public CryptObject[] PermutateAndReecncrypt(CryptObject[] A, int[] pi)
 	{
 		ElGamal gamal=new ElGamal(publicKey)
 		int n=Consts.VOTERS_AMOUNT;
 		CryptObject[] B=new CryptObject[n];	
-		for(int i=0;i<n;i++) //create permutation according to pi[] and then - reencrypt
+		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
 		{
 			B[i]=gamal.reencrypt(A[pi[i]]);			
 		}
