@@ -14,15 +14,20 @@ public class MixCenter
 	 */
 	private int[] generatePermutation()
 	{
-		int d;
+		int d,temp;
 		int n=Consts.VOTERS_AMOUNT;
 		int[] result = new int[n]; //pi
 		Random generator = new Random();
+		for(int i=0;i<n-1;i++)
+		{
+			result[i]=i;
+		}
 		for(int i=0;i<n-1;i++)//for all cells except the last one [0,n-2]
 		{
 			d=generator.nextInt(n-i)+i; //generates a random number [i,n-1]
-			result[i]=d;
-			result[d]=i;			
+			temp=result[i];
+			result[i]=result[d];
+			result[d]=temp;			
 		}
 		return result;
 	}
