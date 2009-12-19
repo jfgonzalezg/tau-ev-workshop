@@ -1,7 +1,5 @@
 package MixCenter;
 
-import java.math.BigInteger;
-
 import elgamal.Ciphertext;
 
 public interface IMixCenter {
