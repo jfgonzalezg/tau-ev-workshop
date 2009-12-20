@@ -10,6 +10,7 @@ import elgamal.CryptObject;
 import global.Consts;
 import global.Consts.DebugOutput;
 import elgamal.ElGamal;
+import global.BigIntegerMod;
 
 public class MixCenter 
 {
@@ -103,10 +104,18 @@ public class MixCenter
 	 *         pi - new permutation array
 	 *         R - random numbers arrays, whichh were used for re-encrypting (according to the original permutation???)
 	 */
-	private void performZKP(CryptObject[] A, CryptObject[] B, int[] pi) // BigIntegerMod[] R)
+	private void performZKP(CryptObject[] A, CryptObject[] B, int[] pi) 
 	{
 		String sZKP = " ";
+		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
+		BigIntegerMod[] R = new BigIntegerMod[n];
 		// get W (the publicKey)
+		
+		// prepare R
+		for (int i=0; i<n; i++)
+		{
+			R[i] = B[i].getR();
+		}
 		
 		/* call ZKP function  
 		sZKP = verifyGIProof(A, B, pi, R, W);*/
