@@ -7,6 +7,7 @@ import java.util.Random;
 
 import sun.awt.datatransfer.DataTransferer.ReencodingInputStream;
 import elgamal.CryptObject;
+import elgamal.Ciphertext;
 import global.Consts;
 import global.Consts.DebugOutput;
 import elgamal.ElGamal;
@@ -42,9 +43,9 @@ public class MixCenter
 	/*
 	 * permutate and re-encrypt A according to pi and using ElGamal module.
 	 */
-	public CryptObject[] PermutateAndReecncrypt(CryptObject[] A, int[] pi)
+	public CryptObject[] PermutateAndReecncrypt(Ciphertext[] A, int[] pi)
 	{
-		ElGamal gamal=new ElGamal(publicKey);
+		ElGamal gamal=new ElGamal(Consts.publicKey); //TBD
 		int n=Consts.VOTERS_AMOUNT;
 		CryptObject[] B=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
@@ -104,7 +105,7 @@ public class MixCenter
 	 *         pi - new permutation array
 	 *         R - random numbers arrays, whichh were used for re-encrypting (according to the original permutation???)
 	 */
-	private void performZKP(CryptObject[] A, CryptObject[] B, int[] pi) 
+	private void performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
 	{
 		String sZKP = " ";
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
