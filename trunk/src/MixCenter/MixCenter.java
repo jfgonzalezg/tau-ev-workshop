@@ -103,26 +103,32 @@ public class MixCenter
 	 * Params: A - encrypted votes array before re-encryption and mixing
 	 *         B - re-encrypted and mixed votes array
 	 *         pi - new permutation array
-	 *         R - random numbers arrays, whichh were used for re-encrypting (according to the original permutation???)
+	 * @return- a Ciphertext array made out of B.
 	 */
-	private void performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
+	private Ciphertext[] performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
 	{
 		String sZKP = " ";
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
-		BigIntegerMod[] R = new BigIntegerMod[n];
+	//	BigIntegerMod[] R = new BigIntegerMod[n];
 		// get W (the publicKey)
 		
 		// prepare R
-		for (int i=0; i<n; i++)
+	/*	for (int i=0; i<n; i++)
 		{
 			R[i] = B[i].getR();
+		}*/
+		
+		// call ZKP function  
+		sZKP = verifyGIProof(A, B, pi);
+		Ciphertext[] result=new Ciphertext[n];
+		for (int i=0; i<n; i++)
+		{
+			result[i]=B[i].getCiphertext();
 		}
 		
-		/* call ZKP function  
-		sZKP = verifyGIProof(A, B, pi, R, W);*/
+		printToFile(sZKP, A, result);
 		
-		printToFile(sZKP, A, B);
-				
+		return result;				
 	}
 	
 	
