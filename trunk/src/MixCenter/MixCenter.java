@@ -58,7 +58,7 @@ public class MixCenter
 	 *         A - encrypted votes array before re-encryption and mixing
 	 *         B - re-encrypted and mixed votes array
 	 */
-	public static void printToFile(String message, Ciphertext[] A, Ciphertext[] B)
+	private static void printToFile(String message, Ciphertext[] A, Ciphertext[] B)
 	{
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
 		
