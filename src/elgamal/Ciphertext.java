@@ -27,5 +27,10 @@ public class Ciphertext {
 	protected void setK(BigIntegerMod b) {
 		this.b = b;
 	}
+	
+	public String toString()
+	{
+		return "<"+a+","+b+">";
+	}
 
 }
