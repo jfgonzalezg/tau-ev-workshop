@@ -58,7 +58,7 @@ public class MixCenter
 	 *         A - encrypted votes array before re-encryption and mixing
 	 *         B - re-encrypted and mixed votes array
 	 */
-	public static void printToFile(String message, CryptObject[] A, CryptObject[] B)
+	public static void printToFile(String message, Ciphertext[] A, Ciphertext[] B)
 	{
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
 		
@@ -69,23 +69,26 @@ public class MixCenter
 				outputFile = new BufferedWriter(new FileWriter(MC_RESULTS_FILE));
 			}
 			// print ZKP string
-			outputFile.write(message + "\r\n");
+			outputFile.write("ZKP:\n"+message + "\r\n");
 			
 			// print A array
-			outputFile.write(" A: [ ");
+			//outputFile.write(" A: [ ");
+			outputFile.write("Recieved votes:\n");
 			for (int i=0; i<n; i++)
 			{
-				outputFile.write(A[i].getText().getValue().toString() + " ");
+			//	outputFile.write(A[i].getText().getValue().toString() + " ");
+				outputFile.write("A["+i+"] = "+A[i].toString()+"\n");
 			}
-			outputFile.write("]\n");
+			outputFile.write("\n");
 			
 			// print B array
-			outputFile.write(" B: [ ");
+			outputFile.write("Permutated and re-encrypted votes:\n");
 			for (int i=0; i<n; i++)
 			{
-				outputFile.write(B[i].getText().getValue().toString() + " ");
+				//outputFile.write(B[i].getText().getValue().toString() + " ");
+				outputFile.write("B["+i+"] = "+B[i].toString()+"\n");
 			}
-			outputFile.write("]\n");
+			outputFile.write("\n");
 			
 			outputFile.flush(); // TODO: is it possible buffer will be full  sooner?
 		}
@@ -123,7 +126,7 @@ public class MixCenter
 			result[i]=B[i].getCiphertext();
 		}
 		
-//		printToFile(sZKP, A, result); TODO - bring this line back and fix.
+		printToFile(sZKP, A, result); 
 		
 		return result;				
 	}
