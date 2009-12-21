@@ -5,13 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import sun.awt.datatransfer.DataTransferer.ReencodingInputStream;
 import elgamal.CryptObject;
 import elgamal.Ciphertext;
 import global.Consts;
-import global.Consts.DebugOutput;
 import elgamal.ElGamal;
-import global.BigIntegerMod;
 
 public class MixCenter 
 {
@@ -119,14 +116,14 @@ public class MixCenter
 		}*/
 		
 		// call ZKP function  
-		sZKP = verifyGIProof(A, B, pi);
+//		sZKP = verifyGIProof(A, B, pi); TODO - bring this line back and fix.
 		Ciphertext[] result=new Ciphertext[n];
 		for (int i=0; i<n; i++)
 		{
 			result[i]=B[i].getCiphertext();
 		}
 		
-		printToFile(sZKP, A, result);
+//		printToFile(sZKP, A, result); TODO - bring this line back and fix.
 		
 		return result;				
 	}
