@@ -30,7 +30,7 @@ public class Ciphertext {
 	
 	public String toString()
 	{
-		return "<"+a+","+b+">";
+		return "<"+a.getValue()+","+b.getValue()+">";
 	}
 
 }
