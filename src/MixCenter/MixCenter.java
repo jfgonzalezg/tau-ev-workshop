@@ -10,7 +10,7 @@ import elgamal.Ciphertext;
 import global.Consts;
 import elgamal.ElGamal;
 
-public class MixCenter 
+public class MixCenter implements IMixCenter
 {
 	private static BufferedWriter outputFile = null;
 	private static final String MC_RESULTS_FILE = "Mix_Center_Log.txt";
@@ -131,6 +131,17 @@ public class MixCenter
 		return result;				
 	}
 	
+	//The description of these functions is explained in the interface file
+	public boolean send_to_next_mix_center (Ciphertext[ ] votes,
+			String dest_IP, 
+			int dest_port){
+		return false;
+	}
+
+	public boolean receive_basics (	Ciphertext[ ] votes, 
+			int listening_port){
+		return false;
+	}
 	
 
 }
