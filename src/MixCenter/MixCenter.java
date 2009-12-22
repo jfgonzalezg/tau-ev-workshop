@@ -3,7 +3,11 @@ package MixCenter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Random;
+
+import tcp.Client;
+import tcp.Server;
 
 import elgamal.CryptObject;
 import elgamal.Ciphertext;
@@ -14,6 +18,13 @@ public class MixCenter implements IMixCenter
 {
 	private static BufferedWriter outputFile = null;
 	private static final String MC_RESULTS_FILE = "Mix_Center_Log.txt";
+	private int mix_center_id;
+	
+	
+	/* Constructor */
+	public MixCenter (int mix_center_id){
+		this.mix_center_id = mix_center_id;
+	}
 	
 	/*
 	 * generates the array (pi) that represents the permutation that will be made.
@@ -132,15 +143,36 @@ public class MixCenter implements IMixCenter
 	}
 	
 	//The description of these functions is explained in the interface file
-	public boolean send_to_next_mix_center (Ciphertext[ ] votes,
-			String dest_IP, 
-			int dest_port){
-		return false;
+	public boolean send_to_next_mix_center (Ciphertext[ ] votes){
+		
+		Client client = new Client("localhost", 7000, mix_center_id);
+		if (client.isConnected()){
+			client.send(votes);
+		} else {
+			Consts.log("Mix Center number "+mix_center_id+" : Error while connecting to the socket.",
+						Consts.DebugOutput.STDERR);
+			return false;
+		}
+		client.close();
+		return true;
 	}
 
-	public boolean receive_basics (	Ciphertext[ ] votes, 
-			int listening_port){
-		return false;
+	public boolean receive_basics (Ciphertext[ ] votes){
+		
+		Server server 			= new Server(7000);
+		Object received_votes 	= server.getReceivedObject();
+		if (received_votes instanceof Ciphertext[]){
+			votes	= (Ciphertext[ ]) received_votes;
+		} else {
+			Consts.log("Mix Center number "+mix_center_id+" : received object is not of type Ciphertext[ ].",
+						Consts.DebugOutput.STDERR);
+			return false;
+		}
+		
+		
+		
+		server.close();
+		return true;
 	}
 	
 
