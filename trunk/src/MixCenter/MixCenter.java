@@ -29,6 +29,7 @@ public class MixCenter implements IMixCenter
 	{
 		this.mix_center_id = mix_center_id;
 	}
+	private MixCenter(){}//no default CTOR
 	
 	/*
 	 * generates the array (pi) that represents the permutation that will be made.
