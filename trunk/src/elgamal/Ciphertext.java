@@ -27,15 +27,17 @@ public class Ciphertext {
 	protected void setK(BigIntegerMod b) {
 		this.b = b;
 	}
-	
-	public String toString()
-	{
-		return "<"+a.getValue()+","+b.getValue()+">";
+
+	public String toString() {
+		return ("<" + a.getValue() + "," + b.getValue() + ">");
 	}
-	
-	public Ciphertext multiply(Ciphertext multiplier){
-		return new Ciphertext(this.a.multiply(multiplier.getA()),
-				this.b.multiply(multiplier.getB()));		
+
+	public Ciphertext multiply(Ciphertext multiplier) {
+		return multiply(this, multiplier);
+	}
+
+	public static Ciphertext multiply(Ciphertext multiplier1, Ciphertext multiplier2) {
+		return new Ciphertext(multiplier1.a.multiply(multiplier2.a), multiplier1.b.multiply(multiplier2.b));
 	}
 
 }
