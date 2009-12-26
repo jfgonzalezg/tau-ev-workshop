@@ -32,5 +32,10 @@ public class Ciphertext {
 	{
 		return "<"+a.getValue()+","+b.getValue()+">";
 	}
+	
+	public Ciphertext multiply(Ciphertext multiplier){
+		return new Ciphertext(this.a.multiply(multiplier.getA()),
+				this.b.multiply(multiplier.getB()));		
+	}
 
 }
