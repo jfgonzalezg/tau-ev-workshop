@@ -101,7 +101,7 @@ public class MixCenter implements IMixCenter
 			}
 			outputFile.write("\n");
 			
-			outputFile.flush(); // TODO: is it possible buffer will be full  sooner?
+			outputFile.flush(); // TODO: is it possible the buffer will be full sooner?
 		}
 		catch (IOException e) 
 		{
@@ -173,5 +173,43 @@ public class MixCenter implements IMixCenter
 		return true;
 	}
 	
+	/*
+	 * Get mix center id
+	 */
+	public int getId()
+	{
+		return this.mix_center_id;
+	}
+	
+	/*
+	 * Get the array A - encrypted votes before re-encryption
+	 */
+	public Ciphertext[] getArrayA()
+	{
+		return this.A;
+	}
 
+	/*
+	 * Get the array A - encrypted votes before re-encryption
+	 */
+	public CryptObject[] getArrayB()
+	{
+		return this.B;
+	}
+	
+	/*
+	 * Get the permutation in specific index
+	 */
+	public int getPremutation(int index)
+	{
+		return this.pi[index];	
+	}
+	
+	/*
+	 * Get the permutation array
+	 */
+	public int[] getPremutationArray()
+	{
+		return this.pi;
+	}
 }
