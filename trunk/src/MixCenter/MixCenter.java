@@ -38,7 +38,7 @@ public class MixCenter implements IMixCenter
 	{
 		int d,temp;
 		int n=Consts.VOTERS_AMOUNT;
-		pi = new int[n]; //pi
+		pi = new int[n]; 
 		Random generator = new Random();
 		for(int i=0;i<n;i++) //initialize the permutation array.
 		{
@@ -97,7 +97,6 @@ public class MixCenter implements IMixCenter
 			outputFile.write("Permutated and re-encrypted votes:\n");
 			for (int i=0; i<n; i++)
 			{
-				//outputFile.write(B[i].getText().getValue().toString() + " ");
 				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+"\n");
 			}
 			outputFile.write("\n");
