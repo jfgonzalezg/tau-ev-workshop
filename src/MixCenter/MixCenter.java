@@ -19,48 +19,50 @@ public class MixCenter implements IMixCenter
 	private static BufferedWriter outputFile = null;
 	private static final String MC_RESULTS_FILE = "Mix_Center_Log.txt";
 	private int mix_center_id;
+	private Ciphertext[] A;
+	private CryptObject[] B;
+	private int[] pi;
 	
 	
 	/* Constructor */
-	public MixCenter (int mix_center_id){
+	public MixCenter (int mix_center_id)
+	{
 		this.mix_center_id = mix_center_id;
 	}
 	
 	/*
 	 * generates the array (pi) that represents the permutation that will be made.
 	 */
-	private int[] generatePermutation()
+	public void generatePermutation()
 	{
 		int d,temp;
 		int n=Consts.VOTERS_AMOUNT;
-		int[] result = new int[n]; //pi
+		pi = new int[n]; //pi
 		Random generator = new Random();
 		for(int i=0;i<n;i++) //initialize the permutation array.
 		{
-			result[i]=i;
+			pi[i]=i;
 		}
 		for(int i=0;i<n-1;i++)//for all cells except the last one [0,n-2]
 		{
 			d=generator.nextInt(n-i)+i; //generates a random number [i,n-1]
-			temp=result[i];
-			result[i]=result[d];
-			result[d]=temp;			
+			temp=pi[i];
+			pi[i]=pi[d];
+			pi[d]=temp;			
 		}
-		return result;
 	}
 	/*
 	 * permutate and re-encrypt A according to pi and using ElGamal module.
 	 */
-	public CryptObject[] PermutateAndReecncrypt(Ciphertext[] A, int[] pi)
+	public void PermutateAndReecncrypt()
 	{
 		ElGamal gamal=new ElGamal(Consts.publicKey); //TBD
 		int n=Consts.VOTERS_AMOUNT;
-		CryptObject[] B=new CryptObject[n];	
+		B=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
 		{
 			B[i]=gamal.reencrypt(A[pi[i]]);			
 		}
-		return B;
 	}
 	
 	/*
@@ -69,7 +71,7 @@ public class MixCenter implements IMixCenter
 	 *         A - encrypted votes array before re-encryption and mixing
 	 *         B - re-encrypted and mixed votes array
 	 */
-	private static void printToFile(String message, Ciphertext[] A, Ciphertext[] B)
+	public void printToFile(String message)
 	{
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
 		
@@ -83,11 +85,9 @@ public class MixCenter implements IMixCenter
 			outputFile.write("ZKP:\n"+message + "\r\n");
 			
 			// print A array
-			//outputFile.write(" A: [ ");
 			outputFile.write("Recieved votes:\n");
 			for (int i=0; i<n; i++)
 			{
-			//	outputFile.write(A[i].getText().getValue().toString() + " ");
 				outputFile.write("A["+i+"] = "+A[i].toString()+"\n");
 			}
 			outputFile.write("\n");
@@ -97,7 +97,7 @@ public class MixCenter implements IMixCenter
 			for (int i=0; i<n; i++)
 			{
 				//outputFile.write(B[i].getText().getValue().toString() + " ");
-				outputFile.write("B["+i+"] = "+B[i].toString()+"\n");
+				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+"\n");
 			}
 			outputFile.write("\n");
 			
@@ -116,7 +116,8 @@ public class MixCenter implements IMixCenter
 	 *         pi - new permutation array
 	 * @return- a Ciphertext array made out of B.
 	 */
-	private Ciphertext[] performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
+	/*
+	public Ciphertext[] performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
 	{
 		String sZKP = " ";
 		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
@@ -124,10 +125,7 @@ public class MixCenter implements IMixCenter
 		// get W (the publicKey)
 		
 		// prepare R
-	/*	for (int i=0; i<n; i++)
-		{
-			R[i] = B[i].getR();
-		}*/
+	
 		
 		// call ZKP function  
 //		sZKP = verifyGIProof(A, B, pi); TODO - bring this line back and fix.
@@ -140,7 +138,7 @@ public class MixCenter implements IMixCenter
 		printToFile(sZKP, A, result); 
 		
 		return result;				
-	}
+	}*/
 	
 	//The description of these functions is explained in the interface file
 	public boolean send_to_next_mix_center (Ciphertext[ ] votes){
