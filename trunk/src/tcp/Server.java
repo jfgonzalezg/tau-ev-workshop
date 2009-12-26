@@ -117,20 +117,14 @@ public class Server {
 	 * @return the oldest object received of this type, or null if no such object
 	 */
 	public Message getReceivedObject() {
-		boolean shouldWait = false;
 		synchronized(receivedObjects) {
 			if (receivedObjects.isEmpty()) {
-				shouldWait = true;
+				try {
+					receivedObjects.wait(2 * global.Consts.CONNECTION_TIMEOUT);
+				} catch (InterruptedException e) {
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				}
 			}
-		}
-		if (shouldWait) {
-			try {
-				receivedObjects.wait(2 * global.Consts.CONNECTION_TIMEOUT);
-			} catch (InterruptedException e) {
-				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
-			}
-		}
-		synchronized(receivedObjects) {
 			if (receivedObjects.isEmpty()) {
 				return null;
 			} else {
