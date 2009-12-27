@@ -2,7 +2,13 @@ package MixCenter;
 
 import elgamal.Ciphertext;
 
-public interface IMixCenter {
+public interface IMixCenter 
+{
+	public void generatePermutation();
+	public void PermutateAndReecncrypt();
+	public void printToFile(String message);
+	public String performZKP();
+	
 	/*	This function sends array of votes to mix_center.
    		The function is blocking.
     	Parameters: 
