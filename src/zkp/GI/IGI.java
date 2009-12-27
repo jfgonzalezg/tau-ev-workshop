@@ -1,16 +1,20 @@
 package zkp.GI;
 
+
 import zkp.ZkpException;
 import global.Consts;
 import elgamal.Ciphertext;
+import elgamal.CryptObject;
 import global.BigIntegerMod;
+import java.math.BigInteger;
+
 
 public interface IGI {
 
 	/**
 	 * Creates the GI Proof using the given A,B,w,pi,r and g (global)
 	 * @param A - the array reprsenting the original permutation ciphertext[n]. ciphertext=2*BigIntegerMod*n=1024*2*400=819200
-	 * @param B - the array reprsenting the new permutation. ciphertext[]
+	 * @param B - the array reprsenting the new permutation (including the random r used for re-encryption for each vote). CryptObject[]
 	 * @param wi - computed by ElGamal (global)
 	 * @param pi - reprsents the permotation of the mix net - integer[n]
 	 * @param riArray = r1...rk - BigIntegerMod[k] - the random numbers used for encryption. r is out of Zq - 1024bit. 
@@ -22,7 +26,7 @@ public interface IGI {
 	 *		hash - reprsents the coin toss of the proof - we need only K bits out of 1024 - K=40bits
 	 *		
 	 */
-	public GIProof createGIProof(Ciphertext[] A, Ciphertext[] B, BigIntegerMod wi, int pi, BigIntegerMod[] riArray)
+	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod wi,BigInteger q, BigInteger p)
 			throws ZkpException;
 
 
