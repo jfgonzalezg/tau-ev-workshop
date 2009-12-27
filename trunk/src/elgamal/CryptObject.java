@@ -16,7 +16,7 @@ public class CryptObject {
 		// TODO - ZKP
 	}
 
-	protected CryptObject(BigIntegerMod text, Ciphertext ciphertext, BigIntegerMod r) {
+	public CryptObject(BigIntegerMod text, Ciphertext ciphertext, BigIntegerMod r) {
 		this.text = text;
 		this.ciphertext = ciphertext;
 		this.r = r;
@@ -42,15 +42,15 @@ public class CryptObject {
 	}
 */
 
-	protected void setText(BigIntegerMod text) {
+	public void setText(BigIntegerMod text) {
 		this.text = text;
 	}
 
-	protected void setCiphertext(Ciphertext ciphertext) {
+	public void setCiphertext(Ciphertext ciphertext) {
 		this.ciphertext = ciphertext;
 	}
 
-	protected void setR(BigIntegerMod r) {
+	public void setR(BigIntegerMod r) {
 		this.r = r;
 	}
 /*
