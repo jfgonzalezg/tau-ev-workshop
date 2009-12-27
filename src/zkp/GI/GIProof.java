@@ -58,5 +58,9 @@ public class GIProof implements Serializable
 	{
 		//TO do
 	}
-	*/
+	public String toString()
+	{
+		//TO do
+	}*/
+	
 }
