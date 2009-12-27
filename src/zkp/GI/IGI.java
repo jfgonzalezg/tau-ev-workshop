@@ -26,7 +26,7 @@ public interface IGI {
 	 *		hash - reprsents the coin toss of the proof - we need only K bits out of 1024 - K=40bits
 	 *		
 	 */
-	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod wi,BigInteger q, BigInteger p)
+	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigInteger q, BigInteger p)
 			throws ZkpException;
 
 
