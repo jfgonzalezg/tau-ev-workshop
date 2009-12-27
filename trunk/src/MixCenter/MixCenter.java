@@ -3,14 +3,17 @@ package MixCenter;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 //import java.math.BigInteger;
 import java.util.Random;
 
 import tcp.Client;
 import tcp.Server;
-
+import zkp.GI.GIProof;
 import elgamal.CryptObject;
+import zkp.GI.IGI;
 import elgamal.Ciphertext;
+import global.BigIntegerMod;
 import global.Consts;
 import elgamal.ElGamal;
 
@@ -22,6 +25,9 @@ public class MixCenter implements IMixCenter
 	private Ciphertext[] A;
 	private CryptObject[] B;
 	private int[] pi;
+	private int VOTERS_AMOUNT;
+	private BigIntegerMod w,g;
+	private BigInteger q,p;
 	
 	
 	/* Constructor */
@@ -37,16 +43,15 @@ public class MixCenter implements IMixCenter
 	public void generatePermutation()
 	{
 		int d,temp;
-		int n=Consts.VOTERS_AMOUNT;
-		pi = new int[n]; 
+		pi = new int[VOTERS_AMOUNT]; 
 		Random generator = new Random();
-		for(int i=0;i<n;i++) //initialize the permutation array.
+		for(int i=0;i<VOTERS_AMOUNT;i++) //initialize the permutation array.
 		{
 			pi[i]=i;
 		}
-		for(int i=0;i<n-1;i++)//for all cells except the last one [0,n-2]
+		for(int i=0;i<VOTERS_AMOUNT-1;i++)//for all cells except the last one [0,n-2]
 		{
-			d=generator.nextInt(n-i)+i; //generates a random number [i,n-1]
+			d=generator.nextInt(VOTERS_AMOUNT-i)+i; //generates a random number [i,n-1]
 			temp=pi[i];
 			pi[i]=pi[d];
 			pi[d]=temp;			
@@ -58,9 +63,8 @@ public class MixCenter implements IMixCenter
 	public void PermutateAndReecncrypt()
 	{
 		ElGamal gamal=new ElGamal(Consts.publicKey); //TBD
-		int n=Consts.VOTERS_AMOUNT;
-		B=new CryptObject[n];	
-		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
+		B=new CryptObject[VOTERS_AMOUNT];	
+		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
 			B[i]=gamal.reencrypt(A[pi[i]]);			
 		}
@@ -73,9 +77,7 @@ public class MixCenter implements IMixCenter
 	 *         B - re-encrypted and mixed votes array
 	 */
 	public void printToFile(String message)
-	{
-		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
-		
+	{	
 		try 
 		{
 			if (outputFile == null)
@@ -87,7 +89,7 @@ public class MixCenter implements IMixCenter
 			
 			// print A array
 			outputFile.write("Recieved votes:\n");
-			for (int i=0; i<n; i++)
+			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
 				outputFile.write("A["+i+"] = "+A[i].toString()+"\n");
 			}
@@ -95,7 +97,7 @@ public class MixCenter implements IMixCenter
 			
 			// print B array
 			outputFile.write("Permutated and re-encrypted votes:\n");
-			for (int i=0; i<n; i++)
+			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
 				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+"\n");
 			}
@@ -116,29 +118,14 @@ public class MixCenter implements IMixCenter
 	 *         pi - new permutation array
 	 * @return- a Ciphertext array made out of B.
 	 */
-	/*
-	public Ciphertext[] performZKP(Ciphertext[] A, CryptObject[] B, int[] pi) 
-	{
-		String sZKP = " ";
-		int n=Consts.VOTERS_AMOUNT;	//TODO: make it a field so we wont read it all the time?	
-	//	BigIntegerMod[] R = new BigIntegerMod[n];
-		// get W (the publicKey)
-		
-		// prepare R
 	
-		
+	public String performZKP() 
+	{
 		// call ZKP function  
-//		sZKP = verifyGIProof(A, B, pi); TODO - bring this line back and fix.
-		Ciphertext[] result=new Ciphertext[n];
-		for (int i=0; i<n; i++)
-		{
-			result[i]=B[i].getCiphertext();
-		}
-		
-		printToFile(sZKP, A, result); 
-		
-		return result;				
-	}*/
+	//	GIProof zkp=createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);	
+	//	return zkp.toString();	
+		return "";
+	}
 	
 	//The description of these functions is explained in the interface file
 	public boolean send_to_next_mix_center (Ciphertext[ ] votes){
