@@ -5,8 +5,17 @@ import elgamal.Ciphertext;
 public interface IMixCenter 
 {
 	public void generatePermutation();
+	/*
+	 * @PRE generatePermutation()and receive_basics() where called earlier and completed successfully.
+	 */
 	public void PermutateAndReecncrypt();
+	/*
+	 * @PRE PermutateAndReecncrypt() was called earlier and completed successfully.
+	 */
 	public void printToFile(String message);
+	/*
+	 * @PRE PermutateAndReecncrypt() was called earlier and completed successfully.
+	 */
 	public String performZKP();
 	
 	/*	This function sends array of votes to mix_center.
