@@ -62,7 +62,7 @@ public class MixCenter implements IMixCenter
 	 */
 	public void PermutateAndReecncrypt()
 	{
-		ElGamal gamal=new ElGamal(Consts.publicKey); //TBD
+		ElGamal gamal=new ElGamal(w); 
 		B=new CryptObject[VOTERS_AMOUNT];	
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
