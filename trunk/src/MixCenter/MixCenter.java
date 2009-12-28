@@ -85,23 +85,23 @@ public class MixCenter implements IMixCenter
 				outputFile = new BufferedWriter(new FileWriter(MC_RESULTS_FILE));
 			}
 			// print ZKP string
-			outputFile.write("ZKP:\n"+message + "\r\n");
+			outputFile.write("ZKP:\r\n" + message + "\r\n");
 			
 			// print A array
-			outputFile.write("Recieved votes:\n");
+			outputFile.write("Recieved votes: \r\n");
 			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
-				outputFile.write("A["+i+"] = "+A[i].toString()+"\n");
+				outputFile.write("A["+i+"] = "+A[i].toString()+" \r\n");
 			}
 			outputFile.write("\n");
 			
 			// print B array
-			outputFile.write("Permutated and re-encrypted votes:\n");
+			outputFile.write("Permutated and re-encrypted votes: \r\n");
 			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
-				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+"\n");
+				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+" \r\n");
 			}
-			outputFile.write("\n");
+			outputFile.write("\r\n");
 			
 			outputFile.flush(); // TODO: is it possible the buffer will be full sooner?
 		}
@@ -198,5 +198,37 @@ public class MixCenter implements IMixCenter
 	public int[] getPremutationArray()
 	{
 		return this.pi;
+	}
+	
+	/*
+	 * Get the VOTERS_AMOUNT
+	 */
+	public int getVotersAmount()
+	{
+		return this.VOTERS_AMOUNT;
+	}
+	
+	/*
+	 * Set the VOTERS_AMOUNT
+	 */
+	protected void setVotersAmount(int amount)
+	{
+		this.VOTERS_AMOUNT = amount;
+	}
+	
+	/*
+	 * Set the A array
+	 */
+	protected void setArrayA(Ciphertext[] arr)
+	{
+		this.A = arr;
+	}
+	
+	/*
+	 * Set the B array
+	 */
+	protected void setArrayB(CryptObject[] arr)
+	{
+		this.B = arr;
 	}
 }
