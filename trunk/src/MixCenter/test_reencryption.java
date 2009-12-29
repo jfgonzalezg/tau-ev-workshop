@@ -33,6 +33,11 @@ public class test_reencryption
 			pi[d]=temp;			
 		}
 	}
+	public static Ran2_test reencrypt(Ran1_test a)
+	{
+		Ran2_test b=new Ran2_test(a);
+		return b;
+	}
 	/*
 	 * permutate and re-encrypt A according to pi and using ElGamal module.
 	 */
@@ -41,7 +46,7 @@ public class test_reencryption
 		B=new Ran2_test[VOTERS_AMOUNT];
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			B[i]=new Ran2_test(A[pi[i]]);			
+			B[i]=reencrypt(A[pi[i]]);			
 		}
 	}
 	/**
