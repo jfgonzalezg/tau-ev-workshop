@@ -1,9 +1,15 @@
 package elgamal;
 
+import java.io.Serializable;
+
 import global.BigIntegerMod;
 
-public class Ciphertext {
+public class Ciphertext implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BigIntegerMod a; // TODO - verify mod p everywhere
 	private BigIntegerMod b; // represents k*m = (public_key^r)*m // TODO - verify mod p everywhere
 
