@@ -28,6 +28,7 @@ public class MixCenter implements IMixCenter
 	private int VOTERS_AMOUNT;
 	private BigIntegerMod w,g;
 	private BigInteger q,p;
+	private static int num_of_centers_involved;
 	
 	
 	/* Constructor */
@@ -127,38 +128,97 @@ public class MixCenter implements IMixCenter
 		return "";
 	}
 	
+	
+	//This function used for MixCenter users
+	public boolean send_to_next_mix_center (){
+		Ciphertext[] votes = new Ciphertext[B.length];
+		for (int i=0; i<B.length; i++){
+			votes[i] = B[i].getCiphertext();
+		}
+		return send_to_next_mix_center (votes, g, p, q, w, VOTERS_AMOUNT);
+	}
+	
+	
+	
 	//The description of these functions is explained in the interface file
-	public boolean send_to_next_mix_center (Ciphertext[ ] votes){
-		
-		Client client = new Client("localhost", 7000, mix_center_id);
-		if (client.isConnected()){
-			client.send(votes);
-		} else {
-			Consts.log("Mix Center number "+mix_center_id+" : Error while connecting to the socket.",
-						Consts.DebugOutput.STDERR);
-			return false;
+	public boolean send_to_next_mix_center (Ciphertext[ ] votes,
+											BigIntegerMod G,
+											BigInteger    P,
+											BigInteger	  Q,
+											BigIntegerMod W,
+											int			  N)
+	{
+		System.out.println("DEBUG Entering send_to_next_mix_center");
+		SentObject sent_object = new SentObject(votes, G, P, Q, W, N);
+		int next_available_center = mix_center_id + 1;
+		Client client = null;
+		while (next_available_center < 12 ||                         /*Pret a vote is last center*/
+			  (mix_center_id == 0 && next_available_center == 11)){  /*Pret a vote is trying to send to itself*/
+			//NOTE: we assign modulo 11 for the case next_available_center == 11
+			//so it is pret a vote
+			client = new Client(	Consts.MIX_CENTERS_IP  [next_available_center % 11],
+									Consts.MIX_CENTERS_PORT[next_available_center % 11],
+									mix_center_id);
+			if (client.canSend()){
+				client.send(sent_object);
+				Consts.log("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
+						next_available_center, Consts.DebugOutput.STDOUT);
+				client.close();
+				num_of_centers_involved++;
+				return true;
+			} else {
+				Consts.log("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
+						next_available_center, Consts.DebugOutput.STDERR);
+			}
+			next_available_center++;
 		}
 		client.close();
-		return true;
+		return false;
 	}
 
-	public boolean receive_basics (Ciphertext[ ] votes){
+	public Ciphertext[ ] receive_from_prev_mix_center (){
+		return receive_from_prev_mix_center(60/*minutes*/);
+	}
+	
+	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		Server server 			= new Server(7000);
-		Object received_votes 	= server.getReceivedObject();
-		if (received_votes instanceof Ciphertext[]){
-			votes	= (Ciphertext[ ]) received_votes;
-		} else {
-			Consts.log("Mix Center number "+mix_center_id+" : received object is not of type Ciphertext[ ].",
-						Consts.DebugOutput.STDERR);
-			return false;
+		System.out.println("DEBUG Entering  receive_from_prev_mix_center");
+		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
+		Server.Message 	received_votes  = null;
+		
+		timeout *= 60; //convert to seconds
+		while (timeout != 0 && received_votes == null){
+			received_votes 	= server.getReceivedObject();
+			if (received_votes != null){
+				if (received_votes instanceof Server.Message){
+					System.out.println("DEBUG "+received_votes.getMessage().getClass());
+					SentObject recv_object = (SentObject) received_votes.getMessage();
+					//MUST CHECK THAT THESE ARE NOT NULL!!!
+					this.A = recv_object.get_votes_array();
+					System.out.println("size"+A.length);
+					this.g = recv_object.get_G();
+					this.p = recv_object.get_P();
+					this.q = recv_object.get_Q();
+					this.w = recv_object.get_W();
+					this.VOTERS_AMOUNT = recv_object.get_N();
+					if (A.length != VOTERS_AMOUNT)
+						System.out.println("ERROR number of votes in A is "+A.length+
+								" while number of expected votes is "+VOTERS_AMOUNT);
+					server.close();
+					return A;
+				} else {
+					System.out.println(received_votes.getClass());
+					Consts.log("ERROR: Mix Center number "+mix_center_id+" : received object is not of type Ciphertext[ ].",
+								Consts.DebugOutput.STDERR);
+				}
+			}
+			timeout -= 2*(Consts.CONNECTION_TIMEOUT);//The server waits 2 seconds every wait in socket
 		}
 		
-		
-		
 		server.close();
-		return true;
+		return null;
 	}
+	//IGELKA - MAKE SEND FUNCTION TO RETURN FALSE
 	
 	/*
 	 * Get mix center id
@@ -230,5 +290,9 @@ public class MixCenter implements IMixCenter
 	protected void setArrayB(CryptObject[] arr)
 	{
 		this.B = arr;
+	}
+	
+	public int get_num_of_centers_involved(){
+		return num_of_centers_involved;
 	}
 }
