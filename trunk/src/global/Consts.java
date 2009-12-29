@@ -88,7 +88,7 @@ public class Consts {
 		do {
 			result = new BigInteger(p.bitLength(), random);
 		} while ((result.compareTo(lowerBound) < 0) || (result.compareTo(upperBound) > 0));
-		return new BigIntegerMod(result, p);
+		return new BigIntegerMod(result.modPow(TWO, p), p);
 	}
 
 	public static BigInteger getQ() {
