@@ -164,7 +164,8 @@ public class MixCenter implements IMixCenter
 				Consts.log("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
 						next_available_center, Consts.DebugOutput.STDOUT);
 				client.close();
-				num_of_centers_involved++;
+				if (mix_center_id != 0)
+					num_of_centers_involved++;
 				return true;
 			} else {
 				Consts.log("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
