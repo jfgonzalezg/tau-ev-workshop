@@ -32,6 +32,33 @@ public class Consts {
 	public static final BigInteger q = getRandomLargePrimeQ();
 	public static final BigInteger p = getP(q);
 	public static final BigIntegerMod G = calculateG();
+	
+	//Mix Centers IPs and ports. First place in the array is Pret a vote data.
+	public static final String[] MIX_CENTERS_IP = {	"127.0.0.1", //Pret a vote
+													"127.0.0.1", //Mix Center 1
+													"127.0.0.1", //Mix Center 2
+													"127.0.0.1", //Mix Center 3
+													"127.0.0.1", //Mix Center 4
+													"127.0.0.1", //Mix Center 5
+													"127.0.0.1", //Mix Center 6
+													"127.0.0.1", //Mix Center 7
+													"127.0.0.1", //Mix Center 8
+													"127.0.0.1", //Mix Center 9
+													"127.0.0.1"};//Mix Center 10
+	
+	public static final int[] MIX_CENTERS_PORT = {	7000, //Pret a vote
+													7001, //Mix Center 1
+													7002, //Mix Center 2
+													7003, //Mix Center 3
+													7004, //Mix Center 4
+													7005, //Mix Center 5
+													7006, //Mix Center 6
+													7007, //Mix Center 7
+													7008, //Mix Center 8
+													7009, //Mix Center 9
+													7010};//Mix Center 10
+	
+	
 
 	public static void log(String message, DebugOutput logger) {
 		switch (logger) {
