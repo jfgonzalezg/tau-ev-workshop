@@ -27,11 +27,6 @@ public class Consts {
 	public static final int THRESHOLD_CENTER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
 	public static final BigInteger TWO = BigInteger.valueOf(2);
-	public static BigIntegerMod publicKey = null; // TODO - initialization + should be final + consider refactoring the name of this member to something clearer to everybody
-
-	public static final BigInteger q = getRandomLargePrimeQ();
-	public static final BigInteger p = getP(q);
-	public static final BigIntegerMod G = calculateG();
 	
 	//Mix Centers IPs and ports. First place in the array is Pret a vote data.
 	public static final String[] MIX_CENTERS_IP = {	"127.0.0.1", //Pret a vote
