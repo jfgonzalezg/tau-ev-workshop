@@ -96,7 +96,7 @@ public class Consts {
 		return q;
 		*/
 	}
-
+/*
 	private static BigInteger getP(BigInteger q) {
 		// p = 2*q + 1;
 		return q.multiply(TWO).add(BigInteger.ONE);
@@ -112,17 +112,7 @@ public class Consts {
 		} while ((result.compareTo(lowerBound) < 0) || (result.compareTo(upperBound) > 0));
 		return new BigIntegerMod(result.modPow(TWO, p), p);
 	}
-
-	public static BigInteger getQ() {
-		return q;
-	}
-
-	public static BigInteger getP() {
-		return p;
-	}
-
-	public static BigIntegerMod getG() {
-		return G;
-	}
+*/
+	
 
 }
