@@ -9,7 +9,7 @@ public class Ciphertext implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -1866867027378671329L;
 	private BigIntegerMod a; // TODO - verify mod p everywhere
 	private BigIntegerMod b; // represents k*m = (public_key^r)*m // TODO - verify mod p everywhere
 
