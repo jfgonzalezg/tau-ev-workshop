@@ -8,10 +8,11 @@ import elgamal.Ciphertext;
 import global.BigIntegerMod;
 
 public class SentObject implements Serializable{
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -98660363992845654L;
 	private Ciphertext[] 	votes_array;
 	private BigIntegerMod 	G;
 	private BigInteger 		P;
