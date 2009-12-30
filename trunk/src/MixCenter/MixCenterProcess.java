@@ -7,7 +7,6 @@ import java.util.*;
 
 public class MixCenterProcess {
 
-	int counter = 0;
 	protected static String defaultLogFile = "c:\\MClog.txt";
     
     public static void write(String s) throws IOException {
