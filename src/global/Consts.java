@@ -27,8 +27,12 @@ public class Consts {
 	public static final int THRESHOLD_CENTER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
 	public static final BigInteger TWO = BigInteger.valueOf(2);
-	
-	//Mix Centers IPs and ports. First place in the array is Pret a vote data.
+
+	public static final BigInteger q = getRandomLargePrimeQ();
+	public static final BigInteger p = getP(q);
+	public static final BigIntegerMod G = calculateG();
+
+	// Mix Centers IPs and ports. First item in the array is Pret a vote data.
 	public static final String[] MIX_CENTERS_IP = {	"127.0.0.1", //Pret a vote
 													"127.0.0.1", //Mix Center 1
 													"127.0.0.1", //Mix Center 2
@@ -40,7 +44,7 @@ public class Consts {
 													"127.0.0.1", //Mix Center 8
 													"127.0.0.1", //Mix Center 9
 													"127.0.0.1"};//Mix Center 10
-	
+
 	public static final int[] MIX_CENTERS_PORT = {	7000, //Pret a vote
 													7001, //Mix Center 1
 													7002, //Mix Center 2
@@ -52,8 +56,6 @@ public class Consts {
 													7008, //Mix Center 8
 													7009, //Mix Center 9
 													7010};//Mix Center 10
-	
-	
 
 	public static void log(String message, DebugOutput logger) {
 		switch (logger) {
@@ -96,7 +98,7 @@ public class Consts {
 		return q;
 		*/
 	}
-/*
+
 	private static BigInteger getP(BigInteger q) {
 		// p = 2*q + 1;
 		return q.multiply(TWO).add(BigInteger.ONE);
@@ -112,7 +114,17 @@ public class Consts {
 		} while ((result.compareTo(lowerBound) < 0) || (result.compareTo(upperBound) > 0));
 		return new BigIntegerMod(result.modPow(TWO, p), p);
 	}
-*/
-	
+
+	public static BigInteger getQ() {
+		return q;
+	}
+
+	public static BigInteger getP() {
+		return p;
+	}
+
+	public static BigIntegerMod getG() {
+		return G;
+	}
 
 }
