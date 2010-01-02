@@ -38,15 +38,16 @@ public class Client {
 		send(new Integer(connectionNumber)); // predefined handshake
 	}
 
-	public void send(Object object) {
+	public boolean send(Object object) {
 		// send the string to the server
 		Consts.log("Client: Client sending \"" + object + "\" to server", Consts.DebugOutput.STDOUT);
 		try {
 			Soutput.writeObject(object);
 			Soutput.flush();
+			return true;
 		} catch (IOException e) {
 			Consts.log("Client: Error writting to the socket: " + e, Consts.DebugOutput.STDERR);
-			return;
+			return false;
 		}
 	}
 
