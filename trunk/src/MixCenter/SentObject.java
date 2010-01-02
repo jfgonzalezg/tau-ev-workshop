@@ -19,19 +19,22 @@ public class SentObject implements Serializable{
 	private BigInteger 		Q;
 	private BigIntegerMod 	W;
 	private	int				N;
+	private int				num_of_centers_involved;
 	
 	public SentObject(	Ciphertext[] 	votes_array,
 						BigIntegerMod 	G,
 						BigInteger 		P,
 						BigInteger 		Q,
 						BigIntegerMod 	W,
-						int				N) {
+						int				N,
+						int				num_of_centers_involved) {
 		this.votes_array = votes_array;
 		this.G = G;
 		this.P = P;
 		this.Q = Q;
 		this.W = W;
 		this.N = N;
+		this.num_of_centers_involved = num_of_centers_involved;
 	}
 	
 	public Ciphertext[] get_votes_array(){
@@ -56,5 +59,9 @@ public class SentObject implements Serializable{
 	
 	public int get_N(){
 		return N;
+	}
+	
+	public int get_num_of_centers_involved(){
+		return num_of_centers_involved;
 	}
 }

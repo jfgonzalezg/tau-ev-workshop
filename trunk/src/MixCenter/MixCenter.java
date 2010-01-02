@@ -28,7 +28,7 @@ public class MixCenter implements IMixCenter
 	private int VOTERS_AMOUNT;
 	private BigIntegerMod w,g;
 	private BigInteger q,p;
-	private static int num_of_centers_involved;
+	private int num_of_centers_involved;
 	
 	
 	/* Constructor */
@@ -148,8 +148,8 @@ public class MixCenter implements IMixCenter
 											BigIntegerMod W,
 											int			  N)
 	{
-		System.out.println("DEBUG Entering send_to_next_mix_center");
-		SentObject sent_object = new SentObject(votes, G, P, Q, W, N);
+		MixCenterProcess.write("DEBUG Entering send_to_next_mix_center");
+		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
 		while (next_available_center < 12 ||                         /*Pret a vote is last center*/
@@ -159,17 +159,22 @@ public class MixCenter implements IMixCenter
 			client = new Client(	Consts.MIX_CENTERS_IP  [next_available_center % 11],
 									Consts.MIX_CENTERS_PORT[next_available_center % 11],
 									mix_center_id);
+			MixCenterProcess.write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
+					next_available_center);
 			if (client.canSend()){
-				client.send(sent_object);
-				Consts.log("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
-						next_available_center, Consts.DebugOutput.STDOUT);
-				client.close();
-				if (mix_center_id != 0)
-					num_of_centers_involved++;
-				return true;
+				if (client.send(sent_object) == false){
+					MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
+							next_available_center);
+				}
+				else {
+					MixCenterProcess.write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
+							next_available_center);
+					client.close();
+					return true;
+				}
 			} else {
-				Consts.log("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
-						next_available_center, Consts.DebugOutput.STDERR);
+				MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
+									next_available_center);
 			}
 			next_available_center++;
 		}
@@ -183,34 +188,58 @@ public class MixCenter implements IMixCenter
 	
 	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		System.out.println("DEBUG Entering  receive_from_prev_mix_center");
+		MixCenterProcess.write("DEBUG Entering  receive_from_prev_mix_center");
 		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
 		Server.Message 	received_votes  = null;
 		
 		timeout *= 60; //convert to seconds
 		while (timeout != 0 && received_votes == null){
-			received_votes 	= server.getReceivedObject();
+			received_votes 	= server.getReceivedObject(); //this line blocking for 2*(Consts.CONNECTION_TIMEOUT)
 			if (received_votes != null){
 				if (received_votes instanceof Server.Message){
-					System.out.println("DEBUG "+received_votes.getMessage().getClass());
-					SentObject recv_object = (SentObject) received_votes.getMessage();
-					//MUST CHECK THAT THESE ARE NOT NULL!!!
-					this.A = recv_object.get_votes_array();
-					System.out.println("size"+A.length);
-					this.g = recv_object.get_G();
-					this.p = recv_object.get_P();
-					this.q = recv_object.get_Q();
-					this.w = recv_object.get_W();
-					this.VOTERS_AMOUNT = recv_object.get_N();
-					if (A.length != VOTERS_AMOUNT)
-						System.out.println("ERROR number of votes in A is "+A.length+
-								" while number of expected votes is "+VOTERS_AMOUNT);
-					server.close();
-					return A;
+					MixCenterProcess.write("DEBUG "+received_votes.getMessage().getClass());
+					if (received_votes.getMessage() instanceof SentObject){
+						SentObject recv_object = (SentObject) received_votes.getMessage();
+						this.A = recv_object.get_votes_array();
+						this.g = recv_object.get_G();
+						this.p = recv_object.get_P();
+						this.q = recv_object.get_Q();
+						this.w = recv_object.get_W();
+						this.VOTERS_AMOUNT = recv_object.get_N();
+						this.num_of_centers_involved = recv_object.get_num_of_centers_involved();
+						if (mix_center_id != 0)
+							num_of_centers_involved++;
+						// if some of these null kill the process
+						if (this.A == null ||
+							this.g == null ||
+							this.p == null ||
+							this.q == null ||
+							this.w == null){
+							MixCenterProcess.write("ERROR: Some of received parameters are null:\n" +
+									"A "+ ((this.A == null) ? "is" : "is not") + " null\n"+
+									"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
+									"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
+									"q "+ ((this.q == null) ? "is" : "is not") + " null\n"+
+									"w "+ ((this.w == null) ? "is" : "is not") + " null\n");
+							server.close();
+							return null;
+						}
+						if (A.length != VOTERS_AMOUNT){
+							MixCenterProcess.write("ERROR number of votes in A is "+A.length+
+									" while number of expected votes is "+VOTERS_AMOUNT);
+							server.close();
+							return null;
+						}
+						server.close();
+						return A;
+					} else {MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
+							"SentObject, received type is "+received_votes.getMessage().getClass()+" \nTrying" +
+							"receive another message, timeout left = "+timeout+" seconds");
+					}
 				} else {
-					System.out.println(received_votes.getClass());
-					Consts.log("ERROR: Mix Center number "+mix_center_id+" : received object is not of type Ciphertext[ ].",
-								Consts.DebugOutput.STDERR);
+					MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
+										"Server.Message, received type is "+received_votes.getClass()+" \nTrying" +
+										"receive another message, timeout left = "+timeout+" seconds");
 				}
 			}
 			timeout -= 2*(Consts.CONNECTION_TIMEOUT);//The server waits 2 seconds every wait in socket
