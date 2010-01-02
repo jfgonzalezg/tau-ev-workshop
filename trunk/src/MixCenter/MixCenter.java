@@ -124,6 +124,7 @@ public class MixCenter implements IMixCenter
 	{
 		// call ZKP function  
 	//	GIProof zkp=createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);	
+		//check whether ZKP returned a NULL. 
 	//	return zkp.toString();	
 		return "";
 	}
