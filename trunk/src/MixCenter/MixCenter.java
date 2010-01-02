@@ -200,48 +200,36 @@ public class MixCenter implements IMixCenter
 					MixCenterProcess.write("DEBUG "+received_votes.getMessage().getClass());
 					if (received_votes.getMessage() instanceof SentObject){
 						SentObject recv_object = (SentObject) received_votes.getMessage();
-						this.A = recv_object.get_votes_array();
-						this.g = recv_object.get_G();
-						this.p = recv_object.get_P();
-						this.q = recv_object.get_Q();
-						this.w = recv_object.get_W();
-						this.VOTERS_AMOUNT = recv_object.get_N();
-						this.num_of_centers_involved = recv_object.get_num_of_centers_involved();
-						if (mix_center_id != 0)
-							num_of_centers_involved++;
-						// if some of these null kill the process
-						if (this.A == null ||
-							this.g == null ||
-							this.p == null ||
-							this.q == null ||
-							this.w == null){
-							MixCenterProcess.write("ERROR: Some of received parameters are null:\n" +
-									"A "+ ((this.A == null) ? "is" : "is not") + " null\n"+
-									"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
-									"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
-									"q "+ ((this.q == null) ? "is" : "is not") + " null\n"+
-									"w "+ ((this.w == null) ? "is" : "is not") + " null\n");
+						if (check_corected_recv_params(recv_object) == true){
+							this.A = recv_object.get_votes_array();
+							this.g = recv_object.get_G();
+							this.p = recv_object.get_P();
+							this.q = recv_object.get_Q();
+							this.w = recv_object.get_W();
+							this.VOTERS_AMOUNT = recv_object.get_N();
+							this.num_of_centers_involved = recv_object.get_num_of_centers_involved();
+							if (mix_center_id != 0)
+								num_of_centers_involved++;
+							if (A.length != VOTERS_AMOUNT){
+								MixCenterProcess.write("ERROR number of votes in A is "+A.length+
+										" while number of expected votes is "+VOTERS_AMOUNT);
+								server.close();
+								return null;
+							}
 							server.close();
-							return null;
+							return A;
 						}
-						if (A.length != VOTERS_AMOUNT){
-							MixCenterProcess.write("ERROR number of votes in A is "+A.length+
-									" while number of expected votes is "+VOTERS_AMOUNT);
-							server.close();
-							return null;
-						}
-						server.close();
-						return A;
-					} else {MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
+					} else {//if (received_votes.getMessage() instanceof SentObject)
+						MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 							"SentObject, received type is "+received_votes.getMessage().getClass()+" \nTrying" +
 							"receive another message, timeout left = "+timeout+" seconds");
 					}
-				} else {
+				} else { //(received_votes instanceof Server.Message)
 					MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 										"Server.Message, received type is "+received_votes.getClass()+" \nTrying" +
 										"receive another message, timeout left = "+timeout+" seconds");
 				}
-			}
+			}//if (received_votes != null)
 			timeout -= 2*(Consts.CONNECTION_TIMEOUT);//The server waits 2 seconds every wait in socket
 		}
 		
@@ -249,6 +237,27 @@ public class MixCenter implements IMixCenter
 		return null;
 	}
 	//IGELKA - MAKE SEND FUNCTION TO RETURN FALSE
+	
+	/*
+	 * this function checks that received parameters are not null and
+	 * of right type 
+	 */
+	private boolean check_corected_recv_params(SentObject recv_obj){
+		if (recv_obj.get_votes_array() == null ||
+			recv_obj.get_G() == null ||
+			recv_obj.get_P() == null ||
+			recv_obj.get_Q() == null ||
+			recv_obj.get_W() == null){
+			MixCenterProcess.write("ERROR: Some of received parameters are null:\n" +
+					"A "+ ((this.A == null) ? "is" : "is not") + " null\n"+
+					"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
+					"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
+					"q "+ ((this.q == null) ? "is" : "is not") + " null\n"+
+					"w "+ ((this.w == null) ? "is" : "is not") + " null\n");
+			return false;
+		}
+		return true;
+	}
 	
 	/*
 	 * Get mix center id
