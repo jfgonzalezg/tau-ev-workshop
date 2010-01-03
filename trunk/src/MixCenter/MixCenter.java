@@ -65,9 +65,17 @@ public class MixCenter implements IMixCenter
 	{
 		ElGamal gamal=new ElGamal(w); 
 		B=new CryptObject[VOTERS_AMOUNT];	
+		
+		//ALEX
+		//for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
+		//{
+		//	B[i]=gamal.reencrypt(A[pi[i]]);			
+		//}
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			B[i]=gamal.reencrypt(A[pi[i]]);			
+			B[i] = new CryptObject();
+			B[i].setCiphertext(A[i]);
+			B[i].setR(g);
 		}
 	}
 	
@@ -149,7 +157,7 @@ public class MixCenter implements IMixCenter
 											BigIntegerMod W,
 											int			  N)
 	{
-		MixCenterProcess.write("DEBUG Entering send_to_next_mix_center");
+		MixCenterProcess.write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id);
 		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
@@ -161,21 +169,21 @@ public class MixCenter implements IMixCenter
 									Consts.MIX_CENTERS_PORT[next_available_center % 11],
 									mix_center_id);
 			MixCenterProcess.write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
-					next_available_center);
-			if (client.canSend()){
+					next_available_center%11);
+			if (client.isConnected() && client.canSend()){
 				if (client.send(sent_object) == false){
 					MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
-							next_available_center);
+							next_available_center%11);
 				}
 				else {
 					MixCenterProcess.write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
-							next_available_center);
+							next_available_center%11);
 					client.close();
 					return true;
 				}
 			} else {
 				MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
-									next_available_center);
+									next_available_center%11);
 			}
 			next_available_center++;
 		}
@@ -189,7 +197,7 @@ public class MixCenter implements IMixCenter
 	
 	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		MixCenterProcess.write("DEBUG Entering  receive_from_prev_mix_center");
+		MixCenterProcess.write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id);
 		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
 		Server.Message 	received_votes  = null;
 		
