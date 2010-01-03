@@ -52,7 +52,9 @@ public class Client {
 	}
 
 	public boolean isConnected() {
-		return (canSend() && canReceive());
+		if (socket != null)
+			return (canSend() && canReceive());
+		return false;
 	}
 
 	public boolean canSend() {
