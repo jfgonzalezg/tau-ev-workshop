@@ -17,6 +17,9 @@ public class Consts {
 	private static final boolean DEBUG_MODE = true;
 	private static final String LOG_FILE = "Elections_Log.txt";
 	private static BufferedWriter outputFile = null;
+	
+	public static BufferedWriter mcOutputFile = null;
+	public static final String MC_RESULTS_FILE = "MixCenter_formal_Log.txt";
 
 	public static final int PARTIES_AMOUNT = 40;
 	public static final int VOTERS_AMOUNT = 400;
