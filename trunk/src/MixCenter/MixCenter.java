@@ -19,8 +19,6 @@ import elgamal.ElGamal;
 
 public class MixCenter implements IMixCenter
 {
-	private static BufferedWriter outputFile = null;
-	private static final String MC_RESULTS_FILE = "Mix_Center_Log.txt";
 	private int mix_center_id;
 	private Ciphertext[] A;
 	private CryptObject[] B;
@@ -89,30 +87,30 @@ public class MixCenter implements IMixCenter
 	{	
 		try 
 		{
-			if (outputFile == null)
+			if (Consts.mcOutputFile == null)
 			{
-				outputFile = new BufferedWriter(new FileWriter(MC_RESULTS_FILE));
+				Consts.mcOutputFile = new BufferedWriter(new FileWriter(Consts.MC_RESULTS_FILE));
 			}
 			// print ZKP string
-			outputFile.write("ZKP:\r\n" + message + "\r\n");
+			Consts.mcOutputFile.write("ZKP:\r\n" + message + "\r\n");
 			
 			// print A array
-			outputFile.write("Recieved votes: \r\n");
+			Consts.mcOutputFile.write("Recieved votes: \r\n");
 			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
-				outputFile.write("A["+i+"] = "+A[i].toString()+" \r\n");
+				Consts.mcOutputFile.write("A["+i+"] = "+A[i].toString()+" \r\n");
 			}
-			outputFile.write("\n");
+			Consts.mcOutputFile.write("\n");
 			
 			// print B array
-			outputFile.write("Permutated and re-encrypted votes: \r\n");
+			Consts.mcOutputFile.write("Permutated and re-encrypted votes: \r\n");
 			for (int i=0; i<VOTERS_AMOUNT; i++)
 			{
-				outputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+" \r\n");
+				Consts.mcOutputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+" \r\n");
 			}
-			outputFile.write("\r\n");
+			Consts.mcOutputFile.write("\r\n");
 			
-			outputFile.flush(); // TODO: is it possible the buffer will be full sooner?
+			Consts.mcOutputFile.flush(); // TODO: is it possible the buffer will be full sooner?
 		}
 		catch (IOException e) 
 		{
