@@ -68,9 +68,10 @@ public class MixCenterTester {
 	
 	public static void testPrint(String msg, MixCenter mc)
 	{
-		mc.printToFile(msg);
+		mc.printToFile(msg, true);
 	}
-
+	
+	
 	/**
 	 * @param args
 	 */
