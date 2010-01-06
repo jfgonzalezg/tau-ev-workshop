@@ -16,7 +16,7 @@ public interface IMixCenter
 	/*
 	 * @PRE PermutateAndReecncrypt() was called earlier and completed successfully.
 	 */
-	public void printToFile(String message);
+	public void printToFile(String message, boolean ZKPflag);
 	/*
 	 * @PRE PermutateAndReecncrypt() was called earlier and completed successfully.
 	 */
