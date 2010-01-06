@@ -1,25 +1,25 @@
 package MixCenter;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import global.Consts;
 
 public class PretAVoteProcess {
-
-	public static void main(String[] args) {
-		
+	
+	public static void basicTest(int numOfVotes)
+	{
 		IMixCenter preta_center = new MixCenter(0);
 		
-		
 		//Create some votes
-		Ciphertext[] votes= new Ciphertext[Consts.VOTERS_AMOUNT];
+		Ciphertext[] votes= new Ciphertext[numOfVotes];
 		BigIntegerMod g = new BigIntegerMod(new BigInteger("3"),new BigInteger("4"));
 		BigInteger p = new BigInteger("5");
 		BigInteger q = new BigInteger("6");
 		BigIntegerMod w = new BigIntegerMod(new BigInteger("7"),new BigInteger("8"));
-		for (int i = 0; i<Consts.VOTERS_AMOUNT; i++){
+		for (int i = 0; i<numOfVotes; i++){
 			BigIntegerMod a = new BigIntegerMod(new BigInteger("9"+10*i),new BigInteger("10"+10*i));
 			BigIntegerMod b = new BigIntegerMod(new BigInteger("11"+10*i),new BigInteger("12"+10*i));
 			Ciphertext vote = new Ciphertext(a, b);
@@ -44,7 +44,7 @@ public class PretAVoteProcess {
 			System.out.println("num_of_centers_involved" + preta_center.get_num_of_centers_involved());
 			
 			//Check that got same values
-			for (int i = 0; i<Consts.VOTERS_AMOUNT; i++){
+			for (int i = 0; i<numOfVotes; i++){
 				if (A[i].getA().getValue().compareTo(votes[i].getA().getValue()) == 0 && 
 					A[i].getB().getValue().compareTo(votes[i].getB().getValue()) == 0){
 					System.out.println("received data same as from sent i = "+i);
@@ -55,7 +55,37 @@ public class PretAVoteProcess {
 			}
 		}
 		
+	}
+
+	public static void main(String[] args) {
 		
+		/* test num 1 */
+		if (args[0] == "test1")
+		{
+			basicTest(Consts.VOTERS_AMOUNT);
+		}
+		
+		/* test num 2 */
+		if (args[0] == "test2")
+		{
+			basicTest(0);
+			basicTest(1);
+			for (int i=0; i<5; i++)
+			{
+				Random r = new Random();
+				int n = r.nextInt(1000);
+				basicTest(n);
+			}
+		}
+		
+		/* test num 3 */
+		//if (args[0] == "test3") - one mc process is missing so skip of one mix is needed
+		
+		/* test num 4 */
+		//if (args[0] == "test4") - more than one mc process is missing so skip of few mixes is needed
+		
+		/* test num 5 */
+		//if (args[0] == "test5") - do not run any mc process, so skipping of all mc's is needed
 		
 	}
 
