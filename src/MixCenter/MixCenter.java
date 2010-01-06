@@ -80,10 +80,9 @@ public class MixCenter implements IMixCenter
 	/*
 	 * Print results to file
 	 * Params: message - string to print
-	 *         A - encrypted votes array before re-encryption and mixing
-	 *         B - re-encrypted and mixed votes array
+	 *         ZKPflag - marks whether to print the arrays or not
 	 */
-	public void printToFile(String message)
+	public void printToFile(String message, boolean ZKPflag)
 	{	
 		try 
 		{
@@ -94,22 +93,24 @@ public class MixCenter implements IMixCenter
 			// print ZKP string
 			Consts.mcOutputFile.write("ZKP:\r\n" + message + "\r\n");
 			
-			// print A array
-			Consts.mcOutputFile.write("Recieved votes: \r\n");
-			for (int i=0; i<VOTERS_AMOUNT; i++)
+			if (ZKPflag)
 			{
-				Consts.mcOutputFile.write("A["+i+"] = "+A[i].toString()+" \r\n");
-			}
-			Consts.mcOutputFile.write("\n");
+				// print A array
+				Consts.mcOutputFile.write("Recieved votes: \r\n");
+				for (int i=0; i<VOTERS_AMOUNT; i++)
+				{
+					Consts.mcOutputFile.write("A["+i+"] = "+A[i].toString()+" \r\n");
+				}
+				Consts.mcOutputFile.write("\n");
 			
-			// print B array
-			Consts.mcOutputFile.write("Permutated and re-encrypted votes: \r\n");
-			for (int i=0; i<VOTERS_AMOUNT; i++)
-			{
-				Consts.mcOutputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+" \r\n");
+				// print B array
+				Consts.mcOutputFile.write("Permutated and re-encrypted votes: \r\n");
+				for (int i=0; i<VOTERS_AMOUNT; i++)
+				{
+					Consts.mcOutputFile.write("B["+i+"] = "+B[i].getCiphertext().toString()+" \r\n");
+				}
+				Consts.mcOutputFile.write("\r\n");
 			}
-			Consts.mcOutputFile.write("\r\n");
-			
 			Consts.mcOutputFile.flush(); // TODO: is it possible the buffer will be full sooner?
 		}
 		catch (IOException e) 

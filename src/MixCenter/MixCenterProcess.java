@@ -59,7 +59,7 @@ public class MixCenterProcess {
 			write("Finished reencypting and permutating the data, performing ZKP...", id);
 			proof = new String(MC.performZKP());
 			if (proof != null){
-				MC.printToFile(proof);
+				MC.printToFile(proof, true);
 				write("ZKP is done, proof file was created and has valid data...", id);
 				write("Starting to send data to the next MC...", id);
 				if (!MC.send_to_next_mix_center())
