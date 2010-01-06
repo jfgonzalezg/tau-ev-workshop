@@ -226,7 +226,10 @@ public class MixCenter implements IMixCenter
 							}
 							server.close();
 							return A;
-						}
+						} else { //if (check_corected_recv_params(recv_object) == true)
+							this.printToFile("Global parameters were not recieve correctly: communication ends", false);
+						} //TODO - don't we need to close communication here as well?
+						
 					} else {//if (received_votes.getMessage() instanceof SentObject)
 						MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 							"SentObject, received type is "+received_votes.getMessage().getClass()+" \nTrying" +
