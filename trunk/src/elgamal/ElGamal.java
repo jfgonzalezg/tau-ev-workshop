@@ -1,83 +1,128 @@
 package elgamal;
 
+import java.math.BigInteger;
+
 import global.BigIntegerMod;
 import global.Consts;
 import global.Consts.DebugOutput;
 
 public class ElGamal implements IElGamal {
 
+	private BigInteger P;
+	private BigInteger Q;
+	private BigIntegerMod G;
+	private BigIntegerMod ONE;
 	private BigIntegerMod privateKey;
 	private BigIntegerMod publicKey;
 
 	public ElGamal(BigIntegerMod publicKey) {
-		if (publicKey.getMod() != Consts.getQ()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Creating an ElGamal object where publicKey.getMod()!=Consts.getQ()", DebugOutput.STDERR);
-			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
-		}
-		this.publicKey = publicKey;
-		this.privateKey = null;
+		AssignAndCheckValues(Consts.getP(), Consts.getG(), publicKey, null);
 	}
 
 	public ElGamal(BigIntegerMod publicKey, BigIntegerMod privateKey) {
-		if (publicKey.getMod() != Consts.getQ()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Creating an ElGamal object where publicKey.getMod()!=Consts.getQ()", DebugOutput.STDERR);
+		AssignAndCheckValues(Consts.getP(), Consts.getG(), publicKey, privateKey);
+	}
+
+	public ElGamal(BigInteger P, BigIntegerMod G, BigIntegerMod publicKey, BigIntegerMod privateKey) {
+		AssignAndCheckValues(P, G, publicKey, privateKey);
+	}
+	
+	private void AssignAndCheckValues(BigInteger P, BigIntegerMod G, BigIntegerMod publicKey, BigIntegerMod privateKey) {
+		SetPAndG(P, G);
+		if (publicKey == null) {
+			publicKey = G.pow(privateKey);
+		}
+		if (!publicKey.getMod().equals(P)) {
+			Consts.log("Creating an ElGamal object where publicKey.getMod()!= P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
-		if (privateKey.getMod() != Consts.getQ()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Creating an ElGamal object where privateKey.getMod()!=Consts.getQ()", DebugOutput.STDERR);
+		if ((privateKey != null) && (!privateKey.getMod().equals(Q))) {
+			Consts.log("Creating an ElGamal object where privateKey.getMod()!= Q", DebugOutput.STDERR);
+			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+		}
+		if ((privateKey != null) && (!G.pow(privateKey).equals(publicKey))) {
+			Consts.log("Creating an ElGamal object where G.pow(privateKey) != publicKey", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
 		this.publicKey = publicKey;
 		this.privateKey = privateKey;
-		boolean match = true;
-		// TODO - check if the keys match
-		if (!match) {
-			Consts.log("The given private key does not match the given public key", DebugOutput.STDERR);
+	}
+	
+	public void SetPAndG(BigInteger P, BigIntegerMod G) {
+		this.P = P;
+		this.Q = P.subtract(BigInteger.ONE).divide(Consts.TWO);
+		this.ONE = new BigIntegerMod(BigInteger.ONE, P);
+		if (G.getMod() != P) {
+			Consts.log("Trying to assign G where G.getMod() != P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
+		if (!G.pow(Q).getValue().equals(BigInteger.ONE)) {
+			Consts.log("Trying to assign G where G is not of order Q", DebugOutput.STDERR);
+			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+		}
+		this.G = G;
 	}
-
-	public BigIntegerMod decrypt(Ciphertext ciphertext) {
+	
+	public void SetPublicKey(BigIntegerMod publicKey) {
+		if (!publicKey.getMod().equals(P)) {
+			Consts.log("Trying to assign public key where publicKey.getMod()!=P", DebugOutput.STDERR);
+			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+		}
+		privateKey = null;
+		this.publicKey = publicKey;
+	}
+	
+	public void SetPrivateAndPublicKeys(BigIntegerMod privateKey) {
+		if (!privateKey.getMod().equals(Q)) {
+			Consts.log("Trying to assign private key where privateKey.getMod()!=Q", DebugOutput.STDERR);
+			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+		}
+		this.privateKey = privateKey; 
+		this.publicKey = G.pow(privateKey);
+	}
+	
+	public BigIntegerMod decrypt(Ciphertext c) {
 		if (privateKey == null) {
 			Consts.log("Trying to decrypt a ciphertext when the private key is null", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		// TODO decrypt
-		return null;
+		BigIntegerMod PadInverse = c.getA().pow(privateKey).inverse();
+		return c.getB().multiply(PadInverse);
 	}
 
 	public CryptObject encrypt(BigIntegerMod message) {
-		return encrypt(message, new BigIntegerMod(Consts.getP()));
+		return encrypt(message, new BigIntegerMod(Q));
 	}
 
 	public CryptObject encrypt(BigIntegerMod message, BigIntegerMod r) {
-		if (message.getMod() != Consts.getP()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Trying to encrypt a message where message.getMod()!=Consts.getP()", DebugOutput.STDERR);
+		if (!message.getMod().equals(P)) {
+			Consts.log("Trying to encrypt a message where message.getMod()!=P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		if (r.getMod() != Consts.getQ()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Trying to encrypt a message where r.getMod()!=Consts.getQ()", DebugOutput.STDERR);
+		if (!r.getMod().equals(Q)) {
+			Consts.log("Trying to encrypt a message where r.getMod()!=Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		// TODO encrypt
-		return null;
+		Ciphertext C = new Ciphertext(G.pow(r), publicKey.pow(r).multiply(message));
+		return new CryptObject(message, C, r);
 	}
 
 	public CryptObject reencrypt(Ciphertext ciphertext) {
-		return reencrypt(ciphertext, new BigIntegerMod(Consts.getQ()));
+		return reencrypt(ciphertext, new BigIntegerMod(Q));
 	}
 
-	public CryptObject reencrypt(Ciphertext ciphertext, BigIntegerMod r) {
-		if (r.getMod() != Consts.getQ()) { // TODO - verify it works well, and doesn't require getMod().compareTo(p)!=0
-			Consts.log("Trying to reencrypt a message where r.getMod()!=Consts.getQ()", DebugOutput.STDERR);
+	public CryptObject reencrypt(Ciphertext c, BigIntegerMod r) {
+		if (!r.getMod().equals(Q)) {
+			Consts.log("Trying to reencrypt a message where r.getMod()!=Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		// TODO reencrypt
-		return null;
+		CryptObject result = encrypt(ONE, r);
+		result.setCiphertext(result.getCiphertext().multiply(c));
+		return result;
 	}
 
 	public BigIntegerMod getPrivateKey() {
