@@ -30,7 +30,7 @@ public class Ciphertext implements Serializable{
 		this.a = a;
 	}
 
-	protected void setK(BigIntegerMod b) {
+	protected void setB(BigIntegerMod b) {
 		this.b = b;
 	}
 
