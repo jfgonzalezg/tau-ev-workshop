@@ -61,8 +61,7 @@ public class MixCenter implements IMixCenter
 	 */
 	public void PermutateAndReecncrypt()
 	{
-		ElGamal gamal=new ElGamal(w); 
-		gamal.SetPAndG(p, g);		
+		ElGamal gamal=new ElGamal(p,g,w,null);
 		B=new CryptObject[VOTERS_AMOUNT];	
 		
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
@@ -132,8 +131,10 @@ public class MixCenter implements IMixCenter
 		// call ZKP function  
 	//	GIProof zkp=createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);	
 		//check whether ZKP returned a NULL. 
-	//	return zkp.toString();	
-		return "";
+/*		if (zkp)
+			return zkp.toString();
+		else
+	*/		return null;
 	}
 	
 	
