@@ -181,10 +181,17 @@ public class MixCenter implements IMixCenter
 	
 	
 	//This function used for MixCenter users
-	public boolean send_to_next_mix_center (){
-		Ciphertext[] votes = new Ciphertext[B.length];
-		for (int i=0; i<B.length; i++){
-			votes[i] = B[i].getCiphertext();
+	public boolean send_to_next_mix_center (boolean isZKPValid){
+		Ciphertext[] votes;
+		if (isZKPValid){
+			votes = new Ciphertext[B.length];
+			for (int i=0; i<B.length; i++){
+				votes[i] = B[i].getCiphertext();
+			//if (mix_center_id != 0) //mix center 0 doesn't suppose to get here
+			num_of_centers_involved++;
+			}
+		} else {
+			votes = A;
 		}
 		return send_to_next_mix_center (votes, g, p, q, w, VOTERS_AMOUNT);
 	}
@@ -259,8 +266,6 @@ public class MixCenter implements IMixCenter
 							this.w = recv_object.get_W();
 							this.VOTERS_AMOUNT = recv_object.get_N();
 							this.num_of_centers_involved = recv_object.get_num_of_centers_involved();
-							if (mix_center_id != 0)
-								num_of_centers_involved++;
 							if (A.length != VOTERS_AMOUNT){
 								write("ERROR number of votes in A is "+A.length+
 										" while number of expected votes is "+VOTERS_AMOUNT, this.getId());
