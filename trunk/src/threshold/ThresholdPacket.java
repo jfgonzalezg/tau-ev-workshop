@@ -16,8 +16,8 @@ public class ThresholdPacket implements Serializable{
 	}
 
 	public PacketType type; 
-	public int source;
-	public int dest;
+	public Integer source;
+	public Integer dest;
 	public int Parameters[];
 	public BigInteger Data[][];
 }

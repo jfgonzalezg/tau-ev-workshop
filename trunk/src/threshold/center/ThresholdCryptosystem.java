@@ -300,6 +300,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 				}
 				server.send(packet.dest, packet); //TODO check return value
+				Consts.log("moved packet from "+packet.source+" to "+packet.dest, DebugOutput.STDOUT);
 			}
 			Consts.log("threshold center: finished key exchange", DebugOutput.STDOUT);
 		}

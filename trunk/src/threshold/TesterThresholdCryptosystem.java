@@ -14,8 +14,8 @@ public class TesterThresholdCryptosystem {
 		//BigInteger q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
 		BigIntegerMod g = (new BigIntegerMod(p)).pow(Consts.TWO);
 		System.out.println("g = " + g);
-		int partiesAmount = 10;
-		int threshold = 3;
+		int partiesAmount = 3;
+		int threshold = 2;
 		ThresholdCryptosystem thresholdCryptosystem = new ThresholdCryptosystem(partiesAmount, threshold, p, g, Consts.THRESHOLD_CENTER_PORT);
 		Party parties[] = new Party[partiesAmount];
 		for (int i=0; i<partiesAmount; ++i) {
@@ -77,6 +77,7 @@ public class TesterThresholdCryptosystem {
 		for (int i=0; i<partiesAmount; ++i) {
 			System.out.print("" + i + ":" + polynom[i] + " "); //TODO print only values
 		}
+		System.out.println("");
 		
 		//TODO finish the sessions
 	}

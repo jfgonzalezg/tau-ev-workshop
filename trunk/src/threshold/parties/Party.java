@@ -33,7 +33,7 @@ public class Party {
 	private Integer polynomGeneratedLock;
 	private boolean keyExchangeFinished;
 	private Integer keyExchangeFinishedLock;
-	private Integer waitingLock;
+	//private Integer waitingLock;
 
 	public Party(int partyNumber, String serverName, int serverPort) {
 		this.partyNumber = partyNumber;
@@ -42,7 +42,7 @@ public class Party {
 		polynomGeneratedLock = new Integer(0);
 		keyExchangeFinished = false;
 		keyExchangeFinishedLock = new Integer(0);
-		waitingLock = new Integer(0);
+		//waitingLock = new Integer(0);
 		waitToConnect();
 		thread = new PartyThread();
 	}
@@ -100,13 +100,13 @@ public class Party {
 		}
 
 		public void run() {
-			synchronized(waitingLock) {
+			/*synchronized(waitingLock) {
 				try {
 					waitingLock.wait(WAITING_TIME);
 				} catch (InterruptedException e) {
 					Consts.log("Party "+partyNumber+": unable to lock and wait", DebugOutput.STDERR);
 				}
-			}
+			}*/
 			ExchangeKey();
 			// TODO remove unnecessary data
 			// TODO add wait for decryption requests
