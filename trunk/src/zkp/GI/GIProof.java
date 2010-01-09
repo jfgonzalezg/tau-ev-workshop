@@ -20,7 +20,7 @@ public class GIProof implements Serializable
 	 */
 	private static final long serialVersionUID = 4379903319068606945L;
 	private Ciphertext[][] C; // [k][n]
-	private int[] lambda; // [k]
+	private int[][] lambda; // [k][n]
 	private BigIntegerMod[][] T; //[k][n]
 	private BigIntegerMod hash;
 
@@ -62,5 +62,8 @@ public class GIProof implements Serializable
 	{
 		//TO do
 	}*/
+
+	
+
 	
 }
