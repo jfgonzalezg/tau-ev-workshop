@@ -62,7 +62,7 @@ public class Client {
 			Consts.log("Client " + connectionNumber + ": timeout reached in receive function, returning null.", Consts.DebugOutput.STDERR);
 			receivedObject = null;
 		} catch (Exception e) {
-			Consts.log("Client " + connectionNumber + ": exception occured in receive(timeout) function, returning null. exeption:"+e.toString(), Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": exception occured in receive(timeout) function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
 			receivedObject = null;
 		}
 		return receivedObject;
@@ -73,7 +73,7 @@ public class Client {
 		try {
 			socket.setSoTimeout(timeout_miliseconds);
 		} catch (SocketException e) {
-			Consts.log("Client " + connectionNumber + ": exception occured in receive() function, returning null.", Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": exception occured in receive() function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
 		}
 		return receive();
 	}
