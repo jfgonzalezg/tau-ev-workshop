@@ -38,7 +38,7 @@ public interface IGI {
 	 * @return	true - all iterations returns true
 	 *			false - one of the iterations returned false
 	 * */
-	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, Ciphertext[] B)
+	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g)
 			throws ZkpException;
 
 	

@@ -1,8 +1,12 @@
 package zkp.GI;
 
 import global.BigIntegerMod;
+import global.Consts;
 import elgamal.Ciphertext;
-import java.io.Serializable; 
+import elgamal.CryptObject;
+
+import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
 	 * @return GIProof - representing the ZKP proof - containes:
@@ -19,51 +23,61 @@ public class GIProof implements Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 4379903319068606945L;
-	private Ciphertext[][] C; // [k][n]
+	private CryptObject[][] C; // [k][n] includes Ti
 	private int[][] lambda; // [k][n]
-	private BigIntegerMod[][] T; //[k][n]
-	private BigIntegerMod hash;
+	private String hash;
 
-	public GIProof(Ciphertext[][] Ci, int[] lambda, BigIntegerMod[] T, BigIntegerMod hash)
+
+	public GIProof(CryptObject[][] C, int[][] lambda, String hash)
 	{
-		//TO do
+		this.C = C;
+		this.lambda = lambda;
+		this.hash = hash;
 	}
-/*
-	public Ciphertext[][] getC()
+
+	public CryptObject[][] getC()
 	{
-		//TO do
+		return C;
 	}
 	
-	public Ciphertext[] getCi(int i)
+	public CryptObject[] getCi(int i)
 	{
-		//TO do
+		return C[i];
 	}
 
-	public int[] getlambda()
+	public int[][] getLambda()
 	{
-		//TO do
-	}
-
-	public BigIntegerMod[] getT()
-	{
-		//TO do
-	}
-
-	public BigIntegerMod getTi(int i)
-	{
-		//TO do
+		return lambda;
 	}
 	
-	public BigIntegerMod gethash()
+	public String getHash()
 	{
-		//TO do
+		return hash;
 	}
+
 	public String toString()
 	{
-		//TO do
-	}*/
+		String tempres1 = "";
+		for (int i = 0; i < C.length; i++)
+		{
+			for (int j = 0; j < C[i].length; j++)
+			{
+				tempres1 = tempres1 + C[i][j].toString() + ", ";
+			}
+		}
+		String tempres2 = "";
+		for (int i = 0; i < lambda.length; i++)
+		{
+			for (int j = 0; j < lambda[i].length; j++)
+			{
+				tempres2 = tempres2 + lambda[i][j] + ", ";
+			}
+		}
 
-	
+		String str = " C: " + tempres1 + " lambda: " + tempres2 + " hash: " + hash; 
+		return str;
+	}
 
-	
+
+
 }
