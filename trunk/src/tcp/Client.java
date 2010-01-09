@@ -79,17 +79,18 @@ public class Client {
 	}
 
 	public boolean isConnected() {
-		if (socket != null)
-			return (canSend() && canReceive());
+		if (socket != null) {
+			return (canSend() && canReceive() && (!socket.isClosed()));
+		}
 		return false;
 	}
 
 	public boolean canSend() {
-		return !socket.isOutputShutdown();
+		return (socket.isConnected() && (!socket.isOutputShutdown()));
 	}
 
 	public boolean canReceive() {
-		return !socket.isInputShutdown();
+		return (socket.isConnected() && (!socket.isInputShutdown()));
 	}
 
 	public void close() {

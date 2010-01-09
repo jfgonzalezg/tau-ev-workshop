@@ -14,18 +14,12 @@ public class TesterThresholdCryptosystem {
 		//BigInteger q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
 		BigIntegerMod g = (new BigIntegerMod(p)).pow(Consts.TWO);
 		System.out.println("g = " + g);
-		int partiesAmount = 2;
-		int threshold = 1;
+		int partiesAmount = 10;
+		int threshold = 3;
 		ThresholdCryptosystem thresholdCryptosystem = new ThresholdCryptosystem(partiesAmount, threshold, p, g, Consts.THRESHOLD_CENTER_PORT);
 		Party parties[] = new Party[partiesAmount];
 		for (int i=0; i<partiesAmount; ++i) {
 			parties[i] = new Party(i, "localhost", Consts.THRESHOLD_CENTER_PORT);
-			try {
-				// wait between initialization of parties, to let the server do each handshake without errors
-				java.lang.Thread.sleep(2 * Consts.CONNECTION_TIMEOUT);
-			} catch (InterruptedException e) {
-				System.err.println(e);
-			}
 		}
 		
 		System.out.println("waiting the key-exchange protocol to finish");
