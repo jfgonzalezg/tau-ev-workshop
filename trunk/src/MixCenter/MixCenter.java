@@ -4,8 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-//import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
+import java.util.TimeZone;
 
 import tcp.Client;
 import tcp.Server;
@@ -137,6 +140,42 @@ public class MixCenter implements IMixCenter
 	*/		return null;
 	}
 	
+
+	protected static String defaultLogFilePath = "c:\\";
+    
+	public static void write(String s) 
+	{
+    	final String defaultLogFile = defaultLogFilePath + "MC" +".txt";
+    	write(defaultLogFile, s);
+    }
+	
+    public static void write(String s, int id) 
+    {
+    	final String defaultLogFile = defaultLogFilePath + "MC" + id +".txt";
+    	write(defaultLogFile, s);
+    }
+    
+    public static void write(String f, String s) 
+    {
+	    TimeZone tz = TimeZone.getTimeZone("GMT+2"); // or PST, MID, etc ...
+	    Date now = new Date();
+	    DateFormat df = new SimpleDateFormat ("yyyy.mm.dd hh:mm:ss ");
+	    df.setTimeZone(tz);
+	    String currentTime = df.format(now); 
+	    FileWriter aWriter;
+	    try 
+	    {
+	    	aWriter = new FileWriter(f, true);
+	    	aWriter.write(currentTime + ":\r\n" + "-> " + s + "\r\n");
+	    	aWriter.flush();
+	    	aWriter.close();
+	    } 
+	    catch (IOException e)
+	    { 
+	    	System.err.println(e);
+	    }
+    }
+	
 	
 	//This function used for MixCenter users
 	public boolean send_to_next_mix_center (){
@@ -157,7 +196,7 @@ public class MixCenter implements IMixCenter
 											BigIntegerMod W,
 											int			  N)
 	{
-		MixCenterProcess.write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id);
+		write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id);
 		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
@@ -168,21 +207,21 @@ public class MixCenter implements IMixCenter
 			client = new Client(	Consts.MIX_CENTERS_IP  [next_available_center % 11],
 									Consts.MIX_CENTERS_PORT[next_available_center % 11],
 									mix_center_id);
-			MixCenterProcess.write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
+			write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
 					next_available_center%11);
 			if (client.isConnected() && client.canSend()){
 				if (client.send(sent_object) == false){
-					MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
+					write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
 							next_available_center%11);
 				}
 				else {
-					MixCenterProcess.write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
+					write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
 							next_available_center%11);
 					client.close();
 					return true;
 				}
 			} else {
-				MixCenterProcess.write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
+				write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
 									next_available_center%11);
 			}
 			next_available_center++;
@@ -197,7 +236,7 @@ public class MixCenter implements IMixCenter
 	
 	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		MixCenterProcess.write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id);
+		write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id);
 		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
 		Server.Message 	received_votes  = null;
 		
@@ -206,7 +245,7 @@ public class MixCenter implements IMixCenter
 			received_votes 	= server.getReceivedObject(); //this line blocking for 2*(Consts.CONNECTION_TIMEOUT)
 			if (received_votes != null){
 				if (received_votes instanceof Server.Message){
-					MixCenterProcess.write("DEBUG "+received_votes.getMessage().getClass());
+					write("DEBUG "+received_votes.getMessage().getClass());
 					if (received_votes.getMessage() instanceof SentObject){
 						SentObject recv_object = (SentObject) received_votes.getMessage();
 						if (check_corected_recv_params(recv_object) == true){
@@ -220,7 +259,7 @@ public class MixCenter implements IMixCenter
 							if (mix_center_id != 0)
 								num_of_centers_involved++;
 							if (A.length != VOTERS_AMOUNT){
-								MixCenterProcess.write("ERROR number of votes in A is "+A.length+
+								write("ERROR number of votes in A is "+A.length+
 										" while number of expected votes is "+VOTERS_AMOUNT);
 								server.close();
 								return null;
@@ -232,12 +271,12 @@ public class MixCenter implements IMixCenter
 						} //TODO - don't we need to close communication here as well?
 						
 					} else {//if (received_votes.getMessage() instanceof SentObject)
-						MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
+						write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 							"SentObject, received type is "+received_votes.getMessage().getClass()+" \nTrying" +
 							"receive another message, timeout left = "+timeout+" seconds");
 					}
 				} else { //(received_votes instanceof Server.Message)
-					MixCenterProcess.write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
+					write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 										"Server.Message, received type is "+received_votes.getClass()+" \nTrying" +
 										"receive another message, timeout left = "+timeout+" seconds");
 				}
@@ -260,7 +299,7 @@ public class MixCenter implements IMixCenter
 			recv_obj.get_P() == null ||
 			recv_obj.get_Q() == null ||
 			recv_obj.get_W() == null){
-			MixCenterProcess.write("ERROR: Some of received parameters are null:\n" +
+			write("ERROR: Some of received parameters are null:\n" +
 					"A "+ ((this.A == null) ? "is" : "is not") + " null\n"+
 					"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
 					"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
