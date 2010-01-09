@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 public class ThresholdPacket implements Serializable{
 
-	private static final long serialVersionUID = -2030870442404871724L;
+	private static final long serialVersionUID = 3142608504206907437L;
 	public enum PacketType {
 		BASIC_INFO,
 		POLYNOM,
