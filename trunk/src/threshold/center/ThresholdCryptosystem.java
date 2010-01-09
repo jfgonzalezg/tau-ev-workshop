@@ -1,12 +1,11 @@
 package threshold.center;
 
+
 import java.math.BigInteger;
 import tcp.Server;
 import threshold.IThresholdCryptosystem;
 import threshold.ThresholdPacket;
 import threshold.ThresholdPacket.PacketType;
-
-
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import global.Consts;
@@ -23,7 +22,11 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 	private Server server;
 	private BigInteger clientsPolynoms[][];
 	private BigIntegerMod mutualPolynom[];
-	private BigInteger clientsPublicKeys[];
+	private BigIntegerMod clientsPublicKeys[];
+	private boolean keyReady;
+	private Integer keyReadyLock;
+	private boolean keyExchangeDone;
+	private Integer keyExchangeLock;
 
 	public ThresholdCryptosystem(int portnum) {
 		applyConstructor(Consts.PARTIES_AMOUNT, Consts.THRESHOLD, Consts.getP(), Consts.getG(), portnum);
@@ -40,97 +43,32 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		this.p = p;
 		q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
 		this.g = g;
-		clientsPolynoms = new BigInteger[partiesAmount][threshold-1];
-		clientsPublicKeys = new BigInteger[partiesAmount];
-		mutualPolynom = new BigIntegerMod[threshold-1];
-		for (int i=0; i<threshold-1; ++i) {
+		clientsPolynoms = new BigInteger[partiesAmount][threshold];
+		clientsPublicKeys = new BigIntegerMod[partiesAmount];
+		mutualPolynom = new BigIntegerMod[threshold];
+		for (int i=0; i<threshold; ++i) {
 			mutualPolynom[i] = new BigIntegerMod(BigInteger.ONE, p);
 		}
-		generateMutualPublicKey();
-	}
-
-	/**
-	 * Generates a mutual public key for a mutual encryption
-	 * @return the generated public key, where (public key).getMod()==Consts.getQ()
-	 */
-	private void generateMutualPublicKey() {
-		clientsInit();
-		getPolynoms();
-		publishPolynoms();
-		handlePrivateKeysExchange();
-	}
-
-	private void handlePrivateKeysExchange() {
-		ThresholdPacket packet = null;
-		for (int i=0; i<partiesAmount*(partiesAmount-1); ++i) {
-			packet = recieveNextPacket();
-			if (packet.type != PacketType.CIPHERTEXT) {
-				Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
-				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
-			}
-			server.send(packet.dest, packet); //TODO check return value
-		}
-	}
-
-	private void publishPolynoms() {
-		ThresholdPacket packet = new ThresholdPacket();
-		packet.type = PacketType.ALL_POLYNOMS;
-		packet.Data = new BigInteger[partiesAmount+1][threshold];
-		for (int i=0; i<partiesAmount; ++i) {
-			packet.Data[i][threshold-1] = clientsPublicKeys[i];
-			for (int j=0; j<threshold-1; ++j) {
-				packet.Data[i][j] = clientsPolynoms[i][j];
-			}
-		}
-		for (int j=0; j<threshold-1; ++j) {
-			packet.Data[partiesAmount][j] = mutualPolynom[j].getValue();
-		}
-		server.broadcast(packet);
+		keyReady = false;
+		keyReadyLock = new Integer(0);
+		keyExchangeDone = false;
+		keyExchangeLock = new Integer(0);
+		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
+		new KeyExchangeThread();
 	}
 
 	private ThresholdPacket recieveNextPacket() {
-		ThresholdPacket packet;
+		Server.Message m;
 		do {
-			packet = (ThresholdPacket)server.getReceivedObject().getMessage();
-		} while (packet == null);
-		return packet;
-	}
-
-	private void assignPolynom(int partyNum, BigInteger polynom[]) {
-		if (polynom.length < threshold-1) {
-			Consts.log("polynom length is less then threshold", DebugOutput.STDERR);
-			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
-		}
-		clientsPolynoms[partyNum] = polynom;
-		for (int i=0; i<threshold-1; ++i) {
-			mutualPolynom[i] = mutualPolynom[i].multiply(new BigIntegerMod(polynom[i], p));
-		}
-	}
-
-	private void getPolynoms() {
-		ThresholdPacket packet;
-		for (int i=0; i<partiesAmount; ++i) {
-			packet = recieveNextPacket();
-			if (packet.type != PacketType.POLYNOM) {
-				Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
-				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
-			}
-			assignPolynom(packet.source, packet.Data[0]);
-		}
-		mutualPublicKey = mutualPolynom[0];
-		computePublicKeys();
-	}
-
-	private void computePublicKeys() {
-		for (int i=0; i<partiesAmount; ++i) {
-			clientsPublicKeys[i] = computeExponentPolynomValue(mutualPolynom, i, p, q).getValue();
-		}
+			m = server.getReceivedObject();;
+		} while (m == null);
+		return (ThresholdPacket)(m.getMessage());
 	}
 
 	public static BigIntegerMod computeExponentPolynomValue(BigIntegerMod polynom[], Integer x, BigInteger p, BigInteger q) {
 		BigIntegerMod result = new BigIntegerMod(BigInteger.ONE, p);
 		BigIntegerMod base = new BigIntegerMod(new BigInteger(x.toString()), q);
-		BigIntegerMod currExponent = result;
+		BigIntegerMod currExponent = new BigIntegerMod(BigInteger.ONE, q);
 		for (int i=0; i<polynom.length; ++i) {
 			result = result.multiply(polynom[i].pow(currExponent));
 			currExponent = currExponent.multiply(base);
@@ -149,23 +87,24 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return result;
 	}
 
-	private void clientsInit() {
-		ThresholdPacket packet = new ThresholdPacket();
-		packet.type = PacketType.BASIC_INFO;
-		packet.Data = new BigInteger[1][2];
-		packet.Data[0][0] = p;
-		packet.Data[0][1] = g.getValue();
-		packet.Parameters = new int[2];
-		packet.Parameters[0] = partiesAmount;
-		packet.Parameters[1] = threshold;
-		while (server.getConnectionNumbers().length < partiesAmount) {
+	public void close() {
+		wait4KeyExchange();
+		synchronized(keyExchangeLock) {
+			ThresholdPacket packet = new ThresholdPacket();
+			packet.type = PacketType.END;
+			server.broadcast(packet);
+			try {
+				wait(2 * Consts.CONNECTION_TIMEOUT);
+			} catch (InterruptedException e) {
+				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+			}
+			server.close();
 			try {
 				wait(2 * Consts.CONNECTION_TIMEOUT);
 			} catch (InterruptedException e) {
 				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
 		}
-		server.broadcast(packet);
 	}
 
 	public int getPartiesAmount() {
@@ -185,7 +124,30 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 	}
 
 	public BigIntegerMod getMutualPublicKey() {
+		wait4Key();
 		return mutualPublicKey;
+	}
+
+	public BigIntegerMod[] getMutualPolynom() {
+		wait4Key();
+		return mutualPolynom;
+	}
+
+	public BigIntegerMod[] getMutualPublicKeys() {
+		wait4Key();
+		return clientsPublicKeys;
+	}
+
+	public void wait4Key() {
+		synchronized(keyReadyLock) {
+			if (!keyReady) {
+				try {
+					keyReadyLock.wait();
+				} catch (InterruptedException e) {
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				}
+			}
+		}
 	}
 
 	public BigIntegerMod decryptMutually(Ciphertext ciphertext) {
@@ -204,8 +166,143 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			return null;
 		}
 		// TODO randomly choose threshold parties
-		// TODO decrypt the given ciphertext using the threshold parties' private keys
+		wait4KeyExchange();
+		synchronized(keyExchangeLock) {
+			// TODO decrypt the given ciphertext using the threshold parties' private keys
+		}
 		return null;
+	}
+
+	public void wait4KeyExchange() {
+		synchronized(keyExchangeLock) {
+			if (!keyExchangeDone) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				}
+			}
+		}
+	}
+	
+	private class KeyExchangeThread extends Thread {
+		
+		KeyExchangeThread() {
+			start();
+		}
+
+		public void run() {
+			synchronized(keyExchangeLock) {
+				generateMutualPublicKey();
+				keyExchangeDone = true;
+				keyExchangeLock.notifyAll();
+			}
+		}
+		
+		/**
+		 * Generates a mutual public key for a mutual encryption
+		 * @return the generated public key, where (public key).getMod()==Consts.getQ()
+		 */
+		private void generateMutualPublicKey() {
+			clientsInit();
+			getPolynoms();
+			publishPolynoms();
+			handlePrivateKeysExchange();
+		}
+		
+		private void clientsInit() {
+			Consts.log("Initializing clients", Consts.DebugOutput.STDOUT);
+			ThresholdPacket packet = new ThresholdPacket();
+			packet.type = PacketType.BASIC_INFO;
+			packet.Data = new BigInteger[1][2];
+			packet.Data[0][0] = p;
+			packet.Data[0][1] = g.getValue();
+			packet.Parameters = new int[2];
+			packet.Parameters[0] = partiesAmount;
+			packet.Parameters[1] = threshold;
+			wait4AllClients();
+			Consts.log("threshold center: all clients connected! sending global parameters to all", DebugOutput.STDOUT);
+			server.broadcast(packet);
+		}
+		
+		private void wait4AllClients() {
+			while (server.getConnectionNumbers().length < partiesAmount) {
+				try {
+					sleep(2);
+				} catch (InterruptedException e) {
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				}
+			}
+		}
+		
+		private void getPolynoms() {
+			ThresholdPacket packet;
+			Consts.log("threshold center: waiting for client's polynoms", DebugOutput.STDOUT);
+			for (int i=0; i<partiesAmount; ++i) {
+				packet = recieveNextPacket();
+				if (packet.type != PacketType.POLYNOM) {
+					Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+				}
+				Consts.log("threshold center: got polynom from party "+packet.source, DebugOutput.STDOUT);
+				assignPolynom(packet.source, packet.Data[0]);
+			}
+			Consts.log("threshold center: got polynom from all parties", DebugOutput.STDOUT);
+			mutualPublicKey = mutualPolynom[0];
+			computePublicKeys();
+			synchronized(keyReadyLock) {
+				keyReady = true;
+				keyReadyLock.notifyAll();
+			}
+		}
+		
+		private void assignPolynom(int partyNum, BigInteger polynom[]) {
+			if (polynom.length < threshold) {
+				Consts.log("polynom length is less then threshold", DebugOutput.STDERR);
+				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+			}
+			clientsPolynoms[partyNum] = polynom;
+			for (int i=0; i<threshold; ++i) {
+				mutualPolynom[i] = mutualPolynom[i].multiply(new BigIntegerMod(polynom[i], p));
+			}
+		}
+		
+		private void computePublicKeys() {
+			for (int i=0; i<partiesAmount; ++i) {
+				clientsPublicKeys[i] = computeExponentPolynomValue(mutualPolynom, i, p, q);
+			}
+		}
+		
+		private void publishPolynoms() {
+			ThresholdPacket packet = new ThresholdPacket();
+			packet.type = PacketType.ALL_POLYNOMS;
+			packet.Data = new BigInteger[partiesAmount+1][threshold+1];
+			for (int i=0; i<partiesAmount; ++i) {
+				packet.Data[i][threshold] = clientsPublicKeys[i].getValue();
+				for (int j=0; j<threshold; ++j) {
+					packet.Data[i][j] = clientsPolynoms[i][j];
+				}
+			}
+			for (int j=0; j<threshold; ++j) {
+				packet.Data[partiesAmount][j] = mutualPolynom[j].getValue();
+			}
+			Consts.log("threshold center: publishing all polynoms", DebugOutput.STDOUT);
+			server.broadcast(packet);
+		}
+		
+		private void handlePrivateKeysExchange() {
+			ThresholdPacket packet = null;
+			Consts.log("threshold center: exchanging keys between parties", DebugOutput.STDOUT);
+			for (int i=0; i<partiesAmount*(partiesAmount-1); ++i) {
+				packet = recieveNextPacket();
+				if (packet.type != PacketType.CIPHERTEXT) {
+					Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
+				}
+				server.send(packet.dest, packet); //TODO check return value
+			}
+			Consts.log("threshold center: finished key exchange", DebugOutput.STDOUT);
+		}
 	}
 
 }
