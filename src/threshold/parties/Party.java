@@ -233,7 +233,7 @@ public class Party {
 			ThresholdPacket packet;
 			BigIntegerMod a, b, m;
 			Ciphertext c;
-			for (int i=0; i<partiesAmount; ++i) {
+			for (int i=0; i<partiesAmount-1; ++i) {
 				do {
 					packet = (ThresholdPacket)client.receive(WAITING_TIME);
 				} while (packet == null);
