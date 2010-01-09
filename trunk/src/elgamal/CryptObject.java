@@ -36,8 +36,7 @@ public class CryptObject {
 	}
 	
 	public String toString() {
-		String str = "text: " + text.toString() + " ciphertext: " + ciphertext.toString() + " r: " + r.toString();
-		return str;
+		return "text: " + text + " ciphertext: " + ciphertext + " r: " + r;
 	}
 
 /*
