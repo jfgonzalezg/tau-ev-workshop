@@ -30,6 +30,7 @@ public class MixCenter implements IMixCenter
 	private BigIntegerMod w,g;
 	private BigInteger q,p;
 	private int num_of_centers_involved;
+	protected static String defaultLogFilePath = "c:\\";
 	
 	
 	/* Constructor */
@@ -140,8 +141,6 @@ public class MixCenter implements IMixCenter
 	*/		return null;
 	}
 	
-
-	protected static String defaultLogFilePath = "c:\\";
     
 	public static void write(String s) 
 	{
