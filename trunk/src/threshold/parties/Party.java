@@ -14,7 +14,7 @@ import threshold.center.ThresholdCryptosystem;
 
 public class Party {
 
-	private static final int WAITING_TIME = 5000; //mili-seconds
+	private static final int WAITING_TIME = 5 * Consts.CONNECTION_TIMEOUT; //mili-seconds
 	private final int partyNumber;
 	private Client client;
 	private int partiesAmount;
@@ -70,7 +70,7 @@ public class Party {
 				try {
 					polynomGeneratedLock.wait();
 				} catch (InterruptedException e) {
-					Consts.log("Party "+partyNumber+": unable to lock - "+e.toString(), DebugOutput.STDERR);
+					Consts.log("Party "+partyNumber+": unable to lock - "+e, DebugOutput.STDERR);
 				}
 			}
 		}
@@ -87,7 +87,7 @@ public class Party {
 				try {
 					keyExchangeFinishedLock.wait();
 				} catch (InterruptedException e) {
-					Consts.log("Party "+partyNumber+": unable to lock - "+e.toString(), DebugOutput.STDERR);
+					Consts.log("Party "+partyNumber+": unable to lock - "+e, DebugOutput.STDERR);
 				}
 			}
 		}
@@ -141,7 +141,7 @@ public class Party {
 				}
 			} while (packet == null);
 			if (packet.type != PacketType.BASIC_INFO) {
-				Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			}
 			partiesAmount = packet.Parameters[0];
@@ -149,7 +149,7 @@ public class Party {
 			p = packet.Data[0][0];
 			q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
 			g = new BigIntegerMod(packet.Data[0][1], p);
-			Consts.log("Party "+partyNumber+": got values:\np: "+p.toString()+"\ng: "+g.toString(), DebugOutput.STDOUT);
+			Consts.log("Party "+partyNumber+": got values:\np: "+p+"\ng: "+g, DebugOutput.STDOUT);
 			genPrivatePolynom();
 			elGamal = new ElGamal(p, g, null, privatePolynom[0]);
 		}
@@ -159,7 +159,7 @@ public class Party {
 			privatePolynom = new BigIntegerMod[threshold];
 			for (int i=0; i<threshold; ++i) {
 				privatePolynom[i] = new BigIntegerMod(q);
-				s = s+privatePolynom[i].getValue().toString() + " ";
+				s = s+privatePolynom[i].getValue() + " ";
 			}
 			Consts.log("Party "+partyNumber+": generated polynom:" + s, DebugOutput.STDOUT);
 		}
@@ -183,7 +183,7 @@ public class Party {
 				packet = (ThresholdPacket)client.receive(WAITING_TIME);
 			} while (packet == null);
 			if (packet.type != PacketType.ALL_POLYNOMS) {
-				Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			}
 			Consts.log("party "+partyNumber+": got all polynoms. parsing...", Consts.DebugOutput.STDOUT);
@@ -238,7 +238,7 @@ public class Party {
 					packet = (ThresholdPacket)client.receive(WAITING_TIME);
 				} while (packet == null);
 				if (packet.type != PacketType.CIPHERTEXT) {
-					Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 				}
 				a = new BigIntegerMod(packet.Data[0][0], p);

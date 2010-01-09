@@ -241,7 +241,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			for (int i=0; i<partiesAmount; ++i) {
 				packet = recieveNextPacket();
 				if (packet.type != PacketType.POLYNOM) {
-					Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 				}
 				Consts.log("threshold center: got polynom from party "+packet.source, DebugOutput.STDOUT);
@@ -296,7 +296,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			for (int i=0; i<partiesAmount*(partiesAmount-1); ++i) {
 				packet = recieveNextPacket();
 				if (packet.type != PacketType.CIPHERTEXT) {
-					Consts.log("Recieved wrong packet type - " + packet.type.toString(), DebugOutput.STDERR);
+					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 				}
 				server.send(packet.dest, packet); //TODO check return value
