@@ -58,7 +58,7 @@ public class Server {
 		// create the server's socket
 		try {
 			serverSocket = new ServerSocket(port);
-			serverSocket.setSoTimeout(global.Consts.CONNECTION_TIMEOUT);
+			serverSocket.setSoTimeout(3 * global.Consts.CONNECTION_TIMEOUT);
 			Consts.log("Server: Server waiting for clients on port " + serverSocket.getLocalPort(), Consts.DebugOutput.STDOUT);
 			serverThread = new ServerThread();
 		} catch (IOException e) {
@@ -95,9 +95,11 @@ public class Server {
 	}
 
 	public void broadcast(Object toSend) {
-		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
-		while (iter.hasNext()) {
-			send(iter.next(), toSend);
+		synchronized (connectionThreads) {
+			Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+			while (iter.hasNext()) {
+				send(iter.next(), toSend);
+			}
 		}
 	}
 
@@ -109,8 +111,10 @@ public class Server {
 	}
 
 	private void addConnection(ConnectionHandlerThread thread) {
-		connectionThreads.add(thread);
-		closeConnectionThread(knownClients.put(thread.connectionNumber, thread));
+		synchronized (connectionThreads) {
+			connectionThreads.add(thread);
+			closeConnectionThread(knownClients.put(thread.connectionNumber, thread));
+		}
 	}
 
 	/**
@@ -134,20 +138,24 @@ public class Server {
 	}
 
 	public int[] getConnectionNumbers() {
-		int[] result = new int[connectionThreads.size()];
-		int i = 0;
-		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
-		while (iter.hasNext()) {
-			result[i++] = iter.next().connectionNumber;
+		synchronized (connectionThreads) {
+			int[] result = new int[connectionThreads.size()];
+			int i = 0;
+			Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+			while (iter.hasNext()) {
+				result[i++] = iter.next().connectionNumber;
+			}
+			return result;
 		}
-		return result;
 	}
 
 	public void close() {
-		serverThread.finish();
-		Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
-		while (iter.hasNext()) {
-			closeConnectionThread(iter.next());
+		synchronized (connectionThreads) {
+			serverThread.finish();
+			Iterator<ConnectionHandlerThread> iter = connectionThreads.iterator();
+			while (iter.hasNext()) {
+				closeConnectionThread(iter.next());
+			}
 		}
 	}
 
@@ -205,6 +213,7 @@ public class Server {
 				return;
 			}
 			Consts.log("Server: new connection id is " + connectionNumber, Consts.DebugOutput.STDOUT);
+			addConnection(this);
 			while (canReceive()) {
 				try {
 					Object receivedObject = Sinput.readObject();
@@ -291,7 +300,7 @@ public class Server {
 					Consts.log("Server: Exception creating new Input/output Streams: " + e, Consts.DebugOutput.STDERR);
 					return;
 				}
-				addConnection(new ConnectionHandlerThread(socket, Sinput, Soutput));
+				new ConnectionHandlerThread(socket, Sinput, Soutput);
 			}
 			try {
 				serverSocket.close();

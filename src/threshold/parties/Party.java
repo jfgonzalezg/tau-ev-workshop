@@ -132,14 +132,12 @@ public class Party {
 		}
 		
 		private void initValues() {
-			ThresholdPacket packet;
 			Consts.log("party "+partyNumber+":getting basic info from server", Consts.DebugOutput.STDOUT);
-			do {
-				packet = (ThresholdPacket)client.receive(WAITING_TIME);
-				if (packet == null) {
-					Consts.log("party "+partyNumber+": trying again", Consts.DebugOutput.STDOUT);
-				}
-			} while (packet == null);
+			ThresholdPacket packet = receive();
+			if (packet == null) {
+				Consts.log("Recieved null packet, skipping", DebugOutput.STDERR);
+				return; // TODO - handle null packet correctly
+			}
 			if (packet.type != PacketType.BASIC_INFO) {
 				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
@@ -152,6 +150,22 @@ public class Party {
 			Consts.log("Party "+partyNumber+": got values:\np: "+p+"\ng: "+g, DebugOutput.STDOUT);
 			genPrivatePolynom();
 			elGamal = new ElGamal(p, g, null, privatePolynom[0]);
+		}
+		
+		private ThresholdPacket receive() {
+			ThresholdPacket packet = null;
+			while (packet == null) {
+				if (client.canReceive()) {
+					packet = (ThresholdPacket)client.receive(WAITING_TIME);
+					if (packet == null) {
+						Consts.log("party " + partyNumber + ": trying again", Consts.DebugOutput.STDOUT);
+					}
+				} else {
+					Consts.log("party " + partyNumber + ": cannot receive, returing from initValues()'s loop.", Consts.DebugOutput.STDOUT);
+					return null;
+				}
+			}
+			return packet;
 		}
 		
 		private void genPrivatePolynom() {
@@ -178,10 +192,11 @@ public class Party {
 		
 		private void receivePublicPolynoms() {
 			Consts.log("party "+partyNumber+": trying to recieve all polynoms", Consts.DebugOutput.STDOUT);
-			ThresholdPacket packet;
-			do {
-				packet = (ThresholdPacket)client.receive(WAITING_TIME);
-			} while (packet == null);
+			ThresholdPacket packet = receive();
+			if (packet == null) {
+				Consts.log("Recieved null packet, skipping", DebugOutput.STDERR);
+				return; // TODO - handle null packet correctly
+			}
 			if (packet.type != PacketType.ALL_POLYNOMS) {
 				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 				Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
@@ -234,9 +249,11 @@ public class Party {
 			BigIntegerMod a, b, m;
 			Ciphertext c;
 			for (int i=0; i<partiesAmount-1; ++i) {
-				do {
-					packet = (ThresholdPacket)client.receive(WAITING_TIME);
-				} while (packet == null);
+				packet = receive();
+				if (packet == null) {
+					Consts.log("Try number " + i + " recieved null packet, skipping", DebugOutput.STDERR);
+					continue; // TODO - handle null packet correctly
+				}
 				if (packet.type != PacketType.CIPHERTEXT) {
 					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
