@@ -77,9 +77,9 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 	}
 	
 	public static BigIntegerMod computePolynomValue(BigIntegerMod polynom[], Integer x, BigInteger q) {
-		BigIntegerMod result = new BigIntegerMod(BigInteger.ONE, q);
+		BigIntegerMod result = new BigIntegerMod(BigInteger.ZERO, q);
 		BigIntegerMod base = new BigIntegerMod(new BigInteger(x.toString()), q);
-		BigIntegerMod currMultiplier = result;
+		BigIntegerMod currMultiplier = new BigIntegerMod(BigInteger.ONE, q);
 		for (int i=0; i<polynom.length; ++i) {
 			result = result.add(polynom[i].multiply(currMultiplier));
 			currMultiplier = currMultiplier.multiply(base);
