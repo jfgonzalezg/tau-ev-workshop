@@ -132,7 +132,7 @@ public class Server {
 			if (receivedObjects.isEmpty()) {
 				return null;
 			} else {
-				return receivedObjects.get(0);
+				return receivedObjects.remove(0);
 			}
 		}
 	}
