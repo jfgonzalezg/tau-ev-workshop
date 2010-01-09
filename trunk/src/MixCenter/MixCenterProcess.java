@@ -41,7 +41,7 @@ public class MixCenterProcess {
 			MixCenter.write("ZKP is done, proof file was created and has valid data...", id);
 		} 
 		MixCenter.write("Starting to send data to the next MC...", id);
-		if (!MC.send_to_next_mix_center()) //TODO: need to add isZKPValid to this function
+		if (!MC.send_to_next_mix_center(isZKPValid))
 			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id);
 		else
 			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id);
