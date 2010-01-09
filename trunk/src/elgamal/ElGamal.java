@@ -8,9 +8,9 @@ import global.Consts.DebugOutput;
 
 public class ElGamal implements IElGamal {
 
-	private BigInteger P;
-	private BigInteger Q;
-	private BigIntegerMod G;
+	private BigInteger p;
+	private BigInteger q;
+	private BigIntegerMod g;
 	private BigIntegerMod ONE;
 	private BigIntegerMod privateKey;
 	private BigIntegerMod publicKey;
@@ -36,7 +36,7 @@ public class ElGamal implements IElGamal {
 			Consts.log("Creating an ElGamal object where publicKey.getMod()!= P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
-		if ((privateKey != null) && (!privateKey.getMod().equals(Q))) {
+		if ((privateKey != null) && (!privateKey.getMod().equals(q))) {
 			Consts.log("Creating an ElGamal object where privateKey.getMod()!= Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
@@ -49,22 +49,22 @@ public class ElGamal implements IElGamal {
 	}
 	
 	public void SetPAndG(BigInteger P, BigIntegerMod G) {
-		this.P = P;
-		this.Q = P.subtract(BigInteger.ONE).divide(Consts.TWO);
+		this.p = P;
+		this.q = P.subtract(BigInteger.ONE).divide(Consts.TWO);
 		this.ONE = new BigIntegerMod(BigInteger.ONE, P);
 		if (G.getMod() != P) {
 			Consts.log("Trying to assign G where G.getMod() != P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
-		if (!G.pow(Q).getValue().equals(BigInteger.ONE)) {
+		if (!G.pow(q).getValue().equals(BigInteger.ONE)) {
 			Consts.log("Trying to assign G where G is not of order Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
-		this.G = G;
+		this.g = G;
 	}
 	
 	public void SetPublicKey(BigIntegerMod publicKey) {
-		if (!publicKey.getMod().equals(P)) {
+		if (!publicKey.getMod().equals(p)) {
 			Consts.log("Trying to assign public key where publicKey.getMod()!=P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
@@ -73,12 +73,12 @@ public class ElGamal implements IElGamal {
 	}
 	
 	public void SetPrivateAndPublicKeys(BigIntegerMod privateKey) {
-		if (!privateKey.getMod().equals(Q)) {
+		if (!privateKey.getMod().equals(q)) {
 			Consts.log("Trying to assign private key where privateKey.getMod()!=Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
 		this.privateKey = privateKey; 
-		this.publicKey = G.pow(privateKey);
+		this.publicKey = g.pow(privateKey);
 	}
 	
 	public BigIntegerMod decrypt(Ciphertext c) {
@@ -92,30 +92,30 @@ public class ElGamal implements IElGamal {
 	}
 
 	public CryptObject encrypt(BigIntegerMod message) {
-		return encrypt(message, new BigIntegerMod(Q));
+		return encrypt(message, new BigIntegerMod(q));
 	}
 
 	public CryptObject encrypt(BigIntegerMod message, BigIntegerMod r) {
-		if (!message.getMod().equals(P)) {
+		if (!message.getMod().equals(p)) {
 			Consts.log("Trying to encrypt a message where message.getMod()!=P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		if (!r.getMod().equals(Q)) {
+		if (!r.getMod().equals(q)) {
 			Consts.log("Trying to encrypt a message where r.getMod()!=Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		Ciphertext C = new Ciphertext(G.pow(r), publicKey.pow(r).multiply(message));
+		Ciphertext C = new Ciphertext(g.pow(r), publicKey.pow(r).multiply(message));
 		return new CryptObject(message, C, r);
 	}
 
 	public CryptObject reencrypt(Ciphertext ciphertext) {
-		return reencrypt(ciphertext, new BigIntegerMod(Q));
+		return reencrypt(ciphertext, new BigIntegerMod(q));
 	}
 
 	public CryptObject reencrypt(Ciphertext c, BigIntegerMod r) {
-		if (!r.getMod().equals(Q)) {
+		if (!r.getMod().equals(q)) {
 			Consts.log("Trying to reencrypt a message where r.getMod()!=Q", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
