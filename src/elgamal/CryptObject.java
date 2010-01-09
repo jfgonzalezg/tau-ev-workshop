@@ -34,6 +34,11 @@ public class CryptObject {
 	public BigIntegerMod getR() {
 		return r;
 	}
+	
+	public String toString() {
+		String str = "text: " + text.toString() + " ciphertext: " + ciphertext.toString() + " r: " + r.toString();
+		return str;
+	}
 
 /*
 	TODO
