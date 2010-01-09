@@ -9,11 +9,11 @@ import global.BigIntegerMod;
 public interface IThresholdCryptosystem {
 
 	/**
-	 * The implementing class will be threshold.ThresholdCryptosystem
-	 * The following 2 will be the constructors of threshold.ThresholdCryptosystem
+	 * The implementing class will be threshold.center.ThresholdCryptosystem
+	 * The following 2 will be the constructors of threshold.center.ThresholdCryptosystem
 
-	public ThresholdCryptosystem();
-	public ThresholdCryptosystem(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g);
+	public ThresholdCryptosystem(int portnum);
+	public ThresholdCryptosystem(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g, int portnum);
 
 	 * Note that the first one will use the global consts
 	 */
