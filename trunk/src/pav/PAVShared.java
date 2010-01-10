@@ -103,8 +103,15 @@ public class PAVShared {
 			//TODO: Handle Exception
 		}
 		
-		// zkpMaker = new OneOutOfL(pairList);
-		zkpMaker = new OneOutOfL();	
+		
+		// instantiate the ZKP Maker
+		ArrayList<Ciphertext> pairsListForZKP = new ArrayList<Ciphertext>();
+		ElGamal elGamal = new ElGamal(publicKey);
+		for (int i = 0; i < global.Consts.PARTIES_AMOUNT; i++) {
+			CryptObject encObj = elGamal.encrypt(plaintextVotes.get(i), new BigIntegerMod(BigInteger.ONE));
+			pairsListForZKP.add(encObj.getCiphertext());
+		}
+		zkpMaker = new OneOutOfL(pairsListForZKP);	
 	}
 	
 	/**
