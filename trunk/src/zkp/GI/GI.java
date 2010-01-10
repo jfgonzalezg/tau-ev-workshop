@@ -15,6 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
+	
 
 	private static int Repetition=40;
 
