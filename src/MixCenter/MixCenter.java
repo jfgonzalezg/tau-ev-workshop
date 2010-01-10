@@ -15,6 +15,7 @@ import tcp.Server;
 import zkp.GI.GIProof;
 import elgamal.CryptObject;
 import zkp.GI.IGI;
+import zkp.GI.GI;
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import global.Consts;
@@ -133,12 +134,21 @@ public class MixCenter implements IMixCenter
 	public String performZKP() 
 	{
 		// call ZKP function  
-	//	GIProof zkp=createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);	
+		IGI zkpGI = new GI();
+		try
+		{
+		GIProof zkp=zkpGI.createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);
 		//check whether ZKP returned a NULL. 
-/*		if (zkp)
+		if (zkp!=null)
 			return zkp.toString();
 		else
-	*/		return null;
+			return null;
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+		
 	}
 	
 	/*
