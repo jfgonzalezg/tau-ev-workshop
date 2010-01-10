@@ -26,8 +26,8 @@ public class OneOutOfL implements IOneOutOfL {
 	throws ZkpException 
 	{
 		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT
-		BigIntegerMod g = Consts.G;
-		BigInteger q = Consts.q;
+		BigIntegerMod g = Consts.getG();
+		BigInteger q = Consts.getQ();
 		BigIntegerMod x = cryptobj.getCiphertext().getA();
 		BigIntegerMod y = cryptobj.getCiphertext().getB();
 		BigIntegerMod r = cryptobj.getR();
@@ -37,7 +37,6 @@ public class OneOutOfL implements IOneOutOfL {
 			throw new ZkpException("index input t is <0 or >l");
 		
 		// check whether cryptobj is indeed a re-encryption using r of the pair in index t
-				
 		CryptObject test = new CryptObject();
 		ElGamal gamal=new ElGamal(h);
 		test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
@@ -105,8 +104,8 @@ public class OneOutOfL implements IOneOutOfL {
 	{
 		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT????????
 		
-		BigIntegerMod g = Consts.G;
-		BigInteger q = Consts.q;	
+		BigIntegerMod g = Consts.getG();
+		BigInteger q = Consts.getQ();	
 		
 		BigIntegerMod c = proof.getC();
 		ArrayList<BigIntegerMod> d_List = proof.getD_List();
@@ -153,6 +152,16 @@ public class OneOutOfL implements IOneOutOfL {
 			return false;
 	}
 	
+	/**
+	 * Creates a challenge for One Out Of L function, using a MD5 hash function
+	 * @param x - first BigIntegerMod in the Ciphertext pair
+	 * @param y - second BigIntegerMod in the Ciphertext pair
+	 * @param a_List - list of BigIntegerMod items created by createOneOutOfLProof function
+	 * @param b_List - list of BigIntegerMod items created by createOneOutOfLProof function
+	 * @param modulo - the modulo in use 
+	 * @return BigInteger object
+	 * @throws ZkpException
+	 */
 	
 	private static BigInteger createOneOutOfLHashChallenge(BigIntegerMod x, BigIntegerMod y, 
 			ArrayList<BigIntegerMod> a_List, ArrayList<BigIntegerMod> b_List, BigInteger modulo) throws ZkpException

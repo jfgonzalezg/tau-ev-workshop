@@ -3,7 +3,6 @@ package zkp.OneOutOfL;
 
 import global.BigIntegerMod;
 import zkp.ZkpException;
-import elgamal.Ciphertext;
 import elgamal.CryptObject;
 
 /**TODO - will use the list of pairs from pret-a-vote. generated once by them 
