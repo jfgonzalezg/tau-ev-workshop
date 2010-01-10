@@ -43,7 +43,7 @@ public interface IGI {
 	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g)
 			throws ZkpException;
 
-	
+		
 
 }
 

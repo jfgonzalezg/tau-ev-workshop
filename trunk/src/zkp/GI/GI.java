@@ -15,10 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
-	
-
 	private static int Repetition=40;
-
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g) throws ZkpException
 	{	
@@ -59,7 +56,7 @@ public class GI implements IGI
 
 	
 	
-	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g)
+	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g) throws ZkpException
 	{
 		boolean flag = true;
 
@@ -90,7 +87,7 @@ public class GI implements IGI
 	
 
 
-	private int[] createLambda(int n)
+	private static int[] createLambda(int n)
 	{
 		int d,temp;
 		int[] permutation = new int[n]; 
@@ -112,9 +109,9 @@ public class GI implements IGI
 
 
 
-	private CryptObject[] createCi(Ciphertext[] A,int[] lambda, int n,BigIntegerMod w,BigIntegerMod g)
+	private static CryptObject[] createCi(Ciphertext[] A,int[] lambda, int n,BigIntegerMod w,BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.p,g,w,null);
+		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
 		CryptObject[] tempC=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
 		{
@@ -168,7 +165,7 @@ public class GI implements IGI
 		
 
 			
-	private int[] createPiInv(int[] pi)
+	private static int[] createPiInv(int[] pi)
 	{
 		int[] piInv = new int[pi.length];
 		for (int i = 0;i<pi.length;i++)
@@ -179,7 +176,7 @@ public class GI implements IGI
 	}
 
 
-	private int[] makelambdaTAG(int[] lambda, int[] piInv)
+	private static int[] makelambdaTAG(int[] lambda, int[] piInv)
 	{
 		int[] lambdaTAG = new int[piInv.length];
 		int temp;
@@ -194,9 +191,9 @@ public class GI implements IGI
 
 
 
-	private boolean compareMatrix(Ciphertext[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
+	private static boolean compareMatrix(Ciphertext[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.p,g,w,null);
+		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
 		for (int i = 0; i < matrix1.length; i++)
@@ -213,9 +210,9 @@ public class GI implements IGI
 	}
 	
 	
-	private boolean compareMatrix(CryptObject[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
+	private static boolean compareMatrix(CryptObject[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.p,g,w,null);
+		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
 		for (int i = 0; i < matrix1.length; i++)
