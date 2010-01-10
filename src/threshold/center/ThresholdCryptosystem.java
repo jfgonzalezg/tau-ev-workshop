@@ -269,7 +269,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		
 		private void computePublicKeys() {
 			for (int i=0; i<partiesAmount; ++i) {
-				clientsPublicKeys[i] = computeExponentPolynomValue(mutualPolynom, i, p, q);
+				clientsPublicKeys[i] = computeExponentPolynomValue(mutualPolynom, i+1, p, q);
 			}
 		}
 		
