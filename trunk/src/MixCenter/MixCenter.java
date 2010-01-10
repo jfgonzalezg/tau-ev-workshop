@@ -188,8 +188,8 @@ public class MixCenter implements IMixCenter
 			for (int i=0; i<B.length; i++){
 				votes[i] = B[i].getCiphertext();
 			//if (mix_center_id != 0) //mix center 0 doesn't suppose to get here
-			num_of_centers_involved++;
 			}
+			num_of_centers_involved++;
 		} else {
 			votes = A;
 		}
