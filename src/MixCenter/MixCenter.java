@@ -70,7 +70,7 @@ public class MixCenter implements IMixCenter
 		
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			B[i]=gamal.reencrypt(A[pi[i]]);			
+			B[i]=gamal.reencrypt(A[pi[i]]);
 		}
 	/*	for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
@@ -187,8 +187,8 @@ public class MixCenter implements IMixCenter
 			votes = new Ciphertext[B.length];
 			for (int i=0; i<B.length; i++){
 				votes[i] = B[i].getCiphertext();
-			//if (mix_center_id != 0) //mix center 0 doesn't suppose to get here
 			}
+			//if (mix_center_id != 0) //mix center 0 doesn't suppose to get here
 			num_of_centers_involved++;
 		} else {
 			votes = A;
@@ -256,6 +256,8 @@ public class MixCenter implements IMixCenter
 			if (received_votes != null){
 				if (received_votes instanceof Server.Message){
 					write("DEBUG "+received_votes.getMessage().getClass(), this.getId());
+					write("Received message from IP "+received_votes.getAddress().getHostAddress()+
+							                 " PORT "+received_votes.getPort(),this.getId());
 					if (received_votes.getMessage() instanceof SentObject){
 						SentObject recv_object = (SentObject) received_votes.getMessage();
 						if (check_corected_recv_params(recv_object) == true){

@@ -30,7 +30,7 @@ public class MixCenterProcess {
 		MixCenter.write("Starting reencypting and permutating the data...", id);
 		MC.PermutateAndReecncrypt();
 		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id);
-		proof = new String(MC.performZKP());
+		proof = MC.performZKP();
 		boolean isZKPValid = true;
 		if (proof == null){
 			isZKPValid = false;
