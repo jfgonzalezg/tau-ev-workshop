@@ -16,10 +16,15 @@ import java.util.ArrayList;
 
 public class OneOutOfL implements IOneOutOfL {
 
+	private ArrayList<Ciphertext> pairslist;
+
+	public OneOutOfL(ArrayList<Ciphertext> pairslist) {
+		this.pairslist = pairslist;
+	}
+	
 	public OneOutOfLProof createOneOutOfLProof(CryptObject cryptobj, BigIntegerMod h, int t)
 	throws ZkpException 
 	{
-		ArrayList<Ciphertext> pairslist = new ArrayList<Ciphertext>(); //take from pret a vote!!!!!!!!!!!!!!!!!!!!!!  
 		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT
 		BigIntegerMod g = Consts.G;
 		BigInteger q = Consts.q;
@@ -32,9 +37,7 @@ public class OneOutOfL implements IOneOutOfL {
 			throw new ZkpException("index input t is <0 or >l");
 		
 		// check whether cryptobj is indeed a re-encryption using r of the pair in index t
-		//TODO use Elgamal.encrypt and Elgamal.reencrypt to check if cryptobj is a reencryption of the pair in index t in the list
-		
-		
+				
 		CryptObject test = new CryptObject();
 		ElGamal gamal=new ElGamal(h);
 		test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
@@ -100,8 +103,7 @@ public class OneOutOfL implements IOneOutOfL {
 	public boolean verifyOneOutOfLProof(OneOutOfLProof proof, CryptObject cryptobj, BigIntegerMod h) 
 			throws ZkpException 
 	{
-		ArrayList<Ciphertext> pairslist = new ArrayList<Ciphertext>(); //take from pret a vote!!!!!!!!!!!!!!!!!!!!!!  
-		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT
+		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT????????
 		
 		BigIntegerMod g = Consts.G;
 		BigInteger q = Consts.q;	
