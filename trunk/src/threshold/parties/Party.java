@@ -221,16 +221,17 @@ public class Party {
 			Consts.log("party "+partyNumber+": sending polynom values to all other parties", Consts.DebugOutput.STDOUT);
 			Ciphertext c;
 			BigIntegerMod m;
-			ThresholdPacket packet = new ThresholdPacket();
-			packet.type = PacketType.CIPHERTEXT;
-			packet.source = partyNumber;
-			packet.Data = new BigInteger[1][2];
+			ThresholdPacket packet;
 			for (int i=0; i<partiesAmount; ++i) {
 				m = ThresholdCryptosystem.computePolynomValue(privatePolynom, i+1, q);
 				if (i == partyNumber) {
 					mutualPrivateKey = m;
 					continue;
 				}
+				packet = new ThresholdPacket();
+				packet.type = PacketType.CIPHERTEXT;
+				packet.source = partyNumber;
+				packet.Data = new BigInteger[1][2];
 				packet.dest = i;
 				elGamal.SetPublicKey(publicPolynoms[i][0]);
 				m = new BigIntegerMod(m.getValue(),p);

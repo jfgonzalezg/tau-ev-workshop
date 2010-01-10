@@ -12,10 +12,11 @@ public class TesterThresholdCryptosystem {
 	public static void main(String[] args) {
 		BigInteger p = new BigInteger("23");
 		//BigInteger q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
-		BigIntegerMod g = (new BigIntegerMod(p)).pow(Consts.TWO);
+		//BigIntegerMod g = (new BigIntegerMod(p)).pow(Consts.TWO);
+		BigIntegerMod g = new BigIntegerMod(Consts.TWO, p);
 		System.out.println("g = " + g);
-		int partiesAmount = 3;
-		int threshold = 2;
+		int partiesAmount = 10;
+		int threshold = 6;
 		ThresholdCryptosystem thresholdCryptosystem = new ThresholdCryptosystem(partiesAmount, threshold, p, g, Consts.THRESHOLD_CENTER_PORT);
 		Party parties[] = new Party[partiesAmount];
 		for (int i=0; i<partiesAmount; ++i) {
