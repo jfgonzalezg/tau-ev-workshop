@@ -13,8 +13,8 @@ public class EDlog implements IEDlog {
 	public EDlogProof createEDlogProof(BigIntegerMod h, BigIntegerMod a, BigIntegerMod b, 
 			BigIntegerMod x) throws ZkpException {
 
-		BigIntegerMod g = Consts.G;
-		BigInteger q = Consts.q;	
+		BigIntegerMod g = Consts.getG();
+		BigInteger q = Consts.getQ();	
 				
 		//check whether a=g^x and b=h^x
 		if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))
@@ -42,8 +42,8 @@ public class EDlog implements IEDlog {
 	public boolean verifyEDlogProof(EDlogProof proof, BigIntegerMod h, BigIntegerMod a, 
 			BigIntegerMod b) throws ZkpException
 	{
-		BigIntegerMod g = Consts.G;
-		BigInteger q = Consts.q;
+		BigIntegerMod g = Consts.getG();
+		BigInteger q = Consts.getQ();
 
 		BigIntegerMod u = proof.getU();
 		BigIntegerMod v = proof.getV();
@@ -61,7 +61,17 @@ public class EDlog implements IEDlog {
 		return true;
 	}
 
-
+	/**
+	 * Creates a challenge for EDlog functions, using a MD5 hash function
+	 * @param a - BigIntegerMod from elgamal
+	 * @param b - BigIntegerMod from elgamal
+	 * @param u - BigIntegerMod created randomly by createEDlogProof function
+	 * @param v - BigIntegerMod created randomly by createEDlogProof function
+	 * @param modulo - the modulo in use 
+	 * @return BigInteger object
+	 * @throws ZkpException
+	 */
+	
 	private static BigInteger createEDlogHashChallenge(BigIntegerMod a, BigIntegerMod b,
 			BigIntegerMod u, BigIntegerMod v, BigInteger modulo) throws ZkpException
 	{
