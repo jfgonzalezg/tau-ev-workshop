@@ -9,6 +9,7 @@ import global.BigIntegerMod;
 import java.math.BigInteger;
 
 
+
 public interface IGI {
 
 	/**
@@ -29,6 +30,7 @@ public interface IGI {
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
 			throws ZkpException;
 
+	
 
 	/**
 	 * Creates the GI Proof using the given A,B,w,pi,r
