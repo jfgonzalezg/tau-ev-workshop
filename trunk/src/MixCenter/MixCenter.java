@@ -125,10 +125,8 @@ public class MixCenter implements IMixCenter
 	
 	/*
 	 * Performs Zero Knowledge Proof
-	 * Params: A - encrypted votes array before re-encryption and mixing
-	 *         B - re-encrypted and mixed votes array
-	 *         pi - new permutation array
-	 * @return- a Ciphertext array made out of B.
+	 
+	 * @return- a zkp in its String notation.
 	 */
 	
 	public String performZKP() 
