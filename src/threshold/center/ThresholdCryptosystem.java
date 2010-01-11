@@ -2,6 +2,8 @@ package threshold.center;
 
 
 import java.math.BigInteger;
+import java.util.Random;
+
 import tcp.Server;
 import threshold.IThresholdCryptosystem;
 import threshold.ThresholdPacket;
@@ -24,19 +26,31 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 	private BigIntegerMod mutualPolynom[];
 	private BigIntegerMod clientsPublicKeys[];
 	private boolean keyReady;
-	private Integer keyReadyLock;
+	private Integer keyReadyLock = new Integer(0);
 	private boolean keyExchangeDone;
-	private Integer keyExchangeLock;
+	private Integer keyExchangeLock = new Integer(0);
+	private Integer waitLock = new Integer(0);
 
+	public ThresholdCryptosystem() {
+		applyConstructor(null, null, null, null, null);
+	}
+	
 	public ThresholdCryptosystem(int portnum) {
-		applyConstructor(Consts.PARTIES_AMOUNT, Consts.THRESHOLD, Consts.getP(), Consts.getG(), portnum);
+		applyConstructor(null, null, null, null, portnum);
 	}
 
-	public ThresholdCryptosystem(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g, int portnum) {
+	public ThresholdCryptosystem(Integer partiesAmount, Integer threshold, BigInteger p, BigIntegerMod g, Integer portnum) {
 		applyConstructor(partiesAmount, threshold, p, g, portnum);
 	}
 
-	private void applyConstructor(int partiesAmount, int threshold, BigInteger p, BigIntegerMod g, int portnum) {
+	private void applyConstructor(Integer partiesAmount, Integer threshold, BigInteger p, BigIntegerMod g, Integer portnum) {
+		//getting the right parameters
+		partiesAmount = (partiesAmount == null) ? Consts.PARTIES_AMOUNT : partiesAmount;
+		threshold = (threshold == null) ? Consts.THRESHOLD : threshold;
+		p = (p == null) ? Consts.getP() : p;
+		g = (g == null) ? Consts.getG() : g;
+		portnum = (portnum == null) ? Consts.THRESHOLD_CENTER_PORT : portnum;
+		
 		server = new Server(portnum);
 		this.partiesAmount = partiesAmount;
 		this.threshold = threshold;
@@ -50,9 +64,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			mutualPolynom[i] = new BigIntegerMod(BigInteger.ONE, p);
 		}
 		keyReady = false;
-		keyReadyLock = new Integer(0);
 		keyExchangeDone = false;
-		keyExchangeLock = new Integer(0);
 		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
 		new KeyExchangeThread();
 	}
@@ -87,20 +99,41 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return result;
 	}
 
+	public static Integer[] genRandomTOutOfN(int n, int t) {
+		int startingArray[] = new int[n];
+		for (int i=0; i<n; ++i) {
+			startingArray[i] = i;
+		}
+		Random r = new Random();
+		int index2Remove;
+		for (int i=n; i>t; --i) {
+			index2Remove = r.nextInt(n);
+			startingArray[index2Remove] = startingArray[i-1];
+		}
+		Integer[] result = new Integer[t];
+		for (int i=0; i<t; ++i) {
+			result[i] = startingArray[i];
+		}
+		return result;
+	}
+
 	public void close() {
 		wait4KeyExchange();
-		synchronized(keyExchangeLock) {
-			ThresholdPacket packet = new ThresholdPacket();
-			packet.type = PacketType.END;
-			server.broadcast(packet);
+		ThresholdPacket packet = new ThresholdPacket();
+		packet.type = PacketType.END;
+		server.broadcast(packet);
+		
+		synchronized(waitLock) {
 			try {
-				wait(2 * Consts.CONNECTION_TIMEOUT);
+				waitLock.wait(5 * Consts.CONNECTION_TIMEOUT);
 			} catch (InterruptedException e) {
 				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
-			server.close();
+		}
+		server.close();
+		synchronized(waitLock) {
 			try {
-				wait(2 * Consts.CONNECTION_TIMEOUT);
+				waitLock.wait(5 * Consts.CONNECTION_TIMEOUT);
 			} catch (InterruptedException e) {
 				Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 			}
@@ -128,15 +161,19 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return mutualPublicKey;
 	}
 
+	/*
 	public BigIntegerMod[] getMutualPolynom() {
 		wait4Key();
 		return mutualPolynom;
 	}
+	*/
 
+	/*
 	public BigIntegerMod[] getMutualPublicKeys() {
 		wait4Key();
 		return clientsPublicKeys;
 	}
+	*/
 
 	public void wait4Key() {
 		synchronized(keyReadyLock) {
@@ -154,30 +191,88 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return decryptMutually(ciphertext, threshold);
 	}
 
-	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int parties_to_use) {
-		if (parties_to_use < threshold) {
-			Consts.log("Trying to mutually decrypt using too few parties (" + parties_to_use + " < " + Consts.THRESHOLD + ")", DebugOutput.STDERR);
+	public BigIntegerMod decryptMutually(Ciphertext ciphertext, int parties2Use) {
+		if (parties2Use < threshold) {
+			Consts.log("Trying to mutually decrypt using too few parties (" + parties2Use + " < " + Consts.THRESHOLD + ")", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		if (parties_to_use > partiesAmount) {
-			Consts.log("Trying to mutually decrypt using more parties than exist (" + parties_to_use + " > " + Consts.PARTIES_AMOUNT + ")", DebugOutput.STDERR);
+		if (parties2Use > partiesAmount) {
+			Consts.log("Trying to mutually decrypt using more parties than exist (" + parties2Use + " > " + Consts.PARTIES_AMOUNT + ")", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 			return null;
 		}
-		// TODO randomly choose threshold parties
+		Integer[] chosenParties = genRandomTOutOfN(partiesAmount, parties2Use);
 		wait4KeyExchange();
-		synchronized(keyExchangeLock) {
-			// TODO decrypt the given ciphertext using the threshold parties' private keys
+		sendM2ChosenParties(ciphertext.getA().getValue(), chosenParties);
+		BigIntegerMod lambdas[] = computeLambdas(chosenParties);
+		BigIntegerMod w_i[] = receiveFromChosenParties(parties2Use);
+		BigIntegerMod c_s = compute_c_s(w_i, lambdas);
+		return ciphertext.getB().multiply(c_s.inverse());
+	}
+
+	private BigIntegerMod compute_c_s(BigIntegerMod w_i[], BigIntegerMod lambdas[]) {
+		BigIntegerMod result = new BigIntegerMod(BigInteger.ONE, p);
+		for (int i=0; i<w_i.length; ++i) {
+			result = result.multiply(w_i[i].pow(lambdas[i]));
 		}
-		return null;
+		return result;
+	}
+
+	private BigIntegerMod[] receiveFromChosenParties(int t) {
+		BigIntegerMod w_i[] = new BigIntegerMod[t];
+		ThresholdPacket packet;
+		for (int i=0; i<t; ++i) {
+			packet = recieveNextPacket();
+			w_i[packet.dest] = new BigIntegerMod(packet.Data[0][0], p);
+			//TODO add ZKP check
+		}
+		return w_i;
+	}
+
+	private BigIntegerMod[] computeLambdas(Integer[] partiesInteger) {
+		int t = partiesInteger.length;
+		BigIntegerMod parties[] = new BigIntegerMod[t];
+		BigIntegerMod pi_j_inverse = new BigIntegerMod(BigInteger.ONE, q);
+		BigIntegerMod lambdas[] = new BigIntegerMod[t];
+		for (int i=0; i<t; ++i) {
+			BigInteger J = new BigInteger(partiesInteger[i].toString());
+			parties[i] = new BigIntegerMod(J.add(BigInteger.ONE), q);
+			pi_j_inverse = pi_j_inverse.multiply(parties[i]);
+		}
+		pi_j_inverse = pi_j_inverse.inverse();
+		for (int i=0; i<t; ++i) {
+			lambdas[i] = parties[i].multiply(pi_j_inverse);
+			for (int j=0; j<t; ++j) {
+				if (j==i) continue;
+				lambdas[i]=lambdas[i].multiply(parties[j].substract(parties[i]));
+			}
+			lambdas[i] = lambdas[i].inverse();
+		}
+		return lambdas;
+	}
+	
+	private void sendM2ChosenParties(BigInteger m, Integer parties[]) {
+		Consts.log("threshold center: sending number to decrypt to "+parties.length+" parties", DebugOutput.STDOUT);
+		ThresholdPacket packet;
+		for (int i=0; i<parties.length; ++i) {
+			packet = new ThresholdPacket();
+			packet.type = PacketType.NUMBER;
+			packet.dest = parties[i];
+			packet.source = i;
+			packet.Data = new BigInteger[1][1];
+			packet.Data[0][0] = m;
+			server.send(parties[i], packet); //TODO check return value
+			Consts.log("threshold center: sent number to decrypt to party "+parties[i], DebugOutput.STDOUT);
+		}
+		Consts.log("threshold center: sent number to decrypt to all clients", DebugOutput.STDOUT);
 	}
 
 	public void wait4KeyExchange() {
 		synchronized(keyExchangeLock) {
 			if (!keyExchangeDone) {
 				try {
-					wait();
+					keyExchangeLock.wait();
 				} catch (InterruptedException e) {
 					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 				}
@@ -207,7 +302,13 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			clientsInit();
 			getPolynoms();
 			publishPolynoms();
+			removeUnnecessaryData();
 			handlePrivateKeysExchange();
+		}
+		
+		private void removeUnnecessaryData() {
+			clientsPolynoms = null;
+			mutualPolynom = null;
 		}
 		
 		private void clientsInit() {
