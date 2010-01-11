@@ -14,7 +14,8 @@ import threshold.center.ThresholdCryptosystem;
 
 public class Party {
 
-	private static final int WAITING_TIME = 5 * Consts.CONNECTION_TIMEOUT; //mili-seconds
+	private static final int WAITING_TIME = 0;//5 * Consts.CONNECTION_TIMEOUT; //mili-seconds
+	private static final int RECEIVING_RETRIES = 20;
 	private final int partyNumber;
 	private Client client;
 	private int partiesAmount;
@@ -27,13 +28,15 @@ public class Party {
 	private BigIntegerMod publicKeys[];
 	private BigIntegerMod mutualPolynom[];
 	private BigIntegerMod mutualPrivateKey;
+	private BigIntegerMod mutualPublicKey = null;
 	private ElGamal elGamal;
 	private PartyThread thread;
 	private boolean polynomGenerated;
 	private Integer polynomGeneratedLock;
 	private boolean keyExchangeFinished;
 	private Integer keyExchangeFinishedLock;
-	//private Integer waitingLock;
+	private Integer waitLock = new Integer(0);
+	private boolean closing = false;
 
 	public Party(int partyNumber, String serverName, int serverPort) {
 		this.partyNumber = partyNumber;
@@ -100,21 +103,53 @@ public class Party {
 		}
 
 		public void run() {
-			/*synchronized(waitingLock) {
-				try {
-					waitingLock.wait(WAITING_TIME);
-				} catch (InterruptedException e) {
-					Consts.log("Party "+partyNumber+": unable to lock and wait", DebugOutput.STDERR);
-				}
-			}*/
 			ExchangeKey();
-			// TODO remove unnecessary data
-			// TODO add wait for decryption requests
+			removeUnnecessaryData();
+			DecryptMessages();
+			synchronized(waitLock) {
+				try {
+					waitLock.wait(10 * Consts.CONNECTION_TIMEOUT);
+				} catch (InterruptedException e) {
+					Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+				}
+			}
+		}
+		
+		private void removeUnnecessaryData() {
+			if (mutualPublicKey == null) { //TODO remove it when ZKP is added
+				privatePolynom = null;
+				publicPolynoms = null;
+				publicKeys = null;
+				mutualPolynom = null;
+			}
+			mutualPublicKey = g.pow(mutualPrivateKey);
+			
+		}
+		
+		private void DecryptMessages() {
+			if (closing) return;
+			ThresholdPacket receivingPacket = receive();
+			ThresholdPacket sendingPacket;
+			BigIntegerMod m;
+			while (!closing) {
+				sendingPacket = new ThresholdPacket();
+				sendingPacket.type = PacketType.NUMBER;
+				sendingPacket.dest = receivingPacket.source;
+				sendingPacket.source = receivingPacket.dest;
+				sendingPacket.Data = new BigInteger[1][1];
+				m = new BigIntegerMod(receivingPacket.Data[0][0], p);
+				m = m.pow(mutualPrivateKey);
+				sendingPacket.Data[0][0] = m.getValue();
+				//TODO add ZKP
+				client.send(sendingPacket);
+				receivingPacket = receive();
+			}
 		}
 		
 		private void ExchangeKey() {
 			Consts.log("party "+partyNumber+":key exchane started", Consts.DebugOutput.STDOUT);
 			initValues();
+			if (closing) return;
 			Consts.log("party "+partyNumber+": all values initialized", Consts.DebugOutput.STDOUT);
 			synchronized(polynomGeneratedLock) {
 				polynomGenerated = true;
@@ -122,8 +157,10 @@ public class Party {
 			}
 			sendPolynom();
 			receivePublicPolynoms();
+			if (closing) return;
 			sendPolynomValues();
 			receivePolynomValues();
+			if (closing) return;
 			synchronized(keyExchangeFinishedLock) {
 				keyExchangeFinished = true;
 				keyExchangeFinishedLock.notifyAll();
@@ -134,9 +171,9 @@ public class Party {
 		private void initValues() {
 			Consts.log("party "+partyNumber+":getting basic info from server", Consts.DebugOutput.STDOUT);
 			ThresholdPacket packet = receive();
-			if (packet == null) {
-				Consts.log("Recieved null packet, skipping", DebugOutput.STDERR);
-				return; // TODO - handle null packet correctly
+			if (closing) {
+				Consts.log("Party "+partyNumber+": closing party in initValues stage.", DebugOutput.STDERR);
+				return;
 			}
 			if (packet.type != PacketType.BASIC_INFO) {
 				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
@@ -154,7 +191,7 @@ public class Party {
 		
 		private ThresholdPacket receive() {
 			ThresholdPacket packet = null;
-			while (packet == null) {
+			for (int i=0; ((i<RECEIVING_RETRIES)&&(packet == null)); ++i) {
 				if (client.canReceive()) {
 					packet = (ThresholdPacket)client.receive(WAITING_TIME);
 					if (packet == null) {
@@ -162,10 +199,32 @@ public class Party {
 					}
 				} else {
 					Consts.log("party " + partyNumber + ": cannot receive, returing from initValues()'s loop.", Consts.DebugOutput.STDOUT);
+					closeMe();
 					return null;
 				}
 			}
+			if (packet == null) {
+				Consts.log("party "+partyNumber+": Tried to receive packet "+RECEIVING_RETRIES+", unsuccessful. closing...", Consts.DebugOutput.STDOUT);
+				closeMe();
+				return null;
+			}
+			if (packet.type == PacketType.END) {
+				Consts.log("party "+partyNumber+": recieved END packet. closing...", Consts.DebugOutput.STDOUT);
+				closeMe();
+			}
 			return packet;
+		}
+
+		private void closeMe() {
+			closing = true;
+			synchronized(polynomGeneratedLock) {
+				polynomGenerated = true;
+				polynomGeneratedLock.notifyAll();
+			}
+			synchronized(keyExchangeFinishedLock) {
+				keyExchangeFinished = true;
+				keyExchangeFinishedLock.notifyAll();
+			}
 		}
 		
 		private void genPrivatePolynom() {
@@ -193,9 +252,9 @@ public class Party {
 		private void receivePublicPolynoms() {
 			Consts.log("party "+partyNumber+": trying to recieve all polynoms", Consts.DebugOutput.STDOUT);
 			ThresholdPacket packet = receive();
-			if (packet == null) {
-				Consts.log("Recieved null packet, skipping", DebugOutput.STDERR);
-				return; // TODO - handle null packet correctly
+			if (closing) {
+				Consts.log("Party "+partyNumber+": closing party in receivePublicPolynoms stage.", DebugOutput.STDERR);
+				return;
 			}
 			if (packet.type != PacketType.ALL_POLYNOMS) {
 				Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
@@ -251,9 +310,9 @@ public class Party {
 			Ciphertext c;
 			for (int i=0; i<partiesAmount-1; ++i) {
 				packet = receive();
-				if (packet == null) {
-					Consts.log("Try number " + i + " recieved null packet, skipping", DebugOutput.STDERR);
-					continue; // TODO - handle null packet correctly
+				if (closing) {
+					Consts.log("Party "+partyNumber+": closing party in receivePolynomValues stage.", DebugOutput.STDERR);
+					return;
 				}
 				if (packet.type != PacketType.CIPHERTEXT) {
 					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
