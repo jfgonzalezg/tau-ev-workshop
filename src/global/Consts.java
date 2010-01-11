@@ -14,6 +14,7 @@ public class Consts {
 		FILE
 	}
 
+	private static final boolean DISABLE_LOGGER = false;
 	private static final boolean DEBUG_MODE = true;
 	private static final String LOG_FILE = "Elections_Log.txt";
 	private static BufferedWriter outputFile = null;
@@ -61,6 +62,7 @@ public class Consts {
 													7010};//Mix Center 10
 
 	public static void log(String message, DebugOutput logger) {
+		if (DISABLE_LOGGER) return;
 		switch (logger) {
 			case STDOUT : {
 				System.out.println(message);
