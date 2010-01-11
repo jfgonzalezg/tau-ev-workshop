@@ -200,7 +200,7 @@ public class GI implements IGI
 		{
 
 			tempCipher[i] = gamal.reencrypt(matrix1[premutation[i]], matrix2[i].getR());
-			if ((tempCipher[i].getCiphertext().getA() != matrix2[i].getCiphertext().getA()) || (tempCipher[i].getCiphertext().getB() != matrix2[i].getCiphertext().getB()))
+			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
 			{
 				return false;
 			}
@@ -219,7 +219,7 @@ public class GI implements IGI
 		{
 
 			tempCipher[i] = gamal.reencrypt(matrix1[premutation[i]].getCiphertext(), matrix2[i].getR());
-			if ((tempCipher[i].getCiphertext().getA() != matrix2[i].getCiphertext().getA()) || (tempCipher[i].getCiphertext().getB() != matrix2[i].getCiphertext().getB()))
+			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
 			{
 				return false;
 			}
