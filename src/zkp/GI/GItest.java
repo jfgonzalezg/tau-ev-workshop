@@ -30,7 +30,6 @@ public class  GItest{
 		
 		BigIntegerMod a = new BigIntegerMod(Consts.getP());
 		BigIntegerMod b = new BigIntegerMod(Consts.getP());
-		BigIntegerMod c = new BigIntegerMod(Consts.getQ());
 		Ciphertext[] A = new Ciphertext[n];
 		CryptObject[] B = new CryptObject[n];	
 		
@@ -42,18 +41,18 @@ public class  GItest{
 		
 		for (int j=0; j<n; j++)
 		{
-			//B[pi[j]] = new CryptObject(a, A[j], c);
 			B[pi[j]]=gamal.reencrypt(A[j]);
 		}
 		
 			
 		try {
 			giproof=gi.createGIProof(A, B, pi, n, w, Consts.getG());
+			System.out.println(giproof.toString());
 			flag = gi.verifyGIProof(giproof, A, B, w, Consts.getG());
 			if (flag)
 				System.out.println("YES");
 			else
-				System.out.println("AVADOBI");
+				System.out.println("NO");
 		} catch (ZkpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

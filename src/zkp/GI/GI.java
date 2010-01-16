@@ -17,7 +17,7 @@ public class GI implements IGI
 {
 	private static int Repetition=2;
 	
-	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g) throws ZkpException
+	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
 	{	
 		CryptObject[][] C = new CryptObject[Repetition][n];
 		int[][] lambda = new int[Repetition][n];
@@ -29,15 +29,17 @@ public class GI implements IGI
  
 		for (int i = 0; i < Repetition; i++)
 		{
-			//lambda[i] = createLambda(n);
-			lambda[i] = new int[]{1,0,2,4,3};
+			lambda[i] = createLambda(n);
+			//lambda[i] = new int[]{1,0,2,4,3};
 			C[i] = createCi(A,lambda[i],n,w,g);
 		}
 
-		hash = createHash(A,B,C); //returns a string with length of Repetition
+		try {
+			hash = createHash(A,B,C); //returns a string with length of Repetition
+		} catch (ZkpException e) {
+			return null;
+		} 
 		piInv = createPiInv(pi);
-
-
 
 		for (int i = 0; i < Repetition; i++)
 		{
@@ -170,7 +172,7 @@ public class GI implements IGI
 		
 
 			
-	private static int[] createPiInv(int[] pi)
+	private static int[] createPiInv(int[] pi) 
 	{
 		int[] piInv = new int[pi.length];
 		for (int i = 0;i<pi.length;i++)
