@@ -39,7 +39,7 @@ public class BatchUI {
 					System.out.println(voteBuffer);
 				}
 
-				System.out.println("Options:\n\t0-"+global.Consts.PARTIES_AMOUNT+": Your Selection.\n\tver: Verify Ballot\n\tquit: Finish the voting process");
+				System.out.println("Options:\n\t0-"+(global.Consts.PARTIES_AMOUNT-1)+": Your Selection.\n\tver: Verify Ballot\n\tquit: Finish the voting process");
 
 				String voterIn = "";
 				boolean legalVoterIn = false;
