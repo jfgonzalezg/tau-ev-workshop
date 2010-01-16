@@ -24,8 +24,8 @@ public class Main {
 		boolean mixNetsFlag = false;
 		
 		for (String arg : args) {
-			if (arg == "-gui") guiFlag = true;
-			else if (arg == "-mix-nets") mixNetsFlag = true;
+			if (arg.equals("-gui")) guiFlag = true;
+			else if (arg.equals("-mix-nets")) mixNetsFlag = true;
 			else printUsage();
 		}
 		
