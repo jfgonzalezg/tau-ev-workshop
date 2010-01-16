@@ -4,6 +4,13 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import elgamal.Ciphertext;
+import elgamal.CryptObject;
+import elgamal.ElGamal;
+
+import threshold.center.ThresholdCryptosystem;
+import threshold.parties.PartiesManager;
+
 import global.BigIntegerMod;
 import global.Consts;
 
@@ -12,7 +19,7 @@ public class DiscreteLog {
 	private static int nVoters = PAVShared.numberOfCastVotes; 
 	private static int nParties = Consts.PARTIES_AMOUNT;
 
-//	private static int nVoters = 40; 
+//	private static int nVoters = 4; 
 //	private static int nParties = 4;
 	
 	private static int[] indices = new int[nParties -1];
@@ -35,7 +42,7 @@ public class DiscreteLog {
 	 */
 	public static BigIntegerMod dLog(BigIntegerMod xArg, BigIntegerMod baseArg){
 		initializeVotes();
-		
+
 		foundLog = false;
 		
 		x = xArg.getValue();
@@ -81,7 +88,7 @@ public class DiscreteLog {
      */
     private static void initializeVotes(){
     	for (int i = 0; i < PAVShared.getPlaintextVotes().size(); i++) 
-			votes.put(i, PAVShared.getPlaintextVote(i).getValue());
+			votes.put(i, PAVShared.getPlaintextVotes().get(i).getValue());
     }
 	
 	
@@ -96,28 +103,48 @@ public class DiscreteLog {
 			PAVShared.initialize(false,false);
 		}catch(ElectionsSetUpException e){}
 		
+		// THRESHOLD
+		ThresholdCryptosystem tc = new ThresholdCryptosystem();
+		new PartiesManager();
+		ElGamal el = new ElGamal(tc.getMutualPublicKey());
+		
+		Ciphertext voteProd = new Ciphertext(new BigIntegerMod(BigInteger.ONE, Consts.p),
+				new BigIntegerMod(BigInteger.ONE, Consts.p));
 		BigInteger exponent = BigInteger.ZERO;
-		for(i=0; i<0;i++)
-			exponent = exponent.add(PAVShared.getPlaintextVote(0).getValue());
-		for(i=0; i<0;i++)
-			exponent = exponent.add(PAVShared.getPlaintextVote(1).getValue());
-		for(i=0; i<0;i++)
-			exponent = exponent.add(PAVShared.getPlaintextVote(2).getValue());
-		for(i=0; i<40;i++)
-			exponent = exponent.add(PAVShared.getPlaintextVote(3).getValue());
-
-//		PAVShared.announceResults(new BigIntegerMod(exponent,Consts.p));
+		System.out.println("Creating votes...");
+		for(i=0; i<3;i++){
+			voteProd = voteProd.multiply(el.encrypt(PAVShared.getPlaintextVote(0)).getCiphertext());
+			exponent = exponent.add(PAVShared.getPlaintextVotes().get(0).getValue());
+		}
+		for(i=0; i<0;i++){
+			voteProd = voteProd.multiply(el.encrypt(PAVShared.getPlaintextVote(1)).getCiphertext());
+			exponent = exponent.add(PAVShared.getPlaintextVotes().get(1).getValue());
+		}
+		for(i=0; i<1;i++){
+			voteProd = voteProd.multiply(el.encrypt(PAVShared.getPlaintextVote(2)).getCiphertext());
+			exponent = exponent.add(PAVShared.getPlaintextVotes().get(2).getValue());
+		}
+		for(i=0; i<0;i++){
+			voteProd = voteProd.multiply(el.encrypt(PAVShared.getPlaintextVote(3)).getCiphertext());
+			exponent = exponent.add(PAVShared.getPlaintextVotes().get(3).getValue());
+		}
+		System.out.println("Done creating votes. Searching for the log.");
+		BigIntegerMod votProdDec = tc.decryptMutually(voteProd);
+		
 		
 		BigIntegerMod z = PAVShared.getZ();
-//		//BigIntegerMod z = new BigIntegerMod(votes.get(new Integer(2)), Consts.getP());
-		BigIntegerMod xPar = z.pow(exponent);
-//		
-//		long start = System.currentTimeMillis();
-		BigIntegerMod output = dLog(xPar,z);
-		if (output == null) System.out.println("*** Log Wasn't Found");
-		else{	
+
+		BigIntegerMod expOutput = dLog(z.pow(exponent),z);
+		if (expOutput == null)System.out.println("*** Exp Log Wasn't Found");	
+		else {
 			System.out.println("The original exponent was: "+ exponent);
-			System.out.println("The log that was found is: "+output.getValue());
+			System.out.println("The  exp log that was found is: "+expOutput.getValue());;
+		}
+		
+		BigIntegerMod encOutput = dLog(votProdDec,z);
+		if (encOutput == null) System.out.println("*** Enc Log Wasn't Found"); 
+		else {
+			System.out.println("The  enc log that was found is: "+encOutput.getValue());
 		}
 	}
 	
