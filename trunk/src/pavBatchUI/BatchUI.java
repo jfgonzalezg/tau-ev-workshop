@@ -17,8 +17,8 @@ public class BatchUI {
 				try {
 					voterID = Integer.parseInt(userIn.readLine());
 
-					if ((voterID < 10000000)||(voterID > 1000000000))
-						throw new NumberFormatException();
+					//if ((voterID < 10000000)||(voterID > 1000000000))
+						//throw new NumberFormatException(); //TODO: return to code?
 				} catch (NumberFormatException e) {
 					System.err.println("ID error: Please type a valid ID");
 					continue;
@@ -53,8 +53,8 @@ public class BatchUI {
 							e.printStackTrace();
 						}
 
-						if (voterIn == "quit") break voteProcess;
-						else if (voterIn == "ver"){
+						if (voterIn.equals("quit")) break voteProcess;
+						else if (voterIn.equals("ver")){
 							System.out.println("Here is your ballot with corresponding seeds:");
 
 							for (int i = 0; i < global.Consts.PARTIES_AMOUNT;i++){
@@ -102,11 +102,11 @@ public class BatchUI {
 									e.printStackTrace();
 								}
 
-								if (voterConfirm == "yes"){
+								if (voterConfirm.equals("yes")){
 									legalVoterIn = true;
 									voterLegalConfirm = true;
 									PAVShared.addCastVote(b.getVote(castVote), voterID+"");
-								} else if (voterConfirm == "no"){
+								} else if (voterConfirm.equals("no")){
 									System.out.println("You have cancelled your vote.\nPlease make a selection:");
 									continue voterInput;
 								} else {
