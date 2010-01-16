@@ -137,11 +137,19 @@ public class MixCenter implements IMixCenter
 		{
 		GIProof zkp=zkpGI.createGIProof(A,B,pi,VOTERS_AMOUNT,w,g);
 		//check whether ZKP returned a NULL. 
-		if ((zkp!=null)&&(zkpGI.verifyGIProof(zkp, this.getArrayA(), this.getArrayB(), this.w, this.g)))
-			return zkp.toString();
-		else
+		
+		if (zkp==null)
 			return null;
+		else //in case the proof exists
+		{
+			if (zkpGI.verifyGIProof(zkp, this.getArrayA(), this.getArrayB(), this.w, this.g))
+			{
+				return zkp.toString();
+			}
+			else //in case ZKP returned wrong proof
+				return "falseProof";
 		}
+		}//try
 		catch (Exception e)
 		{
 			return null;
