@@ -82,9 +82,13 @@ public class PAVShared {
 		
 		for (int i = 0; i<Consts.PARTIES_AMOUNT;i++){
 			BigInteger b =  BigInteger.ZERO;
-			plaintextVotes.put(new Integer(i),
-					new BigIntegerMod(b.flipBit(i*bitsPerParty), Consts.getP())); //TODO: make sure mod is correct
-			if (!inMixNetsMode){ // Threshold mode
+			
+			if (inMixNetsMode){
+				plaintextVotes.put(new Integer(i),
+						new BigIntegerMod(b.flipBit(i*bitsPerParty), Consts.getP())); //TODO: make sure mod is correct
+			} else { // Threshold mode
+				plaintextVotes.put(new Integer(i),
+						new BigIntegerMod(b.flipBit(i*bitsPerParty), Consts.getQ())); //TODO: make sure mod is correct
 				expPlaintextVotes.put(new Integer(i), z.pow(plaintextVotes.get(new Integer(i))));
 			}
 		}
@@ -108,7 +112,7 @@ public class PAVShared {
 		ArrayList<Ciphertext> pairsListForZKP = new ArrayList<Ciphertext>();
 		ElGamal elGamal = new ElGamal(publicKey);
 		for (int i = 0; i < global.Consts.PARTIES_AMOUNT; i++) {
-			CryptObject encObj = elGamal.encrypt(plaintextVotes.get(i), new BigIntegerMod(BigInteger.ONE, Consts.q));
+			CryptObject encObj = elGamal.encrypt(getPlaintextVote(i), new BigIntegerMod(BigInteger.ONE, Consts.q));
 			pairsListForZKP.add(encObj.getCiphertext());
 		}
 		zkpMaker = new OneOutOfL(pairsListForZKP);
@@ -328,7 +332,6 @@ public class PAVShared {
 		voteBuffer+="\t\t<voterID>"+voterID+"</voterID>\n";
 		voteBuffer+="\t\t<encryptedVote>"+vote.getEncryptionBase64()+"</encryptedVote>\n";
 		/*voteBuffer+="\t\t<oneOutOfLProof>\n"; // TODO: return to code once ZKP works
-		System.out.println(vote.getZKP());
 		voteBuffer+="\t\t\t<C>"+toBase64(vote.getZKP().getC())+"</C>\t";
 		voteBuffer+="\t\t\t<DList>\n\t\t\t";
 		for(BigIntegerMod b : vote.getZKP().getD_List()){
