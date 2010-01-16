@@ -71,7 +71,7 @@ public class MixCenter implements IMixCenter
 		
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			B[i]=gamal.reencrypt(A[pi[i]]);
+			B[pi[i]]=gamal.reencrypt(A[i]);
 		}
 	/*	for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
