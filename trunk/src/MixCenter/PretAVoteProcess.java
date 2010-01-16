@@ -60,13 +60,13 @@ public class PretAVoteProcess {
 	public static void main(String[] args) {
 		
 		/* test num 1 */
-		if (args[0] == "test1")
+		if (args[0].equals("test1"))
 		{
 			basicTest(Consts.VOTERS_AMOUNT);
 		}
 		
 		/* test num 2 */
-		if (args[0] == "test2")
+		if (args[0].equals("test2"))
 		{
 			basicTest(0);
 			basicTest(1);
