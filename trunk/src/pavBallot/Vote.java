@@ -38,8 +38,8 @@ public class Vote {
 		try{
 			zkp = PAVShared.zkpMaker.createOneOutOfLProof(encObj, pKey, (index+offset) % Consts.PARTIES_AMOUNT);
 		} catch (ZkpException ze){
-			/*System.err.println("Failed To Create ZKP");
-			System.err.println(ze);
+			System.err.println("Failed To Create ZKP");
+			/*System.err.println(ze);
 			ze.printStackTrace();*/
 			//TODO: Handle ZKP Exception.
 		}
