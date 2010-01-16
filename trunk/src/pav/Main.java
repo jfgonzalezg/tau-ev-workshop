@@ -2,6 +2,8 @@ package pav;
 
 import MixCenter.*;
 import threshold.center.ThresholdCryptosystem;
+import threshold.parties.PartiesManager;
+
 import java.math.BigInteger;
 import pavBatchUI.BatchUI;
 import elgamal.*;
@@ -32,8 +34,11 @@ public class Main {
 		////////////////////////
 		
 		
-		ThresholdCryptosystem tc = new ThresholdCryptosystem(global.Consts.THRESHOLD_CENTER_PORT);
+		ThresholdCryptosystem tc = new ThresholdCryptosystem();
+		new PartiesManager();
+		
 		try{
+			System.out.println("KALEV: public key is"+tc.getMutualPublicKey());
 			PAVShared.setPublicKey(tc.getMutualPublicKey());
 		}catch (ElectionsSetUpException esue){
 			System.err.println(esue);
@@ -80,6 +85,7 @@ public class Main {
 				voteSum = voteSum.add(tc.decryptMutually(ciphertext));
 			}
 		} else { // Threshold mode
+			System.out.println(tc.decryptMutually(PAVShared.getVoteProduct()));
 			voteSum = DiscreteLog.dLog(tc.decryptMutually(PAVShared.getVoteProduct()),PAVShared.getZ());
 			if (voteSum == null){
 				System.err.println("Discrete logarithm function failed. Exiting.");
