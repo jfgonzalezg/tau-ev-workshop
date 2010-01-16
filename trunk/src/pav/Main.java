@@ -85,7 +85,6 @@ public class Main {
 				voteSum = voteSum.add(tc.decryptMutually(ciphertext));
 			}
 		} else { // Threshold mode
-			System.out.println(tc.decryptMutually(PAVShared.getVoteProduct()));
 			voteSum = DiscreteLog.dLog(tc.decryptMutually(PAVShared.getVoteProduct()),PAVShared.getZ());
 			if (voteSum == null){
 				System.err.println("Discrete logarithm function failed. Exiting.");
