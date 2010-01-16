@@ -99,18 +99,18 @@ public class DiscreteLog {
 		BigInteger exponent = BigInteger.ZERO;
 		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(0).getValue());
-		for(i=0; i<40;i++)
+		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(1).getValue());
 		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(2).getValue());
-		for(i=0; i<0;i++)
+		for(i=0; i<40;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(3).getValue());
 
 //		PAVShared.announceResults(new BigIntegerMod(exponent,Consts.p));
 		
 		BigIntegerMod z = PAVShared.getZ();
 //		//BigIntegerMod z = new BigIntegerMod(votes.get(new Integer(2)), Consts.getP());
-		BigIntegerMod xPar = new BigIntegerMod(z.getValue().modPow(exponent, z.getMod()),z.getMod());
+		BigIntegerMod xPar = z.pow(exponent);
 //		
 //		long start = System.currentTimeMillis();
 		BigIntegerMod output = dLog(xPar,z);
