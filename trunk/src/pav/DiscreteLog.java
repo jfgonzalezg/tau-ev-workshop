@@ -8,9 +8,12 @@ import global.BigIntegerMod;
 import global.Consts;
 
 public class DiscreteLog {
-	
-	private static int nVoters = PAVShared.numberOfCastVotes; 
-	private static int nParties = Consts.PARTIES_AMOUNT;
+	//TODO return to code.
+//	private static int nVoters = PAVShared.numberOfCastVotes; 
+//	private static int nParties = Consts.PARTIES_AMOUNT;
+
+	private static int nVoters = 40; 
+	private static int nParties = 4;
 	
 	private static int[] indices = new int[nParties -1];
 	private static Map<Integer, BigInteger> votes = new HashMap<Integer, BigInteger>(); //Plain text votes
@@ -94,30 +97,28 @@ public class DiscreteLog {
 		}catch(ElectionsSetUpException e){}
 		
 		BigInteger exponent = BigInteger.ZERO;
-		for(i=0; i<100;i++)
+		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(0).getValue());
-		for(i=0; i<10;i++)
+		for(i=0; i<40;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(1).getValue());
-		for(i=0; i<10;i++)
+		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(2).getValue());
-		for(i=0; i<10;i++)
+		for(i=0; i<0;i++)
 			exponent = exponent.add(PAVShared.getPlaintextVote(3).getValue());
-		//System.out.println("Sum of votes: "+exponent);
+
 //		PAVShared.announceResults(new BigIntegerMod(exponent,Consts.p));
 		
-//		BigIntegerMod z = new BigIntegerMod(Consts.getP()); //The Z is chosen randomly from Zp
+		BigIntegerMod z = PAVShared.getZ();
 //		//BigIntegerMod z = new BigIntegerMod(votes.get(new Integer(2)), Consts.getP());
-//		BigIntegerMod xPar = new BigIntegerMod(z.getValue().modPow(exponent, z.getMod()),z.getMod());
+		BigIntegerMod xPar = new BigIntegerMod(z.getValue().modPow(exponent, z.getMod()),z.getMod());
 //		
 //		long start = System.currentTimeMillis();
-//		BigIntegerMod output = dLog(xPar,z);
-//		long end = System.currentTimeMillis();
-//		if (output == null) System.out.println("*** Log Wasn't Found");
-//		else{	
-//			System.out.println("The original exponent was: "+ exponent);
-//			System.out.println("The log that was found is: "+output.getValue());
-//			System.out.println("Time taken: "+((end-start)/1000)+" sec");
-//		}
+		BigIntegerMod output = dLog(xPar,z);
+		if (output == null) System.out.println("*** Log Wasn't Found");
+		else{	
+			System.out.println("The original exponent was: "+ exponent);
+			System.out.println("The log that was found is: "+output.getValue());
+		}
 	}
 	
 	/**
