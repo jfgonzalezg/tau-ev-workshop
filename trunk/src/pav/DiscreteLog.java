@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+import pavBallot.Ballot;
+
 import elgamal.Ciphertext;
 import elgamal.CryptObject;
 import elgamal.ElGamal;
@@ -106,11 +108,14 @@ public class DiscreteLog {
 		// THRESHOLD
 		ThresholdCryptosystem tc = new ThresholdCryptosystem();
 		new PartiesManager();
-		ElGamal el = new ElGamal(tc.getMutualPublicKey());
-		
+		try {
+			PAVShared.setPublicKey(tc.getMutualPublicKey());
+		} catch (ElectionsSetUpException e) {}
+		ElGamal el = new ElGamal(PAVShared.getPublicKey());
 		Ciphertext voteProd = new Ciphertext(new BigIntegerMod(BigInteger.ONE, Consts.p),
 				new BigIntegerMod(BigInteger.ONE, Consts.p));
 		BigInteger exponent = BigInteger.ZERO;
+		/*
 		System.out.println("Creating votes...");
 		for(i=0; i<3;i++){
 			voteProd = voteProd.multiply(el.encrypt(PAVShared.getPlaintextVote(0)).getCiphertext());
@@ -129,15 +134,20 @@ public class DiscreteLog {
 			exponent = exponent.add(PAVShared.getPlaintextVotes().get(3).getValue());
 		}
 		System.out.println("Done creating votes. Searching for the log.");
+		*/
+		
+		for(int i=0; i<4; i++){
+			voteProd = voteProd.multiply((new Ballot()).getVote(3).getEncryptedVote());
+		}
 		BigIntegerMod votProdDec = tc.decryptMutually(voteProd);
 		
 		
 		BigIntegerMod z = PAVShared.getZ();
-
+		
+		System.out.println("The original exponent was: "+ exponent);
 		BigIntegerMod expOutput = dLog(z.pow(exponent),z);
 		if (expOutput == null)System.out.println("*** Exp Log Wasn't Found");	
 		else {
-			System.out.println("The original exponent was: "+ exponent);
 			System.out.println("The  exp log that was found is: "+expOutput.getValue());;
 		}
 		
