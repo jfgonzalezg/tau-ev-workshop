@@ -68,12 +68,25 @@ public class Main {
 			
 			Ciphertext[] mnRetVotes = new Ciphertext[PAVShared.getCastVotes().size()];
 			
-			boolean mnSend = mixNets.send_to_next_mix_center(((Ciphertext[]) PAVShared.getCastVotes().toArray()), 
+			Ciphertext[] castVotesArr = new Ciphertext[PAVShared.getCastVotes().size()];
+			
+			for (int i = 0; i < PAVShared.getCastVotes().size(); i++) {
+				castVotesArr[i] =  PAVShared.getCastVotes().get(i);
+			}
+			
+			boolean mnSend = mixNets.send_to_next_mix_center(castVotesArr, 
 					global.Consts.G,
 					global.Consts.p,
 					global.Consts.q, 
 					PAVShared.getPublicKey(),
 					PAVShared.getCastVotes().size());
+			
+			/*boolean mnSend = mixNets.send_to_next_mix_center(((Ciphertext[]) PAVShared.getCastVotes().toArray()), 
+					global.Consts.G,
+					global.Consts.p,
+					global.Consts.q, 
+					PAVShared.getPublicKey(),
+					PAVShared.getCastVotes().size());*/
 			mnRetVotes = mixNets.receive_from_prev_mix_center();
 			
 			if (!mnSend){
@@ -94,7 +107,7 @@ public class Main {
 			
 		}
 		
-	
+		tc.close();
 		
 		PAVShared.announceResults(voteSum);
 		
