@@ -169,7 +169,7 @@ public class PAVShared {
 	 * @return current ballot offset
 	 */
 	public static int getAndAdvanceOffset(){
-		offset = (offset++) % Consts.PARTIES_AMOUNT;
+		offset = (offset + 1) % Consts.PARTIES_AMOUNT;
 		
 		return offset;
 	}
