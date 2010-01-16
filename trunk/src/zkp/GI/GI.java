@@ -25,10 +25,12 @@ public class GI implements IGI
 
 		BigIntegerMod tempR;
 		int[] piInv = new int[n];
+		int[] lambdaTagInv = new int[n];
  
 		for (int i = 0; i < Repetition; i++)
 		{
-			lambda[i] = createLambda(n); 
+			//lambda[i] = createLambda(n);
+			lambda[i] = new int[]{1,0,2,4,3};
 			C[i] = createCi(A,lambda[i],n,w,g);
 		}
 
@@ -42,9 +44,10 @@ public class GI implements IGI
 			if (hash.charAt(i) != '0')
 			{
 				lambda[i] = makelambdaTAG(lambda[i],piInv);
+				lambdaTagInv = createPiInv(lambda[i]);
 				for (int j = 0;j <n; j++)//	makeTiTAG()
 				{
-					tempR = C[i][j].getR().substract(B[j].getR());//ti-ri
+					tempR = C[i][j].getR().substract(B[lambdaTagInv[j]].getR());//ti-ri
 					C[i][j].setR(tempR)	;
 				}
 			}
@@ -115,7 +118,7 @@ public class GI implements IGI
 		CryptObject[] tempC=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			tempC[i]=gamal.reencrypt(A[lambda[i]]);			
+			tempC[lambda[i]]=gamal.reencrypt(A[i]);			
 		}
 		return tempC;
 	}
@@ -159,7 +162,9 @@ public class GI implements IGI
 		{
 			throw new ZkpException(exception.getMessage());
 		}
-
+		//
+		//challenge = "00";
+		//
 		return challenge;
 	}
 		
@@ -199,7 +204,10 @@ public class GI implements IGI
 		for (int i = 0; i < matrix1.length; i++)
 		{
 
-			tempCipher[i] = gamal.reencrypt(matrix1[premutation[i]], matrix2[i].getR());
+			tempCipher[premutation[i]] = gamal.reencrypt(matrix1[i], matrix2[premutation[i]].getR());
+		}
+		for (int i = 0; i < matrix1.length; i++)
+		{
 			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
 			{
 				return false;
@@ -218,7 +226,10 @@ public class GI implements IGI
 		for (int i = 0; i < matrix1.length; i++)
 		{
 
-			tempCipher[i] = gamal.reencrypt(matrix1[premutation[i]].getCiphertext(), matrix2[i].getR());
+			tempCipher[premutation[i]] = gamal.reencrypt(matrix1[i].getCiphertext(), matrix2[premutation[i]].getR());
+		}
+		for (int i = 0; i < matrix1.length; i++)
+		{
 			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
 			{
 				return false;
