@@ -36,6 +36,11 @@ public class MixCenterProcess {
 			isZKPValid = false;
 			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
 		}
+		//in case ZKP proof was false
+		if (proof == "falseProof"){
+			isZKPValid = false;
+			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id);
+		}
 		else{
 			MC.printToFile(proof, isZKPValid);
 			MixCenter.write("ZKP is done, proof file was created and has valid data...", id);
