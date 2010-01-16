@@ -253,8 +253,8 @@ public class PAVShared {
 
 		//Convert from one BigIntegerMod to an array of votes
 		for(int i=0; i<resultArray.length; i++){
-			resultArray[i] = sumOfVotes.mod(getPlaintextVote(1).getValue()).intValue();
-			sumOfVotes = sumOfVotes.divide(getPlaintextVote(1).getValue());
+			resultArray[i] = sumOfVotes.mod(getPlaintextVotes().get(1).getValue()).intValue();
+			sumOfVotes = sumOfVotes.divide(getPlaintextVotes().get(1).getValue());
 		}
 
 		//Find the max in resultArray, and if there is a tie
