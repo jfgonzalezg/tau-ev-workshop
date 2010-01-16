@@ -37,7 +37,8 @@ public class PAVShared {
 	
 	public static IOneOutOfL zkpMaker;
 	
-	private static String WBBPath = "C:\\Temp\\WBB.xml"; // WBB file path
+	private static String WBBPath = "WBB.xml"; // WBB file path
+	private static FileWriter wbbWriter = null;
 	
 	/***********************************************************
 	 * ******************************************************* *
@@ -79,7 +80,6 @@ public class PAVShared {
 						Consts.VOTERS_AMOUNT);			
 		}
 		
-		
 		for (int i = 0; i<Consts.PARTIES_AMOUNT;i++){
 			BigInteger b =  BigInteger.ZERO;
 			plaintextVotes.put(new Integer(i),
@@ -90,9 +90,8 @@ public class PAVShared {
 		}
 		
 		// Start the WBB file
-		
 		try{
-			FileWriter wbbWriter = new FileWriter(WBBPath,true);
+			wbbWriter = new FileWriter(WBBPath,false);
 			wbbWriter.write("<?xml version=\"1.0\"?>\n");
 			wbbWriter.write("<WBB>\n");
 			wbbWriter.write("\t<P>"+toBase64(global.Consts.p)+"</P>\n");
@@ -100,7 +99,8 @@ public class PAVShared {
 			wbbWriter.write("\t<G>"+toBase64(global.Consts.G)+"</G>\n");
 			wbbWriter.close();
 		} catch(IOException ioe){
-			//TODO: Handle Exception
+			System.err.println("Failed when writing to WBB file");
+			ioe.printStackTrace();
 		}
 		
 		
@@ -108,10 +108,10 @@ public class PAVShared {
 		ArrayList<Ciphertext> pairsListForZKP = new ArrayList<Ciphertext>();
 		ElGamal elGamal = new ElGamal(publicKey);
 		for (int i = 0; i < global.Consts.PARTIES_AMOUNT; i++) {
-			CryptObject encObj = elGamal.encrypt(plaintextVotes.get(i), new BigIntegerMod(BigInteger.ONE));
+			CryptObject encObj = elGamal.encrypt(plaintextVotes.get(i), new BigIntegerMod(BigInteger.ONE, Consts.q));
 			pairsListForZKP.add(encObj.getCiphertext());
 		}
-		zkpMaker = new OneOutOfL(pairsListForZKP);	
+		zkpMaker = new OneOutOfL(pairsListForZKP);
 	}
 	
 	/**
@@ -119,11 +119,12 @@ public class PAVShared {
 	 */
 	public static void terminate(){
 		try{
-			FileWriter wbbWriter = new FileWriter(WBBPath,true);
+			wbbWriter = new FileWriter(WBBPath,true);
 			wbbWriter.write("</WBB>");
 			wbbWriter.close();
 		} catch(IOException ioe){
-			//TODO: Handle Exception
+			System.err.println("Failed when writing to WBB file");
+			ioe.printStackTrace();
 		}
 	}
 	
@@ -141,7 +142,7 @@ public class PAVShared {
 	 * @return the vote for the candidate.
 	 */
 	public static BigIntegerMod getPlaintextVote(int index){
-		return plaintextVotes.get(new Integer(index));	
+		return inMixNetsMode ?  plaintextVotes.get(index) : expPlaintextVotes.get(index);	
 	}
 	
 	/**
@@ -320,18 +321,14 @@ public class PAVShared {
 	 * @param voterID - the ID of the voter who cast the vote.
 	 */
 	public static void appendVoteToWBB(Vote vote, String voterID){
-		FileWriter wbbWriter = null;
+		
 		String voteBuffer = "";
-		try{
-			wbbWriter = new FileWriter(WBBPath,true);
-		} catch(IOException ioe){
-			//TODO: Handle Exception
-		}
 		
 		voteBuffer+="\t<vote>\n";
 		voteBuffer+="\t\t<voterID>"+voterID+"</voterID>\n";
 		voteBuffer+="\t\t<encryptedVote>"+vote.getEncryptionBase64()+"</encryptedVote>\n";
-		voteBuffer+="\t\t<oneOutOfLProof>\n";
+		/*voteBuffer+="\t\t<oneOutOfLProof>\n"; // TODO: return to code once ZKP works
+		System.out.println(vote.getZKP());
 		voteBuffer+="\t\t\t<C>"+toBase64(vote.getZKP().getC())+"</C>\t";
 		voteBuffer+="\t\t\t<DList>\n\t\t\t";
 		for(BigIntegerMod b : vote.getZKP().getD_List()){
@@ -345,14 +342,16 @@ public class PAVShared {
 			voteBuffer+="::";
 		}
 		voteBuffer+="\n\t\t\t</RList>\n";
-		voteBuffer+="\t\t</oneOutOfLProof>\n";
+		voteBuffer+="\t\t</oneOutOfLProof>\n";*/
 		voteBuffer+="\t</vote>\n";
 		
 		try{
+			wbbWriter = new FileWriter(WBBPath,true);
 			wbbWriter.write(voteBuffer);
 			wbbWriter.close();
 		}catch (IOException ioe){
-			//TODO: Handle Exception
+			System.err.println("Failed when writing to WBB file");
+			ioe.printStackTrace();
 		}		
 	}
 }
