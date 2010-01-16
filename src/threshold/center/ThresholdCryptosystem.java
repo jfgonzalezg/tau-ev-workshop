@@ -8,6 +8,8 @@ import tcp.Server;
 import threshold.IThresholdCryptosystem;
 import threshold.ThresholdPacket;
 import threshold.ThresholdPacket.PacketType;
+import zkp.ZkpException;
+import zkp.EDlog.EDlog;
 import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import global.Consts;
@@ -25,6 +27,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 	private BigInteger clientsPolynoms[][];
 	private BigIntegerMod mutualPolynom[];
 	private BigIntegerMod clientsPublicKeys[];
+	private EDlog ZKP;
 	private boolean keyReady;
 	private Integer keyReadyLock = new Integer(0);
 	private boolean keyExchangeDone;
@@ -65,6 +68,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		}
 		keyReady = false;
 		keyExchangeDone = false;
+		ZKP = new EDlog();
 		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
 		new KeyExchangeThread();
 	}
@@ -206,7 +210,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		wait4KeyExchange();
 		sendM2ChosenParties(ciphertext.getA().getValue(), chosenParties);
 		BigIntegerMod lambdas[] = computeLambdas(chosenParties);
-		BigIntegerMod w_i[] = receiveFromChosenParties(parties2Use);
+		BigIntegerMod w_i[] = receiveFromChosenParties(parties2Use, ciphertext.getA());
 		BigIntegerMod c_s = compute_c_s(w_i, lambdas);
 		return ciphertext.getB().multiply(c_s.inverse());
 	}
@@ -219,13 +223,24 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return result;
 	}
 
-	private BigIntegerMod[] receiveFromChosenParties(int t) {
+	private BigIntegerMod[] receiveFromChosenParties(int t, BigIntegerMod m) {
 		BigIntegerMod w_i[] = new BigIntegerMod[t];
+		BigIntegerMod next_w_i;
 		ThresholdPacket packet;
+		boolean ZKP_OK = false;
 		for (int i=0; i<t; ++i) {
 			packet = recieveNextPacket();
-			w_i[packet.dest] = new BigIntegerMod(packet.Data[0][0], p);
-			//TODO add ZKP check
+			next_w_i = new BigIntegerMod(packet.Data[0][0], p);
+			try {
+				ZKP_OK = ZKP.verifyEDlogProof(packet.ZKP, m, clientsPublicKeys[packet.source], next_w_i);
+			} catch (ZkpException e) {
+				e.printStackTrace();
+			}
+			if (!ZKP_OK) {
+				System.out.println("ZKP went wrong");
+				//TODO handle wrong ZKP
+			}
+			w_i[packet.dest] = next_w_i;
 		}
 		return w_i;
 	}

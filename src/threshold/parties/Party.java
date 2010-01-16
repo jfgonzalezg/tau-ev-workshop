@@ -11,6 +11,8 @@ import tcp.Client;
 import threshold.ThresholdPacket;
 import threshold.ThresholdPacket.PacketType;
 import threshold.center.ThresholdCryptosystem;
+import zkp.ZkpException;
+import zkp.EDlog.EDlog;
 
 public class Party {
 
@@ -29,6 +31,7 @@ public class Party {
 	private BigIntegerMod mutualPolynom[];
 	private BigIntegerMod mutualPrivateKey;
 	private BigIntegerMod mutualPublicKey = null;
+	private EDlog ZKP;
 	private ElGamal elGamal;
 	private PartyThread thread;
 	private boolean polynomGenerated;
@@ -45,6 +48,7 @@ public class Party {
 		polynomGeneratedLock = new Integer(0);
 		keyExchangeFinished = false;
 		keyExchangeFinishedLock = new Integer(0);
+		ZKP = new EDlog();
 		//waitingLock = new Integer(0);
 		waitToConnect();
 		thread = new PartyThread();
@@ -131,6 +135,7 @@ public class Party {
 			ThresholdPacket receivingPacket = receive();
 			ThresholdPacket sendingPacket;
 			BigIntegerMod m;
+			BigIntegerMod mpow;
 			while (!closing) {
 				sendingPacket = new ThresholdPacket();
 				sendingPacket.type = PacketType.NUMBER;
@@ -138,9 +143,13 @@ public class Party {
 				sendingPacket.source = receivingPacket.dest;
 				sendingPacket.Data = new BigInteger[1][1];
 				m = new BigIntegerMod(receivingPacket.Data[0][0], p);
-				m = m.pow(mutualPrivateKey);
-				sendingPacket.Data[0][0] = m.getValue();
-				//TODO add ZKP
+				mpow = m.pow(mutualPrivateKey);
+				sendingPacket.Data[0][0] = mpow.getValue();
+				try {
+					sendingPacket.ZKP = ZKP.createEDlogProof(m, mutualPublicKey, mpow, mutualPrivateKey);
+				} catch (ZkpException e) {
+					e.printStackTrace();
+				}
 				client.send(sendingPacket);
 				receivingPacket = receive();
 			}

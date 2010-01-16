@@ -3,6 +3,8 @@ package threshold;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+import zkp.EDlog.EDlogProof;
+
 public class ThresholdPacket implements Serializable{
 
 	private static final long serialVersionUID = 3142608504206907437L;
@@ -20,4 +22,5 @@ public class ThresholdPacket implements Serializable{
 	public Integer dest;
 	public int Parameters[];
 	public BigInteger Data[][];
+	public EDlogProof ZKP;
 }
