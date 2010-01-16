@@ -13,8 +13,8 @@ import MixCenter.Ran1_test;
 
 public class  GItest{
 	
-	public static int n=4;
-	public static int[] pi = new int [] {2,3,0,1};
+	public static int n=5;
+	public static int[] pi = new int [] {4,1,0,2,3};
 	//public static Ciphertext[] A;
 	//public static CryptObject[] B;
 	public static BigIntegerMod w = Consts.getG().pow(Consts.getQ());
@@ -42,13 +42,18 @@ public class  GItest{
 		
 		for (int j=0; j<n; j++)
 		{
-			B[j] = new CryptObject(a, A[pi[j]], c);
+			//B[pi[j]] = new CryptObject(a, A[j], c);
+			B[pi[j]]=gamal.reencrypt(A[j]);
 		}
 		
 			
 		try {
 			giproof=gi.createGIProof(A, B, pi, n, w, Consts.getG());
 			flag = gi.verifyGIProof(giproof, A, B, w, Consts.getG());
+			if (flag)
+				System.out.println("YES");
+			else
+				System.out.println("AVADOBI");
 		} catch (ZkpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
