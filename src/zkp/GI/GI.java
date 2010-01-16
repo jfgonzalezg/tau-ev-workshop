@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
-	private static int Repetition=40;
+	private static int Repetition=2;
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g) throws ZkpException
 	{	
@@ -151,9 +151,9 @@ public class GI implements IGI
 					m.update(C[i][j].getCiphertext().getB().getValue().toByteArray());
 				}
 			}
-			temp = new BigInteger(m.digest()); //create biginteger hash
+			temp = new BigInteger(m.digest()).abs(); //create biginteger hash
 			String tempstr = temp.toString(2); //change biginteger to binary string
-			challenge = tempstr.substring(0,Repetition-1); //cut first "repetition" chars from string 
+			challenge = tempstr.substring(0,Repetition); //cut first "repetition" chars from string 
 		}
 		catch (NoSuchAlgorithmException exception)
 		{

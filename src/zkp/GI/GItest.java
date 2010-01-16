@@ -18,6 +18,8 @@ public class  GItest{
 	//public static Ciphertext[] A;
 	//public static CryptObject[] B;
 	public static BigIntegerMod w = Consts.getG().pow(Consts.getQ());
+	public static GIProof giproof;
+	public static boolean flag;
 	
 	public static void main(String[] args)
 	{
@@ -26,8 +28,9 @@ public class  GItest{
 		GI gi = new GI();
 		ElGamal gamal=new ElGamal(Consts.getP(),Consts.getG(),w,null);
 		
-		BigIntegerMod a = new BigIntegerMod(BigInteger.ONE, BigInteger.TEN);
-		BigIntegerMod b = new BigIntegerMod(BigInteger.ONE, BigInteger.TEN);
+		BigIntegerMod a = new BigIntegerMod(Consts.getP());
+		BigIntegerMod b = new BigIntegerMod(Consts.getP());
+		BigIntegerMod c = new BigIntegerMod(Consts.getQ());
 		Ciphertext[] A = new Ciphertext[n];
 		CryptObject[] B = new CryptObject[n];	
 		
@@ -39,12 +42,13 @@ public class  GItest{
 		
 		for (int j=0; j<n; j++)
 		{
-			B[j] = new CryptObject(a, A[pi[j]], b);
+			B[j] = new CryptObject(a, A[pi[j]], c);
 		}
 		
 			
 		try {
-			gi.createGIProof(A, B, pi, n, w, Consts.getG());
+			giproof=gi.createGIProof(A, B, pi, n, w, Consts.getG());
+			flag = gi.verifyGIProof(giproof, A, B, w, Consts.getG());
 		} catch (ZkpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
