@@ -5,7 +5,8 @@ import threshold.center.ThresholdCryptosystem;
 import threshold.parties.PartiesManager;
 
 import java.math.BigInteger;
-import pavBatchUI.BatchUI;
+
+import pavUI.BatchUI;
 import elgamal.*;
 import global.*;
 
