@@ -139,6 +139,12 @@ public class MixCenter implements IMixCenter
 		//check whether ZKP returned a NULL. 
 		if (zkp!=null)
 			return zkp.toString();
+		
+		//in case ZKP proof was false
+		if (!(zkpGI.verifyGIProof(zkp, this.getArrayA(), this.getArrayB(), this.w, this.g)))
+		{
+			return "falseProof";
+		}
 		else
 			return null;
 		}
