@@ -288,7 +288,7 @@ public class PAVShared {
 				if (resultArray[i]<maxVotes)
 					System.out.println("Candidate"+i+": "+resultArray[i]+" votes.");
 		}else{
-			System.out.println("The winner is Candidate"+winnerIndex+" with "+resultArray[winnerIndex]+" votes");
+			System.out.println("The winner is Candidate"+winnerIndex+" with "+resultArray[winnerIndex]+" votes.");
 			System.out.println("Other results are:");
 			for(int i=0; i<resultArray.length; i++)
 				if (resultArray[i]<maxVotes)
