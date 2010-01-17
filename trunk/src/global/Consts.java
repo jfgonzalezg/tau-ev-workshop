@@ -14,6 +14,7 @@ public class Consts {
 		FILE
 	}
 
+	private static final boolean USE_RANDOM_P = false;
 	private static final boolean DISABLE_LOGGER = false;
 	private static final boolean DEBUG_MODE = true;
 	private static final String LOG_FILE = "Elections_Log.txt";
@@ -90,18 +91,19 @@ public class Consts {
 	}
 
 	private static BigInteger getRandomLargePrimeQ() {
-		return new BigInteger("102878210466625684448564152718275770164400015795599081323142484261174204395771542931556573005457548994300390542836390656590342719190546003475313704107511340660051255130886898195350488634781241593291629806029940967099127171111741121800016354471000128327690358673195988965015732141003244933469931582512668226603");
-		/* TODO - bring back these lines instead of the line above
-		BigInteger q = null;
-		BigInteger p = null;
-		do {
-			System.out.print(".");
-			q = new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
-			p = getP(q);
-		} while (!Utils.isPrime(p));
-		System.out.println("");
-		return q;
-		*/
+		if (USE_RANDOM_P) {
+			BigInteger q = null;
+			BigInteger p = null;
+			do {
+				System.out.print(".");
+				q = new BigInteger(BITS_AMOUNT, CERTAINTY, new Random());
+				p = getP(q);
+			} while (!Utils.isPrime(p));
+			System.out.println("");
+			return q;
+		} else {
+			return new BigInteger("102878210466625684448564152718275770164400015795599081323142484261174204395771542931556573005457548994300390542836390656590342719190546003475313704107511340660051255130886898195350488634781241593291629806029940967099127171111741121800016354471000128327690358673195988965015732141003244933469931582512668226603");
+		}
 	}
 
 	private static BigInteger getP(BigInteger q) {
