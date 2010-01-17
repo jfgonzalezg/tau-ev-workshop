@@ -9,6 +9,10 @@ import java.math.BigInteger;
 import java.util.*;
 
 import org.apache.commons.codec.binary.Base64;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import zkp.OneOutOfL.*;
 
@@ -275,25 +279,33 @@ public class PAVShared {
 		}
 		
 		//Announce results
+		String message = "";
 		if (isTie){
 			int numberOfTie = 0;
-			System.out.println("There is a tie of "+maxVotes+" votes between:");
+			message += "There is a tie of "+maxVotes+" votes between:\n";
 			for(int i=0;i<resultArray.length; i++)
 				if (resultArray[i] == maxVotes){
 					numberOfTie++;
-					System.out.println("Candidate"+i);
+					message += "Candidate"+i+"\n";
 				}
-			if (numberOfTie != resultArray.length) System.out.println("Other results are:");
+			if (numberOfTie != resultArray.length) message +="Other results are:\n";
 			for(int i=0; i<resultArray.length; i++)
 				if (resultArray[i]<maxVotes)
-					System.out.println("Candidate"+i+": "+resultArray[i]+" votes.");
+					message +="Candidate"+i+": "+resultArray[i]+" votes.\n";
 		}else{
-			System.out.println("The winner is Candidate"+winnerIndex+" with "+resultArray[winnerIndex]+" votes.");
-			System.out.println("Other results are:");
+			message += "The winner is Candidate"+winnerIndex+" with "+resultArray[winnerIndex]+" votes.\n";
+			message += "Other results are:\n";
 			for(int i=0; i<resultArray.length; i++)
 				if (resultArray[i]<maxVotes)
-					System.out.println("Candidate"+i+": "+resultArray[i]+" votes.");
-		}		
+					message += "Candidate"+i+": "+resultArray[i]+" votes.\n";
+		}	
+		
+
+		MessageBox emptyName = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_INFORMATION | SWT.OK);
+		emptyName.setMessage(message);
+		emptyName.setText("Election Results");
+		if (emptyName.open() == SWT.OK) System.exit(-1);
+		
 	}
 	
 	
