@@ -52,7 +52,7 @@ public class ElGamal implements IElGamal {
 		this.p = P;
 		this.q = P.subtract(BigInteger.ONE).divide(Consts.TWO);
 		this.ONE = new BigIntegerMod(BigInteger.ONE, P);
-		if (G.getMod() != P) {
+		if (!(G.getMod().equals(P))) {
 			Consts.log("Trying to assign G where G.getMod() != P", DebugOutput.STDERR);
 			Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 		}
