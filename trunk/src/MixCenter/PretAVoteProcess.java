@@ -15,13 +15,15 @@ public class PretAVoteProcess {
 		
 		//Create some votes
 		Ciphertext[] votes= new Ciphertext[numOfVotes];
-		BigIntegerMod g = new BigIntegerMod(new BigInteger("3"),new BigInteger("4"));
-		BigInteger p = new BigInteger("5");
-		BigInteger q = new BigInteger("6");
-		BigIntegerMod w = new BigIntegerMod(new BigInteger("7"),new BigInteger("8"));
+		BigInteger p = new BigInteger("23");
+		BigInteger q = new BigInteger("11");
+		BigIntegerMod g = new BigIntegerMod(new BigInteger("2"),p);
+		BigIntegerMod w = new BigIntegerMod(new BigInteger("7"),p);
 		for (int i = 0; i<numOfVotes; i++){
-			BigIntegerMod a = new BigIntegerMod(new BigInteger("9"+10*i),new BigInteger("10"+10*i));
-			BigIntegerMod b = new BigIntegerMod(new BigInteger("11"+10*i),new BigInteger("12"+10*i));
+			BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
+			BigIntegerMod b = new BigIntegerMod(new BigInteger("17"), p);
+			//BigIntegerMod a = new BigIntegerMod(new BigInteger("9"+10*i),p);
+			//BigIntegerMod b = new BigIntegerMod(new BigInteger("11"+10*i),p);
 			Ciphertext vote = new Ciphertext(a, b);
 			votes[i] = vote;
 		}
