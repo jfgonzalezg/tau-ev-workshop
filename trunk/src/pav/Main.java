@@ -5,7 +5,9 @@ import threshold.center.ThresholdCryptosystem;
 import threshold.parties.PartiesManager;
 
 import java.math.BigInteger;
+import java.util.Random;
 
+import pavBallot.Ballot;
 import pavUI.BatchUI;
 import pavUI.InitialGUI;
 import elgamal.*;
@@ -24,10 +26,12 @@ public class Main {
 		
 		boolean guiFlag = true;
 		boolean mixNetsFlag = false;
+		boolean randomMode = false;
 		
 		for (String arg : args) {
 			if (arg.equals("-gui")) guiFlag = true;
 			else if (arg.equals("-mix-nets")) mixNetsFlag = true;
+			else if (arg.equals("-random")) randomMode = true;
 			else printUsage();
 		}
 		
@@ -40,7 +44,7 @@ public class Main {
 		new PartiesManager();
 		
 		try{
-			System.out.println("KALEV: public key is"+tc.getMutualPublicKey());
+			System.out.println("KALEV: public key is "+tc.getMutualPublicKey());
 			PAVShared.setPublicKey(tc.getMutualPublicKey());
 		}catch (ElectionsSetUpException esue){
 			System.err.println(esue);
@@ -54,7 +58,13 @@ public class Main {
 			System.exit(-1);
 		}
 		
-		if (PAVShared.inGUIMode()){
+		if (randomMode){
+			Random rand = new Random();
+			for (int i=0; i<Consts.VOTERS_AMOUNT; i++){
+				PAVShared.addCastVote((new Ballot()).getVote(rand.nextInt(Consts.PARTIES_AMOUNT)), rand.nextInt(100000)+"");
+			}
+		}
+		else if (PAVShared.inGUIMode()){
 			InitialGUI.runGUI();
 		} else {
 			BatchUI.run();
