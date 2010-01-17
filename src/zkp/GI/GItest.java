@@ -45,7 +45,7 @@ public class  GItest{
 		}
 		
 			
-		try {
+	
 			giproof=gi.createGIProof(A, B, pi, n, w, Consts.getG());
 			System.out.println(giproof.toString());
 			flag = gi.verifyGIProof(giproof, A, B, w, Consts.getG());
@@ -53,10 +53,7 @@ public class  GItest{
 				System.out.println("YES");
 			else
 				System.out.println("NO");
-		} catch (ZkpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 	}
 
