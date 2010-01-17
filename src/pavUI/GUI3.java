@@ -53,9 +53,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
     private Button Bback;
 	private static Shell shell = null;
 	private List list;
-//   String str = "123456789012345678911234567892123456789312345678941234567895" +
-//		"123456578961234567897123456789812345678991234567890";
-
+	public static int mone = 0;
 			
 	/**
 	* Auto-generated main method to display this 
@@ -74,8 +72,8 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
 		//Shell
-		shell = new Shell(display);
-		GUI3 inst = new GUI3(shell, SWT.NULL);
+		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
+		GUI3 inst = new GUI3(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
@@ -85,7 +83,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 			shell.pack();
 		} else {
 //			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(400,600);
+			shell.setSize(450,650);
 		}
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -108,6 +106,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
         if (event.widget == Bconfirm) {
         	System.out.println("You clicked Confirm");
 	        PAVShared.addCastVote(GUI2.getVote(), InitialGUI.getvoterID());
+	        mone = mone + 1;
         	shell.close();
            	InitialGUI.setsw(1);
         	InitialGUI.setezer(4);
@@ -130,8 +129,8 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 			{
 				Bconfirm = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 				FormData BconfirmLData = new FormData();
-				BconfirmLData.left =  new FormAttachment(0, 1000, 290);
-				BconfirmLData.top =  new FormAttachment(0, 1000, 480);
+				BconfirmLData.left =  new FormAttachment(0, 1000, 310);
+				BconfirmLData.top =  new FormAttachment(0, 1000, 540);
 				BconfirmLData.width = 88;
 				BconfirmLData.height = 47;
 				Bconfirm.setLayoutData(BconfirmLData);
@@ -170,7 +169,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Bback = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 				FormData BbackLData = new FormData();
 				BbackLData.left =  new FormAttachment(0, 1000, 85);
-				BbackLData.top =  new FormAttachment(0, 1000, 480);
+				BbackLData.top =  new FormAttachment(0, 1000, 540);
 				BbackLData.width = 160;
 				BbackLData.height = 27;
 				Bback.setLayoutData(BbackLData);
@@ -206,20 +205,20 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
            	}	
            	{
     			FormData list1LData = new FormData();
-    			list1LData.left =  new FormAttachment(0, 1000, 140);
+    			list1LData.left =  new FormAttachment(0, 1000, 120);
     			list1LData.top =  new FormAttachment(0, 1000, 216);
-    			list1LData.width = 270;
-    			list1LData.height = 80;
+    			list1LData.width = 300;
+    			list1LData.height = 220;
     			list = new List(this, SWT.NONE);
     			list.setLayoutData(list1LData);			
     			}
     			
     		
-    			int mana = (GUI2.str.length())/30;
+    			int mana = (GUI2.str.length())/35;
     			for (int j=0;j<mana;j++  ){
-    				 list.add(GUI2.str.substring(j*30,(j+1)*30));    
+    				 list.add(GUI2.str.substring(j*35,(j+1)*35));    
     				 }
-    				 list.add(GUI2.str.substring(mana*30));
+    				 list.add(GUI2.str.substring(mana*35));
 			
             
 		this.layout();

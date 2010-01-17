@@ -59,9 +59,6 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private Button BExit;
 	private static Shell shell = null;
 	private static String voterID;
-//	String str = "123456789012345678911234567892123456789312345678941234567895" +
-//		"123456578961234567897123456789812345678991234567890";
-
 	
 	/**
 	* Auto-generated main method to display this 
@@ -107,9 +104,9 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	public static void showGUI() {
 		sw = 0;
 		Display display = Display.getDefault();
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
 		
-		InitialGUI inst = new InitialGUI(shell, SWT.NULL);
+		InitialGUI inst = new InitialGUI(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
@@ -197,10 +194,11 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		        if (event.widget == startVoting) {
 		        	System.out.println("You clicked Strart Voting");
 		        	checkAndExecute();
-		        			         }
+		        }else
 		        if (event.widget == BExit){
 		        	System.out.println("You clicked Exit");
-		        	idInfo.setText(""); 
+		        	shell.close();
+		        	sw = 0;
 		        }
 		      }
 		    };

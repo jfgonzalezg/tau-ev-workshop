@@ -46,7 +46,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	
+	private  static int numVote=global.Consts.VOTERS_AMOUNT;
 	private Label Ltenc;
     
 	private Button Bdone;
@@ -56,9 +56,6 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	private static Shell shell = null;
 	
 	private List list;
-//   String str = "123456789012345678911234567892123456789312345678941234567895" +
-//		"123456578961234567897123456789812345678991234567890";
-
 	
 		
 	/**
@@ -85,9 +82,9 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
 		//Shell
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
 		
-		GUI4 inst = new GUI4(shell, SWT.NULL);
+		GUI4 inst = new GUI4(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
 		shell.layout();
@@ -96,7 +93,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 			shell.pack();
 		} else {
 //			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(400,600);
+			shell.setSize(450,650);
 		}
 		shell.open();
 
@@ -122,16 +119,20 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	        if (event.widget == Bdone) {
 	        	System.out.println("You clicked done");
 	        	shell.close();
+	        	if (GUI3.mone >= numVote)
+	           	    InitialGUI.setsw(0);
+	        	else{	        		
 	           	InitialGUI.setsw(1);
-	        	InitialGUI.setezer(1);
-	        	
-	        } else 
-	       	if (event.widget == Brec) {
-	            	System.out.println("You clicked for recepite.Hear is your recepite.");
-	            	shell.close();
-		        	InitialGUI.setsw(1);
-		        	InitialGUI.setezer(1);
-	        }
+	           	InitialGUI.setezer(1);
+	        	}
+	        } 
+//	        else 
+//	       	if (event.widget == Brec) {
+//	            	System.out.println("You clicked for recepite.Hear is your recepite.");
+//	            	shell.close();
+//		        	InitialGUI.setsw(1);
+//		        	InitialGUI.setezer(1);
+//	        }
 
 	      }
 	    };    
@@ -139,24 +140,24 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 				FormLayout thisLayout = new FormLayout();
 				this.setLayout(thisLayout);
 				this.setBackground(SWTResourceManager.getColor(248, 231, 231));
-				{
-					Brec = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
-					FormData BrecLData = new FormData();
-					BrecLData.left =  new FormAttachment(0, 1000, 78);
-					BrecLData.top =  new FormAttachment(0, 1000, 470);
-					BrecLData.width = 150;
-					BrecLData.height = 32;
-										Brec.setLayoutData(BrecLData);
-					Brec.setText("Print Recepit");
-					Brec.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
-					Brec.setBackground(SWTResourceManager.getColor(255, 255, 255));
-					Brec.addListener(SWT.Selection, listener3);
-				}
+//				{
+//					Brec = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
+//					FormData BrecLData = new FormData();
+//					BrecLData.left =  new FormAttachment(0, 1000, 78);
+//					BrecLData.top =  new FormAttachment(0, 1000, 540);
+//					BrecLData.width = 150;
+//					BrecLData.height = 32;
+//										Brec.setLayoutData(BrecLData);
+//					Brec.setText("Print Recepit");
+//					Brec.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
+//					Brec.setBackground(SWTResourceManager.getColor(255, 255, 255));
+//					Brec.addListener(SWT.Selection, listener3);
+//				}
 				{
 					Bdone = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 					FormData BdoneLData = new FormData();
 					BdoneLData.left =  new FormAttachment(0, 1000, 300);
-					BdoneLData.top =  new FormAttachment(0, 1000, 470);
+					BdoneLData.top =  new FormAttachment(0, 1000, 510);
 					BdoneLData.width = 79;
 					BdoneLData.height = 52;
 					Bdone.setLayoutData(BdoneLData);
@@ -205,20 +206,20 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 				}
 				{
 	    			FormData list1LData = new FormData();
-	    			list1LData.left =  new FormAttachment(0, 1000, 85);
+	    			list1LData.left =  new FormAttachment(0, 1000, 65);
 	    			list1LData.top =  new FormAttachment(0, 1000, 260);
-	    			list1LData.width = 270;
-	    			list1LData.height = 80;
+	    			list1LData.width = 300;
+	    			list1LData.height = 220;
 	    			list = new List(this, SWT.NONE);
 	    			list.setLayoutData(list1LData);			
 	    			}
 	    			
 	    		
-	    			int mana = (GUI2.str.length())/30;
+	    			int mana = (GUI2.str.length())/35;
 	    			for (int j=0;j<mana;j++  ){
-	    				 list.add(GUI2.str.substring(j*30,(j+1)*30));    
+	    				 list.add(GUI2.str.substring(j*35,(j+1)*35));    
 	    				 }
-	    				 list.add(GUI2.str.substring(mana*30));
+	    				 list.add(GUI2.str.substring(mana*35));
 				
 	            
 	            
