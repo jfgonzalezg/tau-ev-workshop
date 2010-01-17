@@ -51,11 +51,9 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 	private Button Bnew;
 	private Button Bbac;
 	private static Shell shell = null;
-	
+	private static String str;
 	private List list;
-    String str = "0000000005678911234567892123456789312345678941234567895" +
-		"123456578961234567897123456789812345678991234567890";
-
+ 
 	
 		/**
 	* Auto-generated main method to display this 
@@ -72,7 +70,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 	public static void showGUI5() {
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
 		
 		GUI5 inst = new GUI5(shell, SWT.NULL);
 		Point size = inst.getSize();
@@ -83,7 +81,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 			shell.pack();
 		} else {
 			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(400,600);
+			shell.setSize(450,650);
 		}
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -111,15 +109,15 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
         	shell.close();
         	InitialGUI.setsw(1);
         	InitialGUI.setezer(1);
-        	
-        } else 
-       	if (event.widget == Bbac) {
-            	System.out.println(" Printing...");
-            	shell.close();
-            	InitialGUI.setsw(1);
-            	InitialGUI.setezer(1);
-            	
-        }
+            }
+//          else 
+//       	if (event.widget == Bbac) {
+//            	System.out.println(" Printing...");
+//            	shell.close();
+//            	InitialGUI.setsw(1);
+//            	InitialGUI.setezer(1);
+//            	
+//        }
       }
     };
 		try {
@@ -130,29 +128,29 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 				
 				Bnew = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 				FormData BnewLData = new FormData();
-				BnewLData.left =  new FormAttachment(0, 1000, 280);
-				BnewLData.top =  new FormAttachment(0, 1000, 510);
+				BnewLData.left =  new FormAttachment(0, 1000, 260);
+				BnewLData.top =  new FormAttachment(0, 1000, 540);
 				BnewLData.width = 107;
-				BnewLData.height = 27;
+				BnewLData.height = 50;
 				Bnew.setLayoutData(BnewLData);
 				Bnew.setText("New Ballot");
 				Bnew.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 				Bnew.setBackground(SWTResourceManager.getColor(255, 255, 255));
 				Bnew.addListener(SWT.Selection, listener5);
 			}
-			{
-				Bbac = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
-				FormData BbacLData = new FormData();
-				BbacLData.left =  new FormAttachment(0, 1000, 88);
-				BbacLData.top =  new FormAttachment(0, 1000, 510);
-				BbacLData.width = 150;
-				BbacLData.height = 28;
-				Bbac.setLayoutData(BbacLData);
-				Bbac.setText("Print Ballot and Seed");
-				Bbac.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
-				Bbac.setBackground(SWTResourceManager.getColor(255, 255, 255));
-				Bbac.addListener(SWT.Selection, listener5);
-			}
+//			{
+//				Bbac = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
+//				FormData BbacLData = new FormData();
+//				BbacLData.left =  new FormAttachment(0, 1000, 88);
+//				BbacLData.top =  new FormAttachment(0, 1000, 510);
+//				BbacLData.width = 150;
+//				BbacLData.height = 28;
+//				Bbac.setLayoutData(BbacLData);
+//				Bbac.setText("Print Ballot and Seed");
+//				Bbac.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
+//				Bbac.setBackground(SWTResourceManager.getColor(255, 255, 255));
+//				Bbac.addListener(SWT.Selection, listener5);
+//			}
 
 			{
 				LTcand = new Label(this, SWT.NONE);
@@ -194,7 +192,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 			
 			{
 				FormData RchoiseLData = new FormData();
-				RchoiseLData.left =  new FormAttachment(0, 1000, 18);
+				RchoiseLData.left =  new FormAttachment(0, 1000, 10);
 				RchoiseLData.top =  new FormAttachment(0, 1000, 285);
 				RchoiseLData.width = 120;
 				RchoiseLData.height = 20;
@@ -205,18 +203,18 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 			}			
 			
 			FormData list1LData = new FormData();
-			list1LData.left =  new FormAttachment(0, 1000, 140);
+			list1LData.left =  new FormAttachment(0, 1000, 135);
 			list1LData.top =  new FormAttachment(0, 1000, 285);
-			list1LData.width = 270;
-			list1LData.height = 80;
+			list1LData.width = 300;
+			list1LData.height = 220;
 			list = new List(this, SWT.NONE);
 			list.setLayoutData(list1LData);
 			
-			int mana = (GUI2.str.length())/30;
+			int mana = (GUI2.str.length())/35;
 			for (int j=0;j<mana;j++  ){
-				 list.add(GUI2.str.substring(j*30,(j+1)*30));    
+				 list.add(GUI2.str.substring(j*35,(j+1)*35));    
 				 }
-				 list.add(GUI2.str.substring(mana*30));
+				 list.add(GUI2.str.substring(mana*35));
 	    	
              
            {

@@ -25,6 +25,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	private static Label Ltenc;
     private static Label Lplease;
     private static int NumCand=global.Consts.PARTIES_AMOUNT;
+   
     private static Vote vote;
 	private static String TheChoisen = "{candidate 10}";
 	private static Ballot ballot;
@@ -33,10 +34,8 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	private static int i=0;
 	private static String strI;
 	private static String cndName;
-
-	
-	public static String str = "123456789012345678911234567892123456789312345678941234567895" +
-		"123456578961234567897123456789812345678991234567890";
+    public static String str ;
+    
 	
 	/**
 	* Auto-generated main method to display this 
@@ -63,7 +62,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
         }
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
-		shell = new Shell(display);		
+		shell = new Shell(display, SWT.DIALOG_TRIM);		
 // 		GUI1 inst = new GUI1(shell, SWT.NULL);
 		final ScrolledComposite sc1 = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		final Composite c1 = new Composite(sc1, SWT.NONE);
@@ -113,7 +112,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 		            LTcand.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
 				
 					Bverify = new Button(c1, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
-					Bverify.setBounds(140, 240+NumCand*100, 100, 50);
+					Bverify.setBounds(140, 240+NumCand*240, 100, 50);
 					Bverify.setText("Verify Ballot");
 					Bverify.addListener(SWT.Selection, listener1);
 					Bverify.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
@@ -125,7 +124,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Ltenc.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
 						
 					Bvote = new Button(c1, SWT.PUSH | SWT.CENTER |SWT.FLAT | SWT.BORDER);
-					Bvote.setBounds(270, 240+NumCand*100, 90, 50);
+					Bvote.setBounds(300, 240+NumCand*240, 90, 50);
 					Bvote.setText("Vote");
 					Bvote.setBackground(SWTResourceManager.getColor(248, 231, 231));
 					Bvote.addListener(SWT.Selection, listener1);
@@ -148,19 +147,19 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Rchoise.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 					cndName = vote.getCandidateName();
 					Rchoise.setText(cndName);
-					Rchoise.setBounds(6, 200+i*100, 100, 20);
+					Rchoise.setBounds(6, 200+i*240, 100, 20);
 					Rchoise.addListener(SWT.Selection, listener);
 				
                     
 					    List list = new List(c1, SWT.NONE);
-						list.setBounds(110, 200+i*100, 250, 80);
+						list.setBounds(110, 200+i*240, 300, 220);
 						
 					    str=vote.getEncryptionBase64();
-						int mana = (str.length())/30;
+						int mana = (str.length())/35;
 						for (int j=0;j<mana;j++  ){
-							 list.add(str.substring(j*30,(j+1)*30));    
+							 list.add(str.substring(j*35,(j+1)*35));    
 							 }
-							 list.add(str.substring(mana*30));
+							 list.add(str.substring(mana*35));
 			           }
 	           if(size.x == 0 && size.y == 0) {
 	   			c1.pack();
@@ -170,8 +169,8 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	   			c1.setSize(shellBounds.width, shellBounds.height);
 	   		}				   
 	    
-  		sc1.setSize(400,600);
-  		shell.setSize(400,600);
+  		sc1.setSize(450,650);
+  		shell.setSize(450,650);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
