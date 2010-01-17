@@ -17,8 +17,8 @@ public class EDlog implements IEDlog {
 		BigInteger q = Consts.getQ();	
 				
 		//check whether a=g^x and b=h^x
-		if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))
-			throw new ZkpException("Bad parameters for creating EDlog proof");
+		//if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))
+		//	throw new ZkpException("Bad parameters for creating EDlog proof");
 	
 
 		// select r from Zq uniformly at random
