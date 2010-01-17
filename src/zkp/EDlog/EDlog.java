@@ -14,12 +14,12 @@ public class EDlog implements IEDlog {
 	
 	private BigIntegerMod g = null;
 
-	public  BigIntegerMod getG() {
+	public BigIntegerMod getG() {
 		return g;
 	}
 
 
-	public  void setG(BigIntegerMod g) {
+	public void setG(BigIntegerMod g) {
 		this.g = g;
 	}
 
@@ -32,8 +32,8 @@ public class EDlog implements IEDlog {
 		BigInteger q = Consts.getQ();	
 				
 		//check whether a=g^x and b=h^x
-		//if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))
-		//	throw new ZkpException("Bad parameters for creating EDlog proof");
+		if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))
+			throw new ZkpException("Bad parameters for creating EDlog proof");
 	
 
 		// select r from Zq uniformly at random
@@ -57,7 +57,7 @@ public class EDlog implements IEDlog {
 	public boolean verifyEDlogProof(EDlogProof proof, BigIntegerMod h, BigIntegerMod a, 
 			BigIntegerMod b) throws ZkpException
 	{
-		BigIntegerMod g = Consts.getG();
+		//BigIntegerMod g = Consts.getG();
 		BigInteger q = Consts.getQ();
 
 		BigIntegerMod u = proof.getU();

@@ -23,7 +23,7 @@ public class EDlogTest {
 	
 		
 		EDlog edlog = new EDlog();
-		edlog.setG(h);
+		edlog.setG(Consts.getG());
 		
 		
 		try {
