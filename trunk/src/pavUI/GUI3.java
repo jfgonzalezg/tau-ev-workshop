@@ -85,6 +85,8 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 //			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(430,650);
 		}
+		shell.setLocation(100, 30);
+
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

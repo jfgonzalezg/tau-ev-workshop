@@ -80,9 +80,11 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 			inst.pack();
 			shell.pack();
 		} else {
-			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
+//			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
 			shell.setSize(430,650);
 		}
+		shell.setLocation(100, 30);
+
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -205,7 +207,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 			FormData list1LData = new FormData();
 			list1LData.left =  new FormAttachment(0, 1000, 118);
 			list1LData.top =  new FormAttachment(0, 1000, 285);
-			list1LData.width = 290;
+			list1LData.width = 295;
 			list1LData.height = 190;
 			list = new List(this, SWT.NONE);
 			list.setLayoutData(list1LData);
