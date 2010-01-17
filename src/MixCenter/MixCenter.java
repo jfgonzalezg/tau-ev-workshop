@@ -66,6 +66,10 @@ public class MixCenter implements IMixCenter
 	 */
 	public void PermutateAndReecncrypt()
 	{
+		//TODO - delete after debug
+		System.out.println("p = " + p);
+		System.out.println("g = " + g);
+		System.out.println("w = " + w);
 		ElGamal gamal=new ElGamal(p,g,w,null);
 		B=new CryptObject[VOTERS_AMOUNT];	
 		
