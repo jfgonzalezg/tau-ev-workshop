@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
-	private static int Repetition=2;
+	private static int Repetition=40;
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
 	{	
