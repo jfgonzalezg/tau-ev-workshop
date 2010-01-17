@@ -20,12 +20,12 @@ public class MixCenterProcess {
 			return;
 		}
 		MixCenter.write("Mix Center No." + id + " is working...", id);
-		MixCenter.write("Waiting to recieve data from previus MC...", id);
+		MixCenter.write("Waiting to recieve data from previous MC...", id);
 		if (MC.receive_from_prev_mix_center() == null){
 			MixCenter.write("Mix Center No." + id + " didn't succeed to receive data from previus MC, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
 			return;
 		}
-		MixCenter.write("Finished recieving data from previus MC, generating new permutation...", id);
+		MixCenter.write("Finished recieving data from previous MC, generating new permutation...", id);
 		MC.generatePermutation();
 		MixCenter.write("Starting reencypting and permutating the data...", id);
 		MC.PermutateAndReecncrypt();
