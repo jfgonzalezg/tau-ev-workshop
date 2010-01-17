@@ -1,5 +1,6 @@
 package zkp.EDlog;
 
+import elgamal.Ciphertext;
 import global.BigIntegerMod;
 import java.math.BigInteger;
 import global.Consts;
@@ -7,13 +8,27 @@ import zkp.ZkpException;
 import zkp.Util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class EDlog implements IEDlog {
+	
+	private BigIntegerMod g = null;
+
+	public  BigIntegerMod getG() {
+		return g;
+	}
+
+
+	public  void setG(BigIntegerMod g) {
+		this.g = g;
+	}
+
 
 	public EDlogProof createEDlogProof(BigIntegerMod h, BigIntegerMod a, BigIntegerMod b, 
 			BigIntegerMod x) throws ZkpException {
 
-		BigIntegerMod g = Consts.getG();
+		if (g==null)
+			g = Consts.getG();
 		BigInteger q = Consts.getQ();	
 				
 		//check whether a=g^x and b=h^x
