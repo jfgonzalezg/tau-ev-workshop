@@ -7,6 +7,7 @@ import threshold.parties.PartiesManager;
 import java.math.BigInteger;
 
 import pavUI.BatchUI;
+import pavUI.InitialGUI;
 import elgamal.*;
 import global.*;
 
@@ -21,7 +22,7 @@ public class Main {
 		// Options handling   //
 		////////////////////////
 		
-		boolean guiFlag = false;
+		boolean guiFlag = true;
 		boolean mixNetsFlag = false;
 		
 		for (String arg : args) {
@@ -54,7 +55,7 @@ public class Main {
 		}
 		
 		if (PAVShared.inGUIMode()){
-			// gui.run(); //TODO
+			InitialGUI.runGUI();
 		} else {
 			BatchUI.run();
 		}
