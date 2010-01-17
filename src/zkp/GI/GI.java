@@ -61,7 +61,7 @@ public class GI implements IGI
 
 	
 	
-	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g) throws ZkpException
+	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g)
 	{
 		boolean flag = true;
 
