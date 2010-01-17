@@ -49,7 +49,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	static void doSelection(Button button) {
         if (button.getSelection()){
                 System.out.println("do work for selection "+button);
-                TheChoisen = "" + button;
+//                TheChoisen = "" + button;
                 strI = button.getData() + "";
                        
                } else {
@@ -66,8 +66,8 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 // 		GUI1 inst = new GUI1(shell, SWT.NULL);
 		final ScrolledComposite sc1 = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		final Composite c1 = new Composite(sc1, SWT.NONE);
-		c1.setBackground(SWTResourceManager.getColor(248, 231, 231));
-		sc1.setBackground(SWTResourceManager.getColor(248, 231, 231));
+		c1.setBackground(SWTResourceManager.getColor(223, 255, 255));
+		sc1.setBackground(SWTResourceManager.getColor(223, 255, 255));
 		sc1.setContent(c1);
 	    Point size = c1.getSize();
 		shell.setLayout(new FillLayout());
@@ -94,13 +94,9 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	            	InitialGUI.setezer(5);	            	
 	       	}
 	        InitialGUI.swStart=0;
-	        TheChoisen= TheChoisen.substring(8);
-		    int len = TheChoisen.length()-1;
-		    TheChoisen = TheChoisen.substring(0,len);
-		    System.out.println(TheChoisen);
 		    iChoisen = Integer.parseInt(strI);
-		    System.out.println(iChoisen);
 		    vote = ballot.getVote(iChoisen);
+		    TheChoisen = vote.getCandidateName();
  		    str = vote.getEncryptionBase64();
 		    
 	      }
@@ -108,11 +104,11 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	                LTcand = new Label(c1, SWT.NONE);
 	                LTcand.setBounds(6,120,130,17);
 		            LTcand.setText("Candidate Name");
-		            LTcand.setBackground(SWTResourceManager.getColor(248, 231, 231));
+		            LTcand.setBackground(SWTResourceManager.getColor(223, 255, 255));
 		            LTcand.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
 				
 					Bverify = new Button(c1, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
-					Bverify.setBounds(140, 240+NumCand*240, 100, 50);
+					Bverify.setBounds(140, 240+NumCand*220, 100, 50);
 					Bverify.setText("Verify Ballot");
 					Bverify.addListener(SWT.Selection, listener1);
 					Bverify.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
@@ -120,20 +116,20 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
          			Ltenc = new Label(c1, SWT.NONE);
 					Ltenc.setBounds(210, 120, 100, 17);
 					Ltenc.setText("Encryption");
-					Ltenc.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Ltenc.setBackground(SWTResourceManager.getColor(223, 255, 255));
 					Ltenc.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
 						
 					Bvote = new Button(c1, SWT.PUSH | SWT.CENTER |SWT.FLAT | SWT.BORDER);
-					Bvote.setBounds(300, 240+NumCand*240, 90, 50);
+					Bvote.setBounds(300, 240+NumCand*220, 90, 50);
 					Bvote.setText("Vote");
-					Bvote.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Bvote.setBackground(SWTResourceManager.getColor(223, 255, 255));
 					Bvote.addListener(SWT.Selection, listener1);
 					Bvote.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 											
 					Lplease = new Label(c1, SWT.BOLD);
 					Lplease.setBounds(19,30,340,40);
 					Lplease.setText("Please Make Your Selection:");
-					Lplease.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Lplease.setBackground(SWTResourceManager.getColor(223, 255, 255));
 					Lplease.setFont(SWTResourceManager.getFont("Tahoma", 13, 1, false, false));
 					
 	           for (i=0; i<NumCand; i++){
@@ -143,16 +139,18 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Rchoise = new Button(c1, SWT.RADIO | SWT.LEFT );
 					Rchoise.setText("Candidate "+i);
 					Rchoise.setData(i);
-					Rchoise.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Rchoise.setBackground(SWTResourceManager.getColor(223, 255, 255));
 					Rchoise.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 					cndName = vote.getCandidateName();
 					Rchoise.setText(cndName);
-					Rchoise.setBounds(6, 200+i*240, 100, 20);
+					if((InitialGUI.swStart == 0) && (i ==iChoisen))
+						Rchoise.setSelection(true);
+					Rchoise.setBounds(6, 200+i*220, 100, 20);
 					Rchoise.addListener(SWT.Selection, listener);
 				
                     
 					    List list = new List(c1, SWT.NONE);
-						list.setBounds(110, 200+i*240, 300, 220);
+						list.setBounds(103, 200+i*220, 290, 190);
 						
 					    str=vote.getEncryptionBase64();
 						int mana = (str.length())/35;
@@ -169,8 +167,8 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	   			c1.setSize(shellBounds.width, shellBounds.height);
 	   		}				   
 	    
-  		sc1.setSize(450,650);
-  		shell.setSize(450,650);
+  		sc1.setSize(430,650);
+  		shell.setSize(430,650);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

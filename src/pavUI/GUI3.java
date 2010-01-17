@@ -83,7 +83,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 			shell.pack();
 		} else {
 //			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(450,650);
+			shell.setSize(430,650);
 		}
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -125,7 +125,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 			FormLayout thisLayout = new FormLayout();
 			this.setLayout(thisLayout);
 			this.setFont(SWTResourceManager.getFont("Tahoma", 16, 3, false, false));
-			this.setBackground(SWTResourceManager.getColor(248, 231, 231));
+			this.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			{
 				Bconfirm = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 				FormData BconfirmLData = new FormData();
@@ -150,7 +150,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				LTcand.setLayoutData(LTcandLData);
 				LTcand.setText("Candidate Name");
 				LTcand.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
-				LTcand.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				LTcand.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
 			{
 				Ltenc = new Label(this, SWT.NONE);
@@ -162,7 +162,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Ltenc.setLayoutData(LtencLData);
 				Ltenc.setText("Encryption");
 				Ltenc.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
-				Ltenc.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				Ltenc.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
 			     
 			{
@@ -189,7 +189,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Lplease.setLayoutData(LpleaseLData);
 				Lplease.setText("Please confirm your selection:");
 				Lplease.setFont(SWTResourceManager.getFont("Tahoma", 14, 1, false, false));
-				Lplease.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				Lplease.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
 
 			{
@@ -201,14 +201,14 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Rchoise = new Button(this, SWT.RADIO | SWT.LEFT);
 				Rchoise.setText(GUI2.getTheChoisen());
 				Rchoise.setLayoutData(RchoiseLData);
-				Rchoise.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				Rchoise.setBackground(SWTResourceManager.getColor(223, 255, 255));
            	}	
            	{
     			FormData list1LData = new FormData();
-    			list1LData.left =  new FormAttachment(0, 1000, 120);
+    			list1LData.left =  new FormAttachment(0, 1000, 113);
     			list1LData.top =  new FormAttachment(0, 1000, 216);
-    			list1LData.width = 300;
-    			list1LData.height = 220;
+    			list1LData.width = 290;
+    			list1LData.height = 190;
     			list = new List(this, SWT.NONE);
     			list.setLayoutData(list1LData);			
     			}

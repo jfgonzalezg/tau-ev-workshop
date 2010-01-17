@@ -205,7 +205,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		    try{
 		    	FormLayout thisLayout = new FormLayout();
 				this.setLayout(thisLayout);
-				this.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				this.setBackground(SWTResourceManager.getColor(223, 255, 255));
 		FormData idInfoLData = new FormData();
 		idInfoLData.left =  new FormAttachment(0, 1000, 92);
 		idInfoLData.right =  new FormAttachment(1000, 1000, -92);
@@ -256,7 +256,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 				header.setText("Please enter your ID:");
 				header.setOrientation(SWT.HORIZONTAL);
 				header.setFont(SWTResourceManager.getFont("Arial", 10, 1, false, false));
-				header.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				header.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
 			
 			{

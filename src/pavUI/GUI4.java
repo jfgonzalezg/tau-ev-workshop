@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -46,7 +47,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
-	private  static int numVote=global.Consts.VOTERS_AMOUNT;
+	private  static int numVote = global.Consts.VOTERS_AMOUNT;
 	private Label Ltenc;
     
 	private Button Bdone;
@@ -93,7 +94,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 			shell.pack();
 		} else {
 //			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(450,650);
+			shell.setSize(430,650);
 		}
 		shell.open();
 
@@ -110,7 +111,12 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		initGUI4();
 	}
 
-
+	private void maxNumVoters(){
+		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+		emptyName.setMessage("The number of voters has reached to the max num");
+		emptyName.setText("MaxNumVoters");
+		emptyName.open();		
+	}
 
 	private void initGUI4() {
 		
@@ -118,12 +124,14 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	      public void handleEvent(Event event) {
 	        if (event.widget == Bdone) {
 	        	System.out.println("You clicked done");
-	        	shell.close();
-	        	if (GUI3.mone >= numVote)
+	        	if (GUI3.mone >= numVote){
+	        		maxNumVoters();
+	        		shell.close();
 	           	    InitialGUI.setsw(0);
-	        	else{	        		
-	           	InitialGUI.setsw(1);
-	           	InitialGUI.setezer(1);
+	        	}else{
+	        		shell.close();	
+	        		InitialGUI.setsw(1);
+	        		InitialGUI.setezer(1);
 	        	}
 	        } 
 //	        else 
@@ -139,7 +147,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 			try {
 				FormLayout thisLayout = new FormLayout();
 				this.setLayout(thisLayout);
-				this.setBackground(SWTResourceManager.getColor(248, 231, 231));
+				this.setBackground(SWTResourceManager.getColor(223, 255, 255));
 //				{
 //					Brec = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 //					FormData BrecLData = new FormData();
@@ -177,7 +185,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Lyour.setLayoutData(LyourLData);
 					Lyour.setText("Your vote has been registered successfully!");
 					Lyour.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
-					Lyour.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Lyour.setBackground(SWTResourceManager.getColor(223, 255, 255));
 				}
 
 				{
@@ -190,7 +198,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Lhear.setLayoutData(LhearLData);
 					Lhear.setText("Here is your receipt:");
 					Lhear.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
-					Lhear.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Lhear.setBackground(SWTResourceManager.getColor(223, 255, 255));
 				}
 				{
 					Ltenc = new Label(this, SWT.NONE);
@@ -202,14 +210,14 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Ltenc.setLayoutData(LtencLData);
 					Ltenc.setText("Encryption:");
 					Ltenc.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
-					Ltenc.setBackground(SWTResourceManager.getColor(248, 231, 231));
+					Ltenc.setBackground(SWTResourceManager.getColor(223, 255, 255));
 				}
 				{
 	    			FormData list1LData = new FormData();
 	    			list1LData.left =  new FormAttachment(0, 1000, 65);
 	    			list1LData.top =  new FormAttachment(0, 1000, 260);
-	    			list1LData.width = 300;
-	    			list1LData.height = 220;
+	    			list1LData.width = 290;
+	    			list1LData.height = 190;
 	    			list = new List(this, SWT.NONE);
 	    			list.setLayoutData(list1LData);			
 	    			}
