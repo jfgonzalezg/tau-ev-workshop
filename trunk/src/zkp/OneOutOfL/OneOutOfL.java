@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class OneOutOfL implements IOneOutOfL {
 
-	public static final boolean TEST = false;
+	public static final boolean TEST = true;
 	private ArrayList<Ciphertext> pairslist;
 
 	public OneOutOfL(ArrayList<Ciphertext> pairslist) {
@@ -48,7 +48,7 @@ public class OneOutOfL implements IOneOutOfL {
 		// check whether cryptobj is indeed a re-encryption using r of the pair in index t
 		CryptObject test = new CryptObject();
 		ElGamal gamal=new ElGamal(h);
-		test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
+		test = gamal.encrypt(pairslist.get(t).getB(), cryptobj.getR());
 		if ((test.getCiphertext().getA().compareTo(cryptobj.getCiphertext().getA()) !=0) || 
 			(test.getCiphertext().getB().compareTo(cryptobj.getCiphertext().getB()) !=0))
 			throw new ZkpException("input CryptObject is not a re-encryption of the CryptObject in index t of the list");
