@@ -145,7 +145,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Rchoise.setText(cndName);
 					if((InitialGUI.swStart == 0) && (i ==iChoisen))
 						Rchoise.setSelection(true);
-					Rchoise.setBounds(6, 200+i*220, 100, 20);
+					Rchoise.setBounds(6, 200+i*220, 98, 20);
 					Rchoise.addListener(SWT.Selection, listener);
 				
                     
@@ -163,10 +163,11 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	   			c1.pack();
 	   			shell.pack();
 	   		} else {
-	   			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-	   			c1.setSize(shellBounds.width, shellBounds.height);
+//	   			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
+//	   			c1.setSize(shellBounds.width, shellBounds.height);
 	   		}				   
-	    
+        shell.setLocation(100, 30);
+
   		sc1.setSize(430,650);
   		shell.setSize(430,650);
 		shell.open();
