@@ -199,7 +199,7 @@ public class MixCenter implements IMixCenter
 	    FileWriter aWriter;
 	    try 
 	    {
-	    	aWriter = new FileWriter(f, startNew);
+	    	aWriter = new FileWriter(f, !startNew);
 	    	aWriter.write(currentTime + ":\r\n" + "-> " + s + "\r\n");
 	    	aWriter.flush();
 	    	aWriter.close();
