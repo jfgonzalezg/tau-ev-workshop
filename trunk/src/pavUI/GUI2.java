@@ -27,14 +27,14 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
     private static int NumCand=global.Consts.PARTIES_AMOUNT;
    
     private static Vote vote;
-	private static String TheChoisen = "{candidate 10}";
+	private static String TheChoisen;
 	private static Ballot ballot;
 	private static Shell shell = null;
 	private static int iChoisen;
 	private static int i=0;
 	private static String strI;
 	private static String cndName;
-    public static String str ;
+    private static String str ;
     
 	
 	/**
@@ -57,13 +57,14 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
         }
 	}
 	public  static void showGUI2() {
-		if (InitialGUI.swStart == 1){
+		if (InitialGUI.getswStart() == 1){
 		    ballot = new Ballot();
         }
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
 		shell = new Shell(display, SWT.DIALOG_TRIM);		
 // 		GUI1 inst = new GUI1(shell, SWT.NULL);
+		shell.setText("Pret-A-Voter");
 		final ScrolledComposite sc1 = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		final Composite c1 = new Composite(sc1, SWT.NONE);
 		c1.setBackground(SWTResourceManager.getColor(223, 255, 255));
@@ -93,7 +94,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	            	InitialGUI.setsw(1);
 	            	InitialGUI.setezer(5);	            	
 	       	}
-	        InitialGUI.swStart=0;
+	        InitialGUI.setswStart(0);
 		    iChoisen = Integer.parseInt(strI);
 		    vote = ballot.getVote(iChoisen);
 		    TheChoisen = vote.getCandidateName();
@@ -143,7 +144,7 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Rchoise.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 					cndName = vote.getCandidateName();
 					Rchoise.setText(cndName);
-					if((InitialGUI.swStart == 0) && (i ==iChoisen))
+					if((InitialGUI.getswStart() == 0) && (i ==iChoisen))
 						Rchoise.setSelection(true);
 					Rchoise.setBounds(6, 200+i*220, 98, 20);
 					Rchoise.addListener(SWT.Selection, listener);
@@ -163,12 +164,10 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	   			c1.pack();
 	   			shell.pack();
 	   		} else {
-//	   			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-//	   			c1.setSize(shellBounds.width, shellBounds.height);
+	   			sc1.setSize(430,650);
 	   		}				   
         shell.setLocation(100, 30);
 
-  		sc1.setSize(430,650);
   		shell.setSize(430,650);
 		shell.open();
 		while (!shell.isDisposed()) {
@@ -187,6 +186,9 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	
 	public static int getiCoisen(){
 		return iChoisen;
+	}
+	public static String getstr(){
+		return str;
 	}
 
 	public GUI2(org.eclipse.swt.widgets.Composite parent, int style) {

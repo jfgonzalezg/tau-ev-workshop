@@ -23,10 +23,6 @@ import org.eclipse.swt.widgets.Listener;
 import pav.PAVShared;
 
 
-
-
-
-
 /**
 * This code was edited or generated using CloudGarden's Jigloo
 * SWT/Swing GUI Builder, which is free for non-commercial
@@ -49,13 +45,10 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	
 	private  static int numVote = global.Consts.VOTERS_AMOUNT;
 	private Label Ltenc;
-    
-	private Button Bdone;
-	private Button Brec;
+  	private Button Bdone;
 	private Label Lhear;
 	private Label Lyour;
 	private static Shell shell = null;
-	
 	private List list;
 	
 		
@@ -84,7 +77,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		Display display = Display.getDefault();
 		//Shell
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
-		
+		shell.setText("Pert-A-Voter");
 		GUI4 inst = new GUI4(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
@@ -93,8 +86,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 			inst.pack();
 			shell.pack();
 		} else {
-//			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(430,650);
+		shell.setSize(430,650);
 		}
 		shell.setLocation(100, 30);
 
@@ -115,7 +107,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 
 	private void maxNumVoters(){
 		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-		emptyName.setMessage("The number of voters has reached to the max num");
+		emptyName.setMessage("The number of voters has reached the max num");
 		emptyName.setText("MaxNumVoters");
 		emptyName.open();		
 	}
@@ -126,7 +118,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	      public void handleEvent(Event event) {
 	        if (event.widget == Bdone) {
 	        	System.out.println("You clicked done");
-	        	if (GUI3.mone >= numVote){
+	        	if (GUI3.getmone() >= numVote){
 	        		maxNumVoters();
 	        		shell.close();
 	           	    InitialGUI.setsw(0);
@@ -136,13 +128,6 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	        		InitialGUI.setezer(1);
 	        	}
 	        } 
-//	        else 
-//	       	if (event.widget == Brec) {
-//	            	System.out.println("You clicked for recepite.Hear is your recepite.");
-//	            	shell.close();
-//		        	InitialGUI.setsw(1);
-//		        	InitialGUI.setezer(1);
-//	        }
 
 	      }
 	    };    
@@ -150,19 +135,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 				FormLayout thisLayout = new FormLayout();
 				this.setLayout(thisLayout);
 				this.setBackground(SWTResourceManager.getColor(223, 255, 255));
-//				{
-//					Brec = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
-//					FormData BrecLData = new FormData();
-//					BrecLData.left =  new FormAttachment(0, 1000, 78);
-//					BrecLData.top =  new FormAttachment(0, 1000, 540);
-//					BrecLData.width = 150;
-//					BrecLData.height = 32;
-//										Brec.setLayoutData(BrecLData);
-//					Brec.setText("Print Recepit");
-//					Brec.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
-//					Brec.setBackground(SWTResourceManager.getColor(255, 255, 255));
-//					Brec.addListener(SWT.Selection, listener3);
-//				}
+
 				{
 					Bdone = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 					FormData BdoneLData = new FormData();
@@ -176,7 +149,6 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Bdone.setBackground(SWTResourceManager.getColor(255, 255, 255));
 					Bdone.addListener(SWT.Selection, listener3);
 				}
-				
 				{
 					Lyour = new Label(this, SWT.NONE);
 					FormData LyourLData = new FormData();
@@ -189,7 +161,6 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Lyour.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
 					Lyour.setBackground(SWTResourceManager.getColor(223, 255, 255));
 				}
-
 				{
 					Lhear = new Label(this, SWT.NONE);
 					FormData LhearLData = new FormData();
@@ -223,13 +194,11 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	    			list = new List(this, SWT.NONE);
 	    			list.setLayoutData(list1LData);			
 	    			}
-	    			
-	    		
-	    			int mana = (GUI2.str.length())/35;
+          			int mana = (GUI2.getstr().length())/35;
 	    			for (int j=0;j<mana;j++  ){
-	    				 list.add(GUI2.str.substring(j*35,(j+1)*35));    
+	    				 list.add(GUI2.getstr().substring(j*35,(j+1)*35));    
 	    				 }
-	    				 list.add(GUI2.str.substring(mana*35));
+	    				 list.add(GUI2.getstr().substring(mana*35));
 				
 	            
 	            
