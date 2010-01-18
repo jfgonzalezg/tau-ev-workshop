@@ -80,7 +80,8 @@ public class MixCenter implements IMixCenter
 			if ((!(B[pi[i]].getCiphertext().getA().equals(A[i].getA().multiply(g.pow(B[pi[i]].getR())))))
 				&& (!(B[pi[i]].getCiphertext().getB().equals(A[i].getB().multiply(w.pow(B[pi[i]].getR()))))))
 			{
-				System.out.println("wrong reencryption for i=" + i);
+				write("wrong reencryption for i=" + i, this.getId(), false);
+//				System.out.println("wrong reencryption for i=" + i);
 			}
 		}
 		
@@ -174,19 +175,21 @@ public class MixCenter implements IMixCenter
 	 * Print comments to a log file
 	 * Params: s - string (= comment) to print
 	 *         id - the number of the MC related, relevant to the file name
+	 *         startNew - boolean that if true opens a file without append
 	 */
-    public static void write(String s, int id) 
+    public static void write(String s, int id, boolean startNew) 
     {
     	final String defaultLogFile = defaultLogFilePath + "MC" + id +".txt";
-    	write(defaultLogFile, s);
+    	write(defaultLogFile, s, startNew);
     }
     
     /*
      * Print strings to a file
 	 * Params: s - string to print
 	 *         f - string represents full file name (includes the path)
+	 *         startNew - boolean that if true opens a file without append
 	 */
-    private static void write(String f, String s) 
+    private static void write(String f, String s, boolean startNew) 
     {
 	    TimeZone tz = TimeZone.getTimeZone("GMT+2"); // or PST, MID, etc ...
 	    Date now = new Date();
@@ -196,7 +199,7 @@ public class MixCenter implements IMixCenter
 	    FileWriter aWriter;
 	    try 
 	    {
-	    	aWriter = new FileWriter(f, true);
+	    	aWriter = new FileWriter(f, startNew);
 	    	aWriter.write(currentTime + ":\r\n" + "-> " + s + "\r\n");
 	    	aWriter.flush();
 	    	aWriter.close();
@@ -234,7 +237,7 @@ public class MixCenter implements IMixCenter
 											BigIntegerMod W,
 											int			  N)
 	{
-		write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id, this.getId());
+		write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id, this.getId(),false);
 		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
@@ -246,21 +249,21 @@ public class MixCenter implements IMixCenter
 									Consts.MIX_CENTERS_PORT[next_available_center % 11],
 									mix_center_id);
 			write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
-					next_available_center%11, this.getId());
+					next_available_center%11, this.getId(),false);
 			if (client.isConnected() && client.canSend()){
 				if (client.send(sent_object) == false){
 					write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
-							next_available_center%11, this.getId());
+							next_available_center%11, this.getId(),false);
 				}
 				else {
 					write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
-							next_available_center%11, this.getId());
+							next_available_center%11, this.getId(),false);
 					client.close();
 					return true;
 				}
 			} else {
 				write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
-									next_available_center%11, this.getId());
+									next_available_center%11, this.getId(),false);
 			}
 			next_available_center++;
 		}
@@ -274,7 +277,7 @@ public class MixCenter implements IMixCenter
 	
 	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id, this.getId());
+		write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id, this.getId(),false);
 		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
 		Server.Message 	received_votes  = null;
 		
@@ -283,9 +286,9 @@ public class MixCenter implements IMixCenter
 			received_votes 	= server.getReceivedObject(); //this line blocking for 2*(Consts.CONNECTION_TIMEOUT)
 			if (received_votes != null){
 				if (received_votes instanceof Server.Message){
-					write("DEBUG "+received_votes.getMessage().getClass(), this.getId());
+					write("DEBUG "+received_votes.getMessage().getClass(), this.getId(),false);
 					write("Received message from IP "+received_votes.getAddress().getHostAddress()+
-							                 " PORT "+received_votes.getPort(),this.getId());
+							                 " PORT "+received_votes.getPort(),this.getId(),false);
 					if (received_votes.getMessage() instanceof SentObject){
 						SentObject recv_object = (SentObject) received_votes.getMessage();
 						if (check_corected_recv_params(recv_object) == true){
@@ -298,7 +301,7 @@ public class MixCenter implements IMixCenter
 							this.num_of_centers_involved = recv_object.get_num_of_centers_involved();
 							if (A.length != VOTERS_AMOUNT){
 								write("ERROR number of votes in A is "+A.length+
-										" while number of expected votes is "+VOTERS_AMOUNT, this.getId());
+										" while number of expected votes is "+VOTERS_AMOUNT, this.getId(),false);
 								server.close();
 								return null;
 							}
@@ -311,12 +314,12 @@ public class MixCenter implements IMixCenter
 					} else {//if (received_votes.getMessage() instanceof SentObject)
 						write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 							"SentObject, received type is "+received_votes.getMessage().getClass()+" \nTrying" +
-							"receive another message, timeout left = "+timeout+" seconds", this.getId());
+							"receive another message, timeout left = "+timeout+" seconds", this.getId(),false);
 					}
 				} else { //(received_votes instanceof Server.Message)
 					write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
 										"Server.Message, received type is "+received_votes.getClass()+" \nTrying" +
-										"receive another message, timeout left = "+timeout+" seconds", this.getId());
+										"receive another message, timeout left = "+timeout+" seconds", this.getId(),false);
 				}
 			}//if (received_votes != null)
 			timeout -= 2*(Consts.CONNECTION_TIMEOUT);//The server waits 2 seconds every wait in socket
@@ -342,7 +345,7 @@ public class MixCenter implements IMixCenter
 					"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
 					"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
 					"q "+ ((this.q == null) ? "is" : "is not") + " null\n"+
-					"w "+ ((this.w == null) ? "is" : "is not") + " null\n", this.getId());
+					"w "+ ((this.w == null) ? "is" : "is not") + " null\n", this.getId(),false);
 			return false;
 		}
 		return true;
