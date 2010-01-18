@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
-	private static int Repetition=2;
+	private static int Repetition=40;
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
 	{	
@@ -29,8 +29,8 @@ public class GI implements IGI
  
 		for (int i = 0; i < Repetition; i++)
 		{
-			//lambda[i] = createLambda(n);
-			lambda[i] = new int[]{1,0,2,4,3};
+			lambda[i] = createLambda(n);
+			//lambda[i] = new int[]{1,0,2,4,3};
 			C[i] = createCi(A,lambda[i],n,w,g);
 		}
 
@@ -165,7 +165,7 @@ public class GI implements IGI
 			throw new ZkpException(exception.getMessage());
 		}
 		//
-		challenge = "00";
+		//challenge = "00";
 		//
 		return challenge;
 	}
@@ -210,7 +210,9 @@ public class GI implements IGI
 		}
 		for (int i = 0; i < matrix1.length; i++)
 		{
-			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
+			//if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
+			if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
+					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))
 			{
 				return false;
 			}
@@ -232,7 +234,10 @@ public class GI implements IGI
 		}
 		for (int i = 0; i < matrix1.length; i++)
 		{
-			if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
+			//if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
+			if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getCiphertext().getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
+					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getCiphertext().getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))
+					
 			{
 				return false;
 			}
@@ -240,6 +245,11 @@ public class GI implements IGI
 	
 		return true;
 	}
+	
+
+	
+	
+	
 	
 	
 }
