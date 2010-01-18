@@ -10,6 +10,7 @@ import java.util.Random;
 import pavBallot.Ballot;
 import pavUI.BatchUI;
 import pavUI.InitialGUI;
+import pavUI.UIModeEnum;
 import elgamal.*;
 import global.*;
 
@@ -24,14 +25,16 @@ public class Main {
 		// Options handling   //
 		////////////////////////
 		
-		boolean guiFlag = true;
+		//Default modes:
+		UIModeEnum uIMode = UIModeEnum.GRAPHIC;
 		boolean mixNetsFlag = false;
-		boolean randomMode = false;
+
 		
 		for (String arg : args) {
-			if (arg.equals("-gui")) guiFlag = true;
-			else if (arg.equals("-mix-nets")) mixNetsFlag = true;
-			else if (arg.equals("-random")) randomMode = true;
+			if (arg.equals("-mix-nets")) mixNetsFlag = true;
+			else if (arg.equals("-gui")) uIMode = UIModeEnum.GRAPHIC;
+			else if(arg.equals("-batch")) uIMode = UIModeEnum.BATCH;
+			else if (arg.equals("-random")) uIMode = UIModeEnum.RANDOM;
 			else printUsage();
 		}
 		
@@ -52,24 +55,28 @@ public class Main {
 		}
 		
 		try{
-			PAVShared.initialize(mixNetsFlag,guiFlag);
+			PAVShared.initialize(mixNetsFlag,uIMode);
 		} catch (ElectionsSetUpException esue) {
 			System.err.println(esue);
 			System.exit(-1);
 		}
 		
-		if (randomMode){
+		switch(PAVShared.getUIMode()){
+		case RANDOM:
 			Random rand = new Random();
 			for (int i=0; i<Consts.VOTERS_AMOUNT; i++){
 				PAVShared.addCastVote((new Ballot()).getVote(rand.nextInt(Consts.PARTIES_AMOUNT)), rand.nextInt(100000)+"");
 			}
-		}
-		else if (PAVShared.inGUIMode()){
+			break;
+		case GRAPHIC:
 			InitialGUI.runGUI();
-		} else {
+			break;
+		case BATCH:
 			BatchUI.run();
+			break;
 		}
 		
+
 		PAVShared.terminate();
 		
 		BigIntegerMod voteSum;		
