@@ -193,7 +193,7 @@ public class MixCenter implements IMixCenter
     {
 	    TimeZone tz = TimeZone.getTimeZone("GMT+2"); // or PST, MID, etc ...
 	    Date now = new Date();
-	    DateFormat df = new SimpleDateFormat ("yyyy.mm.dd hh:mm:ss ");
+	    DateFormat df = new SimpleDateFormat ("yyyy.MM.dd HH:mm:ss ");
 	    df.setTimeZone(tz);
 	    String currentTime = df.format(now); 
 	    FileWriter aWriter;
