@@ -79,11 +79,59 @@ public class MixCenterTester {
 	{
 		// TODO Auto-generated method stub
 
-		MixCenter mc = new MixCenter(1);
+		int numOfVotes = 400;
+		int id = 1;
+		
+		MixCenter MC = new MixCenter(id);
+		MixCenter.write("Mix Center No." + id + " is working...", id);
+		
+		
+		//Create some votes
+		Ciphertext[] votes= new Ciphertext[numOfVotes];
+		BigInteger p = new BigInteger("23");
+		BigInteger q = new BigInteger("11");
+		BigIntegerMod g = new BigIntegerMod(new BigInteger("2"),p);
+		BigIntegerMod w = new BigIntegerMod(new BigInteger("7"),p);
+		for (int i = 0; i<numOfVotes; i++){
+			BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
+			BigIntegerMod b = new BigIntegerMod(new BigInteger("17"), p);
+			//BigIntegerMod a = new BigIntegerMod(new BigInteger("9"+10*i),p);
+			//BigIntegerMod b = new BigIntegerMod(new BigInteger("11"+10*i),p);
+			Ciphertext vote = new Ciphertext(a, b);
+			votes[i] = vote;
+		}
+		MC.setVotersAmount(numOfVotes);
+		MC.setQ(q);
+		MC.setP(p);
+		MC.setG(g);
+		MC.setW(w);
+		MC.setArrayA(votes);
+		
+		
+		MC.generatePermutation();
+		MixCenter.write("Starting reencypting and permutating the data...", id);
+		MC.PermutateAndReecncrypt();
+		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id);
+		String proof = MC.performZKP();
+		boolean isZKPValid = true;
+		if (proof == null){
+			isZKPValid = false;
+			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
+		}
+		//in case ZKP proof was false
+		if (proof == "falseProof"){
+			isZKPValid = false;
+			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id);
+		}
+		else{
+			MC.printToFile(proof, isZKPValid);
+			MixCenter.write("ZKP is done, proof file was created and has valid data...", id);
+		} 
+		/*MixCenter mc = new MixCenter(1);
 		mc.setVotersAmount(400);
 		testPermutation(mc);
 		testPermutationAndReencryption(mc);
-		testPrint("test", mc);
+		testPrint("test", mc);*/
 	}
 
 }
