@@ -117,7 +117,7 @@ public class PAVShared {
 		ArrayList<Ciphertext> pairsListForZKP = new ArrayList<Ciphertext>();
 		ElGamal elGamal = new ElGamal(publicKey);
 		for (int i = 0; i < global.Consts.PARTIES_AMOUNT; i++) {
-			CryptObject encObj = elGamal.encrypt(getPlaintextVote(i), new BigIntegerMod(BigInteger.ONE, Consts.q));
+			CryptObject encObj = elGamal.encrypt(getPlaintextVote(i), new BigIntegerMod(BigInteger.ZERO, Consts.q));
 			pairsListForZKP.add(encObj.getCiphertext());
 		}
 		zkpMaker = new OneOutOfL(pairsListForZKP);
@@ -344,21 +344,27 @@ public class PAVShared {
 		voteBuffer+="\t<vote>\n";
 		voteBuffer+="\t\t<voterID>"+voterID+"</voterID>\n";
 		voteBuffer+="\t\t<encryptedVote>"+vote.getEncryptionBase64()+"</encryptedVote>\n";
-		/*voteBuffer+="\t\t<oneOutOfLProof>\n"; // TODO: return to code once ZKP works
+		voteBuffer+="\t\t<oneOutOfLProof>\n";
 		voteBuffer+="\t\t\t<C>"+toBase64(vote.getZKP().getC())+"</C>\t";
 		voteBuffer+="\t\t\t<DList>\n\t\t\t";
+		int i = 0;
 		for(BigIntegerMod b : vote.getZKP().getD_List()){
+			voteBuffer+="<DElem"+i+">";
 			voteBuffer+=toBase64(b);
-			voteBuffer+="::";
+			voteBuffer+="</DElem"+i+">";			
+			i++;
 		}
 		voteBuffer+="\n\t\t\t</DList>\n";
 		voteBuffer+="\t\t\t<RList>\n\t\t\t";
+		i=0;
 		for(BigIntegerMod b : vote.getZKP().getR_List()){
+			voteBuffer+="<RElem"+i+">";
 			voteBuffer+=toBase64(b);
-			voteBuffer+="::";
+			voteBuffer+="</RElem"+i+">";
+			i++;
 		}
 		voteBuffer+="\n\t\t\t</RList>\n";
-		voteBuffer+="\t\t</oneOutOfLProof>\n";*/
+		voteBuffer+="\t\t</oneOutOfLProof>\n";
 		voteBuffer+="\t</vote>\n";
 		
 		try{
