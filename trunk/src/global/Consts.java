@@ -50,17 +50,17 @@ public class Consts {
 													"192.168.2.107", //Mix Center 9
 													"127.0.0.1"};//Mix Center 10
 
-	public static final int[] MIX_CENTERS_PORT = {	70000, //Pret a vote
-													70001, //Mix Center 1
-													70002, //Mix Center 2
-													70003, //Mix Center 3
-													70004, //Mix Center 4
-													70005, //Mix Center 5
-													70006, //Mix Center 6
-													70007, //Mix Center 7
-													70008, //Mix Center 8
-													70009, //Mix Center 9
-													70010};//Mix Center 10
+	public static final int[] MIX_CENTERS_PORT = {	40000, //Pret a vote
+													40001, //Mix Center 1
+													40002, //Mix Center 2
+													40003, //Mix Center 3
+													40004, //Mix Center 4
+													40005, //Mix Center 5
+													40006, //Mix Center 6
+													40007, //Mix Center 7
+													40008, //Mix Center 8
+													40009, //Mix Center 9
+													40010};//Mix Center 10
 
 	public static void log(String message, DebugOutput logger) {
 		if (DISABLE_LOGGER) return;
