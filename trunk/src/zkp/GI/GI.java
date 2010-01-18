@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class GI implements IGI 
 {
-	private static int Repetition=40;
+	private static int Repetition=2;
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
 	{	
@@ -29,8 +29,8 @@ public class GI implements IGI
  
 		for (int i = 0; i < Repetition; i++)
 		{
-			lambda[i] = createLambda(n);
-			//lambda[i] = new int[]{1,0,2,4,3};
+			//lambda[i] = createLambda(n);
+			lambda[i] = new int[]{1,0,2,4,3};
 			C[i] = createCi(A,lambda[i],n,w,g);
 		}
 
@@ -116,7 +116,7 @@ public class GI implements IGI
 
 	private static CryptObject[] createCi(Ciphertext[] A,int[] lambda, int n,BigIntegerMod w,BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
+		ElGamal gamal=new ElGamal(g.getMod(),g,w,null);
 		CryptObject[] tempC=new CryptObject[n];	
 		for(int i=0;i<n;i++) //create permutation according to pi[] and then - re-encrypt
 		{
@@ -165,7 +165,7 @@ public class GI implements IGI
 			throw new ZkpException(exception.getMessage());
 		}
 		//
-		//challenge = "00";
+		challenge = "00";
 		//
 		return challenge;
 	}
@@ -200,7 +200,7 @@ public class GI implements IGI
 
 	private static boolean compareMatrix(Ciphertext[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
+		ElGamal gamal=new ElGamal(g.getMod(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
 		for (int i = 0; i < matrix1.length; i++)
@@ -222,7 +222,7 @@ public class GI implements IGI
 	
 	private static boolean compareMatrix(CryptObject[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
-		ElGamal gamal=new ElGamal(Consts.getP(),g,w,null);
+		ElGamal gamal=new ElGamal(g.getMod(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
 		for (int i = 0; i < matrix1.length; i++)
