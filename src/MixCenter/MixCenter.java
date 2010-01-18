@@ -420,6 +420,37 @@ public class MixCenter implements IMixCenter
 		this.B = arr;
 	}
 	
+	/*
+	 * Set q
+	 */
+	protected void setQ(BigInteger Q)
+	{
+		this.q = Q;
+	}
+	
+	/*
+	 * Set p
+	 */
+	protected void setP(BigInteger P)
+	{
+		this.p = P;
+	}
+	
+	/*
+	 * Set w
+	 */
+	protected void setW(BigIntegerMod W)
+	{
+		this.w = W;
+	}
+	
+	/*
+	 * Set g
+	 */
+	protected void setG(BigIntegerMod G)
+	{
+		this.g = G;
+	}
 	public int get_num_of_centers_involved(){
 		return num_of_centers_involved;
 	}
