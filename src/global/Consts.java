@@ -41,13 +41,13 @@ public class Consts {
 	public static final String[] MIX_CENTERS_IP = {	"192.168.2.107", //Pret a vote
 													"192.168.2.180", //Mix Center 1
 													"192.168.2.103", //Mix Center 2
-													"127.0.0.1", //Mix Center 3
-													"127.0.0.1", //Mix Center 4
-													"127.0.0.1", //Mix Center 5
-													"127.0.0.1", //Mix Center 6
-													"192.168.2.1", //Mix Center 7
-													"192.168.2.1", //Mix Center 8
-													"192.168.2.1", //Mix Center 9
+													"192.168.2.107", //Mix Center 3
+													"192.168.2.180", //Mix Center 4
+													"192.168.2.103", //Mix Center 5
+													"192.168.2.107", //Mix Center 6
+													"192.168.2.180", //Mix Center 7
+													"192.168.2.103", //Mix Center 8
+													"192.168.2.107", //Mix Center 9
 													"127.0.0.1"};//Mix Center 10
 
 	public static final int[] MIX_CENTERS_PORT = {	7000, //Pret a vote
