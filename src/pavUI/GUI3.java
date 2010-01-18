@@ -53,7 +53,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
     private Button Bback;
 	private static Shell shell = null;
 	private List list;
-	public static int mone = 0;
+	private static int mone = 0;
 			
 	/**
 	* Auto-generated main method to display this 
@@ -73,6 +73,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 		Display display = Display.getDefault();
 		//Shell
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.ON_TOP);
+		shell.setText("Pret-A-Voter");
 		GUI3 inst = new GUI3(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
@@ -81,12 +82,10 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 		if(size.x == 0 && size.y == 0) {
 			inst.pack();
 			shell.pack();
-		} else {
-//			Rectangle shellBounds = shell.computeTrim(0, 0, size.x, size.y);
-			shell.setSize(430,650);
-		}
+		}else{
+		shell.setSize(430,650);
 		shell.setLocation(100, 30);
-
+		} 
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -95,7 +94,6 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 		}
 		}
 	
-
 	public GUI3(org.eclipse.swt.widgets.Composite parent, int style) {
 		super(parent, style);
 		initGUI3();
@@ -141,7 +139,6 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Bconfirm.setBackground(SWTResourceManager.getColor(255, 255, 255));
 				Bconfirm.addListener(SWT.Selection, listener2);
 			}
-
 			{
 				LTcand = new Label(this, SWT.NONE);
 				FormData LTcandLData = new FormData();
@@ -166,9 +163,8 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Ltenc.setFont(SWTResourceManager.getFont("Arial", 11, 3, false, false));
 				Ltenc.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
-			     
 			{
-				Bback = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
+			    Bback = new Button(this, SWT.PUSH | SWT.CENTER | SWT.FLAT | SWT.BORDER);
 				FormData BbackLData = new FormData();
 				BbackLData.left =  new FormAttachment(0, 1000, 85);
 				BbackLData.top =  new FormAttachment(0, 1000, 540);
@@ -180,7 +176,6 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Bback.setBackground(SWTResourceManager.getColor(255, 255, 255));
 				Bback.addListener(SWT.Selection, listener2);
 			}
-			
 			{
 				Lplease = new Label(this, SWT.NONE);
 				FormData LpleaseLData = new FormData();
@@ -193,8 +188,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				Lplease.setFont(SWTResourceManager.getFont("Tahoma", 14, 1, false, false));
 				Lplease.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}
-
-			{
+            {
 				FormData RchoiseLData = new FormData();
 				RchoiseLData.left =  new FormAttachment(0, 1000, 10);
 				RchoiseLData.top =  new FormAttachment(0, 1000, 216);
@@ -216,11 +210,11 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
     			}
     			
     		
-    			int mana = (GUI2.str.length())/35;
+    			int mana = (GUI2.getstr().length())/35;
     			for (int j=0;j<mana;j++  ){
-    				 list.add(GUI2.str.substring(j*35,(j+1)*35));    
+    				 list.add(GUI2.getstr().substring(j*35,(j+1)*35));    
     				 }
-    				 list.add(GUI2.str.substring(mana*35));
+    				 list.add(GUI2.getstr().substring(mana*35));
 			
             
 		this.layout();
@@ -229,5 +223,8 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public static int getmone(){
+		return mone;
 	}
 }

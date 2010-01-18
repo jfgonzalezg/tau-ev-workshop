@@ -51,7 +51,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	
 	private static int ezer=1;
 	private static int sw=1;
-	public static int swStart=1;
+	private static int swStart=1;
 	
 	private Button startVoting;
 	private Text idInfo;
@@ -109,6 +109,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		InitialGUI inst = new InitialGUI(shell, SWT.ON_TOP);
 		Point size = inst.getSize();
 		shell.setLayout(new FillLayout());
+		shell.setText("Pret-A-Voter");
 		shell.layout();
 		if(size.x == 0 && size.y == 0) {
 			inst.pack();
@@ -135,7 +136,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	
 	private void numbersOnlyMessage(){
 		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-		emptyName.setMessage("The ID can contain numbers only.");
+		emptyName.setMessage("The ID must contain numbers only.");
 		emptyName.setText("Bad Key Entered");
 		emptyName.open();
 		idInfo.setText(""); 
@@ -147,8 +148,8 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	 */
 	private void shortIDMessage(){
 		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
-		emptyName.setMessage("Your ID number must contain 7 digits");
-		emptyName.setText("to short ID number");
+		emptyName.setMessage("Please enter your ID number");
+		emptyName.setText("Blank ID number");
 		emptyName.open();
 		idInfo.setText(""); 
 	}
@@ -163,19 +164,23 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
     	int out=0;
     	String userID = idInfo.getText();
     	idInfo.setText(userID);
+    	
+    	if ((userID.length() == 0)) {
+    		isLeg= false;
+    		shortIDMessage();
+    		out = 1;
+    	}
     	// Check that the user entered numbers only 
     	for (int i = 0; i < userID.length(); i++) {
-            if (!Character.isDigit(userID.charAt(i))){
+            if ((!Character.isDigit(userID.charAt(i)))
+            		&&(out == 0)){
             	numbersOnlyMessage();
             	isLeg = false;
-            	out = 1;
-            	break;
+              	break;
             }
     	}
-            if ((userID.length() < 7)&&(out == 0)) {
-        		isLeg= false;
-        		shortIDMessage();
-            }
+	
+            
     	
     	
     	if (isLeg){ 
@@ -238,8 +243,8 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		
 				KeyListener kL1 = new KeyListener() {
 					public void keyPressed(org.eclipse.swt.events.KeyEvent arg0) {
-					
 					}
+					
 					public void keyReleased(org.eclipse.swt.events.KeyEvent arg0) {
 						// In case [ENTER] was pressed
 						if (arg0.character == 13) {
@@ -290,6 +295,12 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
       }
       public static void setezer(int i){
     	  ezer = i;
+      }
+      public static int getswStart(){
+    	  return swStart;
+      }
+      public static void setswStart(int i){
+    	  swStart = i;
       }
 }
 
