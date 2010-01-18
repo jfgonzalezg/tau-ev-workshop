@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 public class MixCenterTester {
 	
-	public static void testPermutation(MixCenter mc)
+	public static void testPermutationGeneration(MixCenter mc)
 	{
 		int n = mc.getVotersAmount();
 		
@@ -23,7 +23,7 @@ public class MixCenterTester {
 		
 	}
 	
-	public static void testPermutationAndReencryption(MixCenter mc)
+	public static void testPermutation(MixCenter mc)
 	{
 		
 		BigIntegerMod bi1 = new BigIntegerMod(BigInteger.ONE, BigInteger.TEN);
