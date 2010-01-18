@@ -42,8 +42,12 @@ public class PretAVoteProcess {
 			return;
 		} else {
 			System.out.println("Got "+A.length+" votes");
+			System.out.println("Recieved q: " + preta_center.getQ());
+			System.out.println("Recieved p: " + preta_center.getP());
+			System.out.println("Recieved w: " + preta_center.getW());
+			System.out.println("Recieved g: " + preta_center.getG());
 			//Here we can print the votes
-			System.out.println("num_of_centers_involved" + preta_center.get_num_of_centers_involved());
+			System.out.println("num_of_centers_involved " + preta_center.get_num_of_centers_involved());
 			
 			//Check that got same values
 			for (int i = 0; i<numOfVotes; i++){
@@ -70,24 +74,23 @@ public class PretAVoteProcess {
 		/* test num 2 */
 		if (args[0].equals("test2"))
 		{
-			basicTest(0);
-			basicTest(1);
-			for (int i=0; i<5; i++)
-			{
-				Random r = new Random();
-				int n = r.nextInt(1000);
-				basicTest(n);
-			}
+			Random r = new Random();
+			int n = r.nextInt(1000);
+			basicTest(n);
+			
 		}
 		
 		/* test num 3 */
-		//if (args[0] == "test3") - one mc process is missing so skip of one mix is needed
+		if (args[0].equals("test3"))
+		{
+			basicTest(0);			
+		}
 		
 		/* test num 4 */
-		//if (args[0] == "test4") - more than one mc process is missing so skip of few mixes is needed
-		
-		/* test num 5 */
-		//if (args[0] == "test5") - do not run any mc process, so skipping of all mc's is needed
+		if (args[0].equals("test4"))
+		{
+			basicTest(1);			
+		}
 		
 	}
 

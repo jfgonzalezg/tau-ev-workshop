@@ -429,11 +429,27 @@ public class MixCenter implements IMixCenter
 	}
 	
 	/*
+	 * Get q
+	 */
+	public BigInteger getQ()
+	{
+		return this.q;
+	}
+	
+	/*
 	 * Set p
 	 */
 	protected void setP(BigInteger P)
 	{
 		this.p = P;
+	}
+	
+	/*
+	 * Get p
+	 */
+	public BigInteger getP()
+	{
+		return this.p;
 	}
 	
 	/*
@@ -445,12 +461,32 @@ public class MixCenter implements IMixCenter
 	}
 	
 	/*
+	 * Get w
+	 */
+	public BigIntegerMod getW()
+	{
+		return this.w;
+	}
+	
+	/*
 	 * Set g
 	 */
 	protected void setG(BigIntegerMod G)
 	{
 		this.g = G;
 	}
+	
+	/*
+	 * Get g
+	 */
+	public BigIntegerMod getG()
+	{
+		return this.g;
+	}
+	
+	/*
+	 * Get the num of centers involved
+	 */
 	public int get_num_of_centers_involved(){
 		return num_of_centers_involved;
 	}
