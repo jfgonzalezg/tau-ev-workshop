@@ -52,7 +52,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private static int ezer=1;
 	private static int sw=1;
 	private static int swStart=1;
-	
+	private static String userID;
 	private Button startVoting;
 	private Text idInfo;
 	private Text header;
@@ -159,37 +159,34 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	 * 2) SelectionListener- in case the user pressed "Start Voting" button.
 	 * The procedure will check that that ID is legal and will call the next GUI screen. 
 	 */
-	private void checkAndExecute(){
+	private void checkAndExecute(String IDuser){
     	boolean isLeg = true;
-    	int out=0;
-    	String userID = idInfo.getText();
-    	idInfo.setText(userID);
+//    	int out=0;
+    	idInfo.setText(IDuser);
     	
-    	if ((userID.length() == 0)) {
+    	if ((IDuser.length() == 0)) {
     		isLeg= false;
     		shortIDMessage();
-    		out = 1;
-    	}
+//    		out = 1;
+    	}else{
     	// Check that the user entered numbers only 
-    	for (int i = 0; i < userID.length(); i++) {
-            if ((!Character.isDigit(userID.charAt(i)))
-            		&&(out == 0)){
+    	for (int i = 0; i < IDuser.length(); i++) {
+            if (!Character.isDigit(IDuser.charAt(i))){
+//            		&&(out == 0)){
             	numbersOnlyMessage();
             	isLeg = false;
+            	idInfo.setText("");
               	break;
             }
     	}
-	
-            
-    	
-    	
-    	if (isLeg){ 
+    	}
+           	if (isLeg){ 
     		/// If Here Then Legal ID Was Entered.
     		System.out.println("Entered User ID Is:"+userID);
     		shell.close();
     		sw = 1;
     		ezer = 2;
-    		voterID = userID;
+    		voterID = IDuser;
        	}
 	}
 
@@ -198,7 +195,8 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		      public void handleEvent(Event event) {
 		        if (event.widget == startVoting) {
 		        	System.out.println("You clicked Strart Voting");
-		        	checkAndExecute();
+		        	userID = idInfo.getText();
+		        	checkAndExecute(userID);
 		        }else
 		        if (event.widget == BExit){
 		        	System.out.println("You clicked Exit");
@@ -248,7 +246,10 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 					public void keyReleased(org.eclipse.swt.events.KeyEvent arg0) {
 						// In case [ENTER] was pressed
 						if (arg0.character == 13) {
-							idInfo.setText(""); //Deletes "\n" from the string
+							userID = idInfo.getText();
+							int len = userID.length()-2;
+							userID = userID.substring(0, len);
+							checkAndExecute(userID);
 						}
 					}
 				};
