@@ -11,7 +11,7 @@ import MixCenter.Ran2_test;
 
 public class test_reencryption 
 {
-	public static int VOTERS_AMOUNT=10;
+	public static int VOTERS_AMOUNT=5;
 	public static int pi[];
 	public static Ran1_test A[];
 	public static Ran2_test B[];
@@ -46,7 +46,7 @@ public class test_reencryption
 		B=new Ran2_test[VOTERS_AMOUNT];
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
-			B[i]=reencrypt(A[pi[i]]);			
+			B[pi[i]]=reencrypt(A[i]);			
 		}
 	}
 	/**
@@ -60,6 +60,7 @@ public class test_reencryption
 			A[i]=new Ran1_test(i);
 		}
 		generatePermutation();
+	//	pi[0]=4;pi[1]=1;pi[2]=0;pi[3]=2;pi[4]=3;
 		PermutateAndReecncrypt();
 		System.out.println("A: ");
 		for (int i=0;i<VOTERS_AMOUNT;i++)
