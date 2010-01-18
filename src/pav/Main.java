@@ -43,24 +43,26 @@ public class Main {
 		////////////////////////
 		
 		
+		// Initialize threshold cryptosystem 
 		ThresholdCryptosystem tc = new ThresholdCryptosystem();
 		new PartiesManager();
 		
-		try{
-			System.out.println("KALEV: public key is "+tc.getMutualPublicKey());
+		try{ // Try to generate public key
+			System.out.println("PAV: public key is "+tc.getMutualPublicKey());
 			PAVShared.setPublicKey(tc.getMutualPublicKey());
 		}catch (ElectionsSetUpException esue){
 			System.err.println(esue);
 			System.exit(-1);
 		}
 		
-		try{
+		try{ // Initialized Pret-A-Voter
 			PAVShared.initialize(mixNetsFlag,uIMode);
 		} catch (ElectionsSetUpException esue) {
 			System.err.println(esue);
 			System.exit(-1);
 		}
 		
+		// Run chosen user interface
 		switch(PAVShared.getUIMode()){
 		case RANDOM:
 			Random rand = new Random();
@@ -82,6 +84,7 @@ public class Main {
 		BigIntegerMod voteSum;		
 		
 		if (PAVShared.inMixNetsMode()){
+			// Initialize mix nets center 0
 			IMixCenter mixNets = new MixCenter(0);
 			
 			Ciphertext[] mnRetVotes = new Ciphertext[PAVShared.getCastVotes().size()];
@@ -92,6 +95,7 @@ public class Main {
 				castVotesArr[i] =  PAVShared.getCastVotes().get(i);
 			}
 			
+			// Begin mixing process
 			boolean mnSend = mixNets.send_to_next_mix_center(castVotesArr, 
 					global.Consts.G,
 					global.Consts.p,
@@ -113,6 +117,7 @@ public class Main {
 			
 			voteSum = new BigIntegerMod(BigInteger.ZERO,Consts.p);
 			
+			// Decrypt mixed votes
 			for (Ciphertext ciphertext : mnRetVotes) {
 				voteSum = voteSum.add(tc.decryptMutually(ciphertext));
 			}
@@ -125,8 +130,10 @@ public class Main {
 			
 		}
 		
+		// Close threshold cryptosystem
 		tc.close();
 		
+		// Announce the final elections' results 
 		PAVShared.announceResults(voteSum);
 		
 	}
