@@ -135,6 +135,6 @@ public class Main {
 	 * Prints usage information about this application to System.out
 	 */
 	public static void printUsage() {
-		System.out.println("Usage: pav.Main [-gui] [-mix-nets]");
+		System.out.println("Usage: pav.Main [-gui] [-batch] [-mix-nets] [-random]");
 	}
 }
