@@ -83,7 +83,7 @@ public class MixCenterTester {
 		int id = 1;
 		
 		MixCenter MC = new MixCenter(id);
-		MixCenter.write("Mix Center No." + id + " is working...", id);
+		MixCenter.write("Mix Center No." + id + " is working...", id, true);
 		
 		
 		//Create some votes
@@ -109,23 +109,23 @@ public class MixCenterTester {
 		
 		
 		MC.generatePermutation();
-		MixCenter.write("Starting reencypting and permutating the data...", id);
+		MixCenter.write("Starting reencypting and permutating the data...", id, false);
 		MC.PermutateAndReecncrypt();
-		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id);
+		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id, false);
 		String proof = MC.performZKP();
 		boolean isZKPValid = true;
 		if (proof == null){
 			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 		}
 		//in case ZKP proof was false
 		if (proof == "falseProof"){
 			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id, false);
 		}
 		else{
 			MC.printToFile(proof, isZKPValid);
-			MixCenter.write("ZKP is done, proof file was created and has valid data...", id);
+			MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
 		} 
 		/*MixCenter mc = new MixCenter(1);
 		mc.setVotersAmount(400);

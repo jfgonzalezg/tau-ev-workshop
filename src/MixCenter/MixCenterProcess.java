@@ -16,41 +16,41 @@ public class MixCenterProcess {
 		
 		MC = new MixCenter(id);
 		if (MC == null){
-			MixCenter.write("Mix Center No." + id + " couldn't start up!!!- goodbye :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " couldn't start up!!!- goodbye :-( \r\n\r\n", id, true);
 			return;
 		}
-		MixCenter.write("Mix Center No." + id + " is working...", id);
-		MixCenter.write("Waiting to recieve data from previous MC...", id);
+		MixCenter.write("Mix Center No." + id + " is working...", id, true);
+		MixCenter.write("Waiting to recieve data from previous MC...", id, false);
 		if (MC.receive_from_prev_mix_center() == null){
-			MixCenter.write("Mix Center No." + id + " didn't succeed to receive data from previus MC, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " didn't succeed to receive data from previus MC, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 			return;
 		}
-		MixCenter.write("Finished recieving data from previous MC, generating new permutation...", id);
+		MixCenter.write("Finished recieving data from previous MC, generating new permutation...", id, false);
 		MC.generatePermutation();
-		MixCenter.write("Starting reencypting and permutating the data...", id);
+		MixCenter.write("Starting reencypting and permutating the data...", id, false);
 		MC.PermutateAndReecncrypt();
-		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id);
+		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id, false);
 		proof = MC.performZKP();
 		boolean isZKPValid = true;
 		if (proof == null){
 			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 		}
 		//in case ZKP proof was false
 		if (proof == "falseProof"){
 			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id, false);
 		}
 		else{
 			MC.printToFile(proof, isZKPValid);
-			MixCenter.write("ZKP is done, proof file was created and has valid data...", id);
+			MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
 		} 
-		MixCenter.write("Starting to send data to the next MC...", id);
+		MixCenter.write("Starting to send data to the next MC...", id, false);
 		if (!MC.send_to_next_mix_center(isZKPValid))
-			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id);
+			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id, false);
 		else
-			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id);
-		MixCenter.write("Mix Center No." + id + " is down...\r\n\r\n", id);
+			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id, false);
+		MixCenter.write("Mix Center No." + id + " is down...\r\n\r\n", id, false);
 			
 
 	}
