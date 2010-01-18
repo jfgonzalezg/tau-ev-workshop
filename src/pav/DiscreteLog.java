@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pavBallot.Ballot;
+import pavUI.UIModeEnum;
 
 import elgamal.Ciphertext;
 import elgamal.CryptObject;
@@ -102,7 +103,7 @@ public class DiscreteLog {
 	
 	public static void main(String[] args) {
 		try{
-			PAVShared.initialize(false,false);
+			PAVShared.initialize(false,UIModeEnum.GRAPHIC);
 		}catch(ElectionsSetUpException e){}
 		
 		// THRESHOLD

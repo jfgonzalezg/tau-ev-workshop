@@ -1,6 +1,7 @@
 package pav;
 
 import pavBallot.*;
+import pavUI.UIModeEnum;
 import global.*;
 import elgamal.*;
 
@@ -30,7 +31,7 @@ public class PAVShared {
 	private static BigIntegerMod publicKey;
 	
 	private static boolean inMixNetsMode; // A flag for the Mix Nets mode. Default is threshold mode.  
-	private static boolean inGUIMode; // A flag for gui mode. Default is batch mode.
+	private static UIModeEnum uIMode; // A flag for gui mode. Default is batch mode.
 	
 	private static Ciphertext voteProduct = new Ciphertext(new BigIntegerMod(BigInteger.ONE, Consts.p),
 			new BigIntegerMod(BigInteger.ONE, Consts.p)); // The product of all votes - used only in threshold mode.
@@ -56,9 +57,9 @@ public class PAVShared {
 	 * @throws UnsportedElectionSizeException in case the number of 
 	 * voters and parties make the ballot larger than the elections can support
 	 */
-	public static void initialize(boolean inMixNetsMode, boolean inGUIMode) throws ElectionsSetUpException{
+	public static void initialize(boolean inMixNetsMode, UIModeEnum uIMode) throws ElectionsSetUpException{
 		PAVShared.inMixNetsMode = inMixNetsMode;
-		PAVShared.inGUIMode = inGUIMode;
+		PAVShared.uIMode = uIMode;
 		
 		int bitsPerParty = (int) Math.ceil(Math.log(Consts.VOTERS_AMOUNT)/Math.log(2));
 		
@@ -208,8 +209,8 @@ public class PAVShared {
 		return inMixNetsMode;
 	}
 	
-	public static boolean inGUIMode(){
-		return inGUIMode;
+	public static UIModeEnum getUIMode(){
+		return uIMode;
 	}
 	
 	/**
