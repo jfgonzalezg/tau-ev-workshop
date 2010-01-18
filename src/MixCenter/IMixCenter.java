@@ -61,4 +61,29 @@ public interface IMixCenter
 	 * during the voting process.
 	 */
 		public int get_num_of_centers_involved();
+		
+		/*
+		 * Get the VOTERS_AMOUNT
+		 */
+		public int getVotersAmount();
+		
+		/*
+		 * Get q
+		 */
+		public BigInteger getQ();
+		
+		/*
+		 * Get p
+		 */
+		public BigInteger getP();
+		
+		/*
+		 * Get w
+		 */
+		public BigIntegerMod getW();
+		
+		/*
+		 * Get g
+		 */
+		public BigIntegerMod getG();
 }
