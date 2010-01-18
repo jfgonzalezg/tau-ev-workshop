@@ -161,18 +161,15 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	 */
 	private void checkAndExecute(String IDuser){
     	boolean isLeg = true;
-//    	int out=0;
     	idInfo.setText(IDuser);
-    	
     	if ((IDuser.length() == 0)) {
     		isLeg= false;
     		shortIDMessage();
-//    		out = 1;
+;
     	}else{
     	// Check that the user entered numbers only 
     	for (int i = 0; i < IDuser.length(); i++) {
             if (!Character.isDigit(IDuser.charAt(i))){
-//            		&&(out == 0)){
             	numbersOnlyMessage();
             	isLeg = false;
             	idInfo.setText("");
