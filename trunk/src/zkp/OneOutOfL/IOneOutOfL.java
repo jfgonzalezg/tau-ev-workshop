@@ -3,6 +3,7 @@ package zkp.OneOutOfL;
 
 import global.BigIntegerMod;
 import zkp.ZkpException;
+import elgamal.Ciphertext;
 import elgamal.CryptObject;
 
 /**TODO - will use the list of pairs from pret-a-vote. generated once by them 
@@ -28,12 +29,12 @@ public interface IOneOutOfL {
 	 * Verifies using the ZKP that the ciphertext pair in CryptObject is a re-encryption of 
 	 * one of the pairs in the list without knowing which pair it is or the random number used
 	 * @param proof - ZKP ProofOneOutOfL object proving the above claim
-	 * @param CryptObject - a re-encryption the t'th pair in the list, using random (re-encryption is symmetric)
+	 * @param Ciphertext - a re-encryption the t'th pair in the list
 	 * @param h - a public key (Z*p) (for elgamal this is called C)
 	 * @return true if the proof holds, false otherwise.
 	 * @throws ZkpException 
 	 */
-	public boolean verifyOneOutOfLProof(OneOutOfLProof proof, CryptObject cryptObj, BigIntegerMod h) 
+	public boolean verifyOneOutOfLProof(OneOutOfLProof proof, Ciphertext cipher, BigIntegerMod h) 
 			throws ZkpException;
 	
 }
