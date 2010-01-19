@@ -16,16 +16,21 @@ import zkp.ZkpException;
 
 public class OneOutOfLTest {
 
-	public static BigInteger q = new BigInteger("11");
-	public static BigInteger p = new BigInteger("23");
-	public static BigIntegerMod g = new BigIntegerMod(new BigInteger("2"),p);
+	//public static BigInteger q = new BigInteger("11");
+	//public static BigInteger p = new BigInteger("23");
+	//public static BigIntegerMod g = new BigIntegerMod(new BigInteger("2"),p);
+	
+	public static BigInteger q = Consts.getQ();
+	public static BigInteger p = Consts.getP();
+	public static BigIntegerMod g = Consts.getG();
+	
 	
 	public static void main(String[] args)
 	{
 		
 		ArrayList<Ciphertext> plist = new ArrayList<Ciphertext>();
 		
-		
+		BigIntegerMod h = Consts.getG().pow(new BigIntegerMod(q));
 		/*
 		BigIntegerMod h = new BigIntegerMod(new BigInteger("7"),p);
 		for (int i = 0; i<3; i++){
@@ -47,14 +52,27 @@ public class OneOutOfLTest {
 		//BigIntegerMod checkb = Cobj.getCiphertext().getB().multiply(h.pow(Cobj.getR().inverse()));
 		*/
 		
-		BigIntegerMod h = new BigIntegerMod(new BigInteger("7"),p);
+		//BigIntegerMod h = new BigIntegerMod(new BigInteger("13"),p);
 		ElGamal gamal=new ElGamal(p,g,h,null);
 		CryptObject Cobj = new CryptObject();
-		BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
-		BigIntegerMod b = new BigIntegerMod(new BigInteger("17"), p);
+		
+		
+		BigIntegerMod a = new BigIntegerMod(new BigInteger("575776767"), p);
+		BigIntegerMod b = new BigIntegerMod(new BigInteger("56654"), p);
 		Ciphertext vote = new Ciphertext(a, b);
+		BigIntegerMod r = new BigIntegerMod(new BigInteger("57744"), q);
+		Cobj = gamal.reencrypt(vote,r);
+		for (int i = 0; i<3; i++){
+			plist.add(i,Cobj.getCiphertext());
+		}
+		Cobj.setCiphertext(vote);
+		
+		
+		/*BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
+		BigIntegerMod b = new BigIntegerMod(new BigInteger("17"), p);
+		Ciphertext vote = new Ciphertext(a, b);*/
 		//BigIntegerMod qtest = new BigIntegerMod(new BigInteger("1"), q);
-		BigIntegerMod r = new BigIntegerMod(new BigInteger("4"), q);
+		/*BigIntegerMod r = new BigIntegerMod(new BigInteger("4"), q);
 		Cobj = gamal.reencrypt(vote,r);
 		for (int i = 0; i<3; i++){
 			//BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
@@ -65,7 +83,7 @@ public class OneOutOfLTest {
 			//plist.add(i,vote);
 			plist.add(i,Cobj.getCiphertext());
 		}
-		Cobj.setCiphertext(vote);
+		Cobj.setCiphertext(vote);*/
 		
 		//BigIntegerMod x = new BigIntegerMod(BigInteger.TEN, Consts.getQ());
 		//BigIntegerMod h = Consts.getG().pow(Consts.getQ());
