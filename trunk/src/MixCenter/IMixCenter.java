@@ -12,7 +12,7 @@ public interface IMixCenter
 	/*
 	 * @PRE generatePermutation()and receive_basics() where called earlier and completed successfully.
 	 */
-	public void PermutateAndReecncrypt();
+	public boolean PermutateAndReecncrypt();
 	/*
 	 * @PRE PermutateAndReecncrypt() was called earlier and completed successfully.
 	 */
