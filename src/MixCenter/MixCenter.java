@@ -32,6 +32,7 @@ public class MixCenter implements IMixCenter
 	private BigInteger q,p;
 	private int num_of_centers_involved;
 	protected static String defaultLogFilePath = "c:\\";
+	private GIProof zkpProof;
 	
 	
 	/* Constructor */
@@ -166,7 +167,8 @@ public class MixCenter implements IMixCenter
 		{
 			if (zkpGI.verifyGIProof(zkp, this.getArrayA(), this.getArrayB(), this.w, this.g))
 			{
-				return zkp.toString();
+				zkpProof = zkp;
+				return "correctProof";
 			}
 			else //in case ZKP returned wrong proof
 				return "falseProof";
@@ -503,5 +505,13 @@ public class MixCenter implements IMixCenter
 	 */
 	public int get_num_of_centers_involved(){
 		return num_of_centers_involved;
+	}
+	
+	/*
+	 * Get the zkp proof as a string
+	 */
+	public String getProof()
+	{
+		return zkpProof.toString();
 	}
 }

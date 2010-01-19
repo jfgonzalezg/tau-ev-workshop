@@ -45,25 +45,22 @@ public class MixCenterProcess {
 				MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 			}
 			else{
-				//NOTE: ALEX try to write in the end
-				//MC.printToFile(proof, isValid);
-				//MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
-				MixCenter.write("ZKP is done, proof file is created now...", id, false);
+				MixCenter.write("ZKP is done and the data is valid...", id, false);
 			} 
 		}
 		MixCenter.write("Starting to send data to the next MC...", id, false);
 		if (!MC.send_to_next_mix_center(isValid))
 			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id, false);
-		else
+		else{
 			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id, false);
-		
-		//ALEX write ZKP now
-		if (proof != null && !proof.equals("falseProof")){
-			MC.printToFile(proof, isValid);
-			MixCenter.write("ZKP is done, proof file proof file was created and has valid data...", id, false);
+			if (isValid){ //in case zkp went well
+				MixCenter.write("Mix Center No." + id + " start printing ZKP", id, false);
+				MC.printToFile(MC.getProof(), isValid);
+			}
 		}
-
 		MixCenter.write("Mix Center No." + id + " is down...\r\n\r\n", id, false);
+		
+		
 			
 
 	}
