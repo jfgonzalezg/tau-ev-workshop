@@ -261,11 +261,11 @@ public class MixCenter implements IMixCenter
 			client = new Client(	Consts.MIX_CENTERS_IP  [next_available_center % 11],
 									Consts.MIX_CENTERS_PORT[next_available_center % 11],
 									mix_center_id);
-			write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number" +
+			write("Mix Center number "+mix_center_id+" trying to send data to Mix Center number " +
 					next_available_center%11, this.getId(),false);
 			if (client.isConnected() && client.canSend()){
 				if (client.send(sent_object) == false){
-					write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number" +
+					write("ERROR: Mix Center number "+mix_center_id+" : Error while sending to Mix Center number " +
 							next_available_center%11, this.getId(),false);
 				}
 				else {
