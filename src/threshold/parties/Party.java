@@ -132,7 +132,9 @@ public class Party {
 		
 		private void DecryptMessages() {
 			if (closing) return;
+			Consts.log("party "+partyNumber+": waiting to decrypt message", Consts.DebugOutput.STDOUT);
 			ThresholdPacket receivingPacket = receive();
+			Consts.log("party "+partyNumber+": received packet to decrypt", Consts.DebugOutput.STDOUT);
 			ThresholdPacket sendingPacket;
 			BigIntegerMod m;
 			BigIntegerMod mpow;
@@ -151,7 +153,9 @@ public class Party {
 					e.printStackTrace();
 				}
 				client.send(sendingPacket);
+				Consts.log("party "+partyNumber+": sent decryption. waiting to decrypt another message", Consts.DebugOutput.STDOUT);
 				receivingPacket = receive();
+				Consts.log("party "+partyNumber+": received another packet to decrypt", Consts.DebugOutput.STDOUT);
 			}
 		}
 		
