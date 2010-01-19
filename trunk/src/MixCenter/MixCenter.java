@@ -254,8 +254,8 @@ public class MixCenter implements IMixCenter
 		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
-		while (next_available_center < 12 ||                         /*Pret a vote is last center*/
-			  (mix_center_id == 0 && next_available_center == 11)){  /*Pret a vote is trying to send to itself*/
+		while (next_available_center < 12 &&                         /*Pret a vote is last center*/
+			  (!(mix_center_id == 0 && next_available_center == 11))){  /*Pret a vote is trying to send to itself*/
 			//NOTE: we assign modulo 11 for the case next_available_center == 11
 			//so it is pret a vote
 			client = new Client(	Consts.MIX_CENTERS_IP  [next_available_center % 11],
@@ -281,6 +281,8 @@ public class MixCenter implements IMixCenter
 			next_available_center++;
 		}
 		client.close();
+		if (mix_center_id == 0 && next_available_center == 11)
+			write("ERROR: Mix Center number 0 is trying to send to itself", this.getId(),false);
 		return false;
 	}
 
