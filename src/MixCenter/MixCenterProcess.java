@@ -12,7 +12,7 @@ public class MixCenterProcess {
 		
 		MixCenter MC;
 		int id = Integer.parseInt(args[0]);
-		String proof;
+		String proof = null;
 		
 		MC = new MixCenter(id);
 		if (MC == null){
@@ -40,13 +40,15 @@ public class MixCenterProcess {
 				MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 			}
 			//in case ZKP proof was false
-			if (proof == "falseProof"){
+			if (proof != null && proof.equals("falseProof")){
 				isValid = false;
 				MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
 			}
 			else{
-				MC.printToFile(proof, isValid);
-				MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
+				//NOTE: ALEX try to write in the end
+				//MC.printToFile(proof, isValid);
+				//MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
+				MixCenter.write("ZKP is done, proof file is created now...", id, false);
 			} 
 		}
 		MixCenter.write("Starting to send data to the next MC...", id, false);
@@ -54,6 +56,13 @@ public class MixCenterProcess {
 			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id, false);
 		else
 			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id, false);
+		
+		//ALEX write ZKP now
+		if (proof != null && !proof.equals("falseProof")){
+			MC.printToFile(proof, isValid);
+			MixCenter.write("ZKP is done, proof file proof file was created and has valid data...", id, false);
+		}
+
 		MixCenter.write("Mix Center No." + id + " is down...\r\n\r\n", id, false);
 			
 
