@@ -54,11 +54,11 @@ public class MixCenterProcess {
 		else{
 			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id, false);
 			if (isValid){ //in case zkp went well
-				MixCenter.write("Mix Center No." + id + " start printing ZKP", id, false);
+				MixCenter.write("Mix Center No. " + id + " start printing ZKP", id, false);
 				MC.printToFile(MC.getProof(), isValid);
 			}
 		}
-		MixCenter.write("Mix Center No." + id + " is down...\r\n\r\n", id, false);
+		MixCenter.write("Mix Center No. " + id + " is down...\r\n\r\n", id, false);
 		
 		
 			

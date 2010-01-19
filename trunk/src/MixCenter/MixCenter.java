@@ -250,7 +250,7 @@ public class MixCenter implements IMixCenter
 											BigIntegerMod W,
 											int			  N)
 	{
-		write("DEBUG Entering send_to_next_mix_center mix_center_id"+mix_center_id, this.getId(),false);
+		write("DEBUG Entering send_to_next_mix_center mix_center_id "+mix_center_id, this.getId(),false);
 		SentObject sent_object = new SentObject(votes, G, P, Q, W, N, num_of_centers_involved);
 		int next_available_center = mix_center_id + 1;
 		Client client = null;
@@ -269,13 +269,13 @@ public class MixCenter implements IMixCenter
 							next_available_center%11, this.getId(),false);
 				}
 				else {
-					write("Mix Center number "+mix_center_id+" sent data to Mix Center number" +
+					write("Mix Center number "+mix_center_id+" sent data to Mix Center number " +
 							next_available_center%11, this.getId(),false);
 					client.close();
 					return true;
 				}
 			} else {
-				write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number" +
+				write("ERROR: Mix Center number "+mix_center_id+" : Error while connecting to Mix Center number " +
 									next_available_center%11, this.getId(),false);
 			}
 			next_available_center++;
@@ -292,7 +292,7 @@ public class MixCenter implements IMixCenter
 	
 	public Ciphertext[ ] receive_from_prev_mix_center (int timeout){
 		
-		write("DEBUG Entering  receive_from_prev_mix_center mix_center_id"+mix_center_id, this.getId(),false);
+		write("DEBUG Entering receive_from_prev_mix_center mix_center_id "+mix_center_id, this.getId(),false);
 		Server 	server 					= new Server(Consts.MIX_CENTERS_PORT[mix_center_id]);
 		Server.Message 	received_votes  = null;
 		
