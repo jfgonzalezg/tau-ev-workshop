@@ -111,8 +111,9 @@ public class Main {
 					PAVShared.getCastVotes().size());*/
 			mnRetVotes = mixNets.receive_from_prev_mix_center();
 			
-			if (!mnSend){
-				// TODO: handle error
+			if (!mnSend || (mnRetVotes == null)){
+				System.err.println("Critical error during mix-nets phase. Exiting.");
+				return;
 			}
 			
 			voteSum = new BigIntegerMod(BigInteger.ZERO,Consts.p);
