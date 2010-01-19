@@ -28,25 +28,28 @@ public class MixCenterProcess {
 		MixCenter.write("Finished recieving data from previous MC, generating new permutation...", id, false);
 		MC.generatePermutation();
 		MixCenter.write("Starting reencypting and permutating the data...", id, false);
-		MC.PermutateAndReecncrypt();
-		MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id, false);
-		proof = MC.performZKP();
-		boolean isZKPValid = true;
-		if (proof == null){
-			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
+		boolean isReencryptValid = MC.PermutateAndReecncrypt();
+		boolean isValid = isReencryptValid; //this flag indicates several possible problems in the procedure
+		if (isReencryptValid){ //in case reencryption went well
+			MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id, false);
+			proof = MC.performZKP();
+			
+			if (proof == null){
+				isValid = false;
+				MixCenter.write("Mix Center No." + id + " failed to get valid ZKP, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
+			}
+			//in case ZKP proof was false
+			if (proof == "falseProof"){
+				isValid = false;
+				MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
+			}
+			else{
+				MC.printToFile(proof, isValid);
+				MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
+			} 
 		}
-		//in case ZKP proof was false
-		if (proof == "falseProof"){
-			isZKPValid = false;
-			MixCenter.write("Mix Center No." + id + " ZKP proof wasn't correct :-( \r\n\r\n", id, false);
-		}
-		else{
-			MC.printToFile(proof, isZKPValid);
-			MixCenter.write("ZKP is done, proof file was created and has valid data...", id, false);
-		} 
 		MixCenter.write("Starting to send data to the next MC...", id, false);
-		if (!MC.send_to_next_mix_center(isZKPValid))
+		if (!MC.send_to_next_mix_center(isValid))
 			MixCenter.write("Mix Center No." + id + " didn't succeed to send data to one of the next MCs, the elections process failed!!! - goodbye :-( \r\n\r\n", id, false);
 		else
 			MixCenter.write("Finished sending the data to the next MC, goodbye :-) ", id, false);

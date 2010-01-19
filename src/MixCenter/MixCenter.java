@@ -64,7 +64,7 @@ public class MixCenter implements IMixCenter
 	/*
 	 * permutate and re-encrypt A according to pi and using ElGamal module.
 	 */
-	public void PermutateAndReecncrypt()
+	public boolean PermutateAndReecncrypt()
 	{
 		//TODO - delete after debug
 		System.out.println("p = " + p);
@@ -76,14 +76,23 @@ public class MixCenter implements IMixCenter
 		for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
 		{
 			B[pi[i]]=gamal.reencrypt(A[i]);
-			//TODO - debug. to delete or add to log
-			if ((!(B[pi[i]].getCiphertext().getA().equals(A[i].getA().multiply(g.pow(B[pi[i]].getR())))))
-				&& (!(B[pi[i]].getCiphertext().getB().equals(A[i].getB().multiply(w.pow(B[pi[i]].getR()))))))
+			
+			if (B[pi[i]] == null)
 			{
-				write("wrong reencryption for i=" + i, this.getId(), false);
-//				System.out.println("wrong reencryption for i=" + i);
+				MixCenter.write("Mix Center No." + mix_center_id + " failed to perform reencryption, this MC will not take part of the elections... goodbye :-( \r\n\r\n", mix_center_id, false);
+				return false;
+			}
+			else
+			{
+				//TODO - debug. to delete or add to log
+				if ((!(B[pi[i]].getCiphertext().getA().equals(A[i].getA().multiply(g.pow(B[pi[i]].getR())))))
+				&& (!(B[pi[i]].getCiphertext().getB().equals(A[i].getB().multiply(w.pow(B[pi[i]].getR()))))))
+				{
+					write("wrong reencryption for i=" + i, this.getId(), false);
+				}
 			}
 		}
+		return true;
 		
 		
 	/*	for(int i=0;i<VOTERS_AMOUNT;i++) //create permutation according to pi[] and then - re-encrypt
@@ -212,9 +221,9 @@ public class MixCenter implements IMixCenter
 	
 	
 	//This function used for MixCenter users
-	public boolean send_to_next_mix_center (boolean isZKPValid){
+	public boolean send_to_next_mix_center (boolean isValid){
 		Ciphertext[] votes;
-		if (isZKPValid){
+		if (isValid){
 			votes = new Ciphertext[B.length];
 			for (int i=0; i<B.length; i++){
 				votes[i] = B[i].getCiphertext();
@@ -223,6 +232,7 @@ public class MixCenter implements IMixCenter
 			num_of_centers_involved++;
 		} else {
 			votes = A;
+			write("This Mix Center is sending the votes as recieved (no reencryption and mixing were done) "+mix_center_id, this.getId(),false);
 		}
 		return send_to_next_mix_center (votes, g, p, q, w, VOTERS_AMOUNT);
 	}
