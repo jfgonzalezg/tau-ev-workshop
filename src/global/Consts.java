@@ -21,7 +21,7 @@ public class Consts {
 	private static BufferedWriter outputFile = null;
 	
 	public static BufferedWriter mcOutputFile = null;
-	public static final String MC_RESULTS_FILE = "MixCenter_formal_Log.txt";
+	public static final String MC_RESULTS_FILE = "c:\\formal_Log_";
 
 	public static final int PARTIES_AMOUNT = 40;
 	public static final int VOTERS_AMOUNT = 400;
