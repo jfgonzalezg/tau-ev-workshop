@@ -27,19 +27,6 @@ import pavBallot.*;
 
 
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 
 	{
@@ -60,15 +47,12 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private static Shell shell = null;
 	private static String voterID;
 	
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
+	
 	public static void runGUI() {
 		while (sw>0){
 		switch (ezer){
 		case 1:	
-			swStart = 1;
+			swStart = 1; //start a new ballot
 			showGUI();
 			break;
 		case 2:
@@ -89,15 +73,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		}
 	         
 	
-	/**
-	* Overriding checkSubclass allows this class to extend org.eclipse.swt.widgets.Composite
-	*/	
-	protected void checkSubclass() {
-	}
-	//public class BvoteHandler implements SelectionListener{
-	//	public void widgidSelected()
-	//}
-	/**
+	/*
 	* Auto-generated method to display this 
 	* org.eclipse.swt.widgets.Composite inside a new Shell.
 	*/
@@ -162,6 +138,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private void checkAndExecute(String IDuser){
     	boolean isLeg = true;
     	idInfo.setText(IDuser);
+    	//Check that the ID is not empty
     	if ((IDuser.length() == 0)) {
     		isLeg= false;
     		shortIDMessage();
@@ -190,11 +167,13 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private void initGUI1() {
 		Listener listener0 = new Listener() {
 		      public void handleEvent(Event event) {
-		        if (event.widget == startVoting) {
+		    	//Case [Start voting] was pressed     	  
+		        if (event.widget == startVoting) { 
 		        	System.out.println("You clicked Strart Voting");
 		        	userID = idInfo.getText();
 		        	checkAndExecute(userID);
 		        }else
+		        //Case [Exit] was pressed
 		        if (event.widget == BExit){
 		        	System.out.println("You clicked Exit");
 		        	shell.close();

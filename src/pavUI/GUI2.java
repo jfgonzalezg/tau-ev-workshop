@@ -18,19 +18,18 @@ import global.Consts;
 import pavBallot.*;
 
 public class GUI2 extends org.eclipse.swt.widgets.Composite {
-	private static Button Rchoise;
+	private static Button Rchose;
 	private static Button Bvote;
 	private static Button Bverify;
 	private static Label LTcand;
 	private static Label Ltenc;
     private static Label Lplease;
     private static int NumCand=global.Consts.PARTIES_AMOUNT;
-   
     private static Vote vote;
-	private static String TheChoisen;
+	private static String TheChosen;
 	private static Ballot ballot;
 	private static Shell shell = null;
-	private static int iChoisen;
+	private static int iChosen;
 	private static int i=0;
 	private static String strI;
 	private static String cndName;
@@ -49,7 +48,6 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	static void doSelection(Button button) {
         if (button.getSelection()){
                 System.out.println("do work for selection "+button);
-//                TheChoisen = "" + button;
                 strI = button.getData() + "";
                        
                } else {
@@ -63,7 +61,6 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
 		shell = new Shell(display, SWT.DIALOG_TRIM);		
-// 		GUI1 inst = new GUI1(shell, SWT.NULL);
 		shell.setText("Pret-A-Voter");
 		final ScrolledComposite sc1 = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		final Composite c1 = new Composite(sc1, SWT.NONE);
@@ -82,22 +79,24 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 		
 	    Listener listener1 = new Listener() {
 	      public void handleEvent(Event event) {
+	   //Case [Vote] was pressed 
 	        if (event.widget == Bvote) {
 	        	System.out.println("You clicked Vote");
 	        	shell.close();
 	        	InitialGUI.setsw(1);;
 	        	InitialGUI.setezer(3);
 	        } else 
+	   //Case [verify Ballot] was pressed
 	       	if (event.widget == Bverify) {
 	            	System.out.println("You clicked Verify");
 	            	shell.close();
 	            	InitialGUI.setsw(1);
 	            	InitialGUI.setezer(5);	            	
 	       	}
-	        InitialGUI.setswStart(0);
-		    iChoisen = Integer.parseInt(strI);
-		    vote = ballot.getVote(iChoisen);
-		    TheChoisen = vote.getCandidateName();
+	        InitialGUI.setswStart(0); //keep the same ballot
+		    iChosen = Integer.parseInt(strI); //keeping the i of the chosen 
+		    vote = ballot.getVote(iChosen);
+		    TheChosen = vote.getCandidateName();
  		    str = vote.getEncryptionBase64();
 		    
 	      }
@@ -132,22 +131,22 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 					Lplease.setText("Please Make Your Selection:");
 					Lplease.setBackground(SWTResourceManager.getColor(223, 255, 255));
 					Lplease.setFont(SWTResourceManager.getFont("Tahoma", 13, 1, false, false));
-					
+         //Printing the candidates					
 	           for (i=0; i<NumCand; i++){
 	        	   
 	        	    vote = ballot.getVote(i);
 				
-					Rchoise = new Button(c1, SWT.RADIO | SWT.LEFT );
-					Rchoise.setText("Candidate "+i);
-					Rchoise.setData(i);
-					Rchoise.setBackground(SWTResourceManager.getColor(223, 255, 255));
-					Rchoise.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
+					Rchose = new Button(c1, SWT.RADIO | SWT.LEFT );
+					Rchose.setText("Candidate "+i);
+					Rchose.setData(i);
+					Rchose.setBackground(SWTResourceManager.getColor(223, 255, 255));
+					Rchose.setFont(SWTResourceManager.getFont("Arial", 8, 3, false, false));
 					cndName = vote.getCandidateName();
-					Rchoise.setText(cndName);
-					if((InitialGUI.getswStart() == 0) && (i ==iChoisen))
-						Rchoise.setSelection(true);
-					Rchoise.setBounds(6, 200+i*220, 98, 20);
-					Rchoise.addListener(SWT.Selection, listener);
+					Rchose.setText(cndName);
+					if((InitialGUI.getswStart() == 0) && (i == iChosen))
+						Rchose.setSelection(true);
+					Rchose.setBounds(6, 200+i*220, 98, 20);
+					Rchose.addListener(SWT.Selection, listener);
 				
                     
 					    List list = new List(c1, SWT.NONE);
@@ -160,6 +159,8 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 							 }
 							 list.add(str.substring(mana*35));
 			           }
+	           
+	           
 	           if(size.x == 0 && size.y == 0) {
 	   			c1.pack();
 	   			shell.pack();
@@ -180,12 +181,12 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 		return vote;
 	}
 	
-	public static String getTheChoisen(){
-		return TheChoisen;
+	public static String getTheChosen(){
+		return TheChosen;
 	}
 	
-	public static int getiCoisen(){
-		return iChoisen;
+	public static int getiCosen(){
+		return iChosen;
 	}
 	public static String getstr(){
 		return str;

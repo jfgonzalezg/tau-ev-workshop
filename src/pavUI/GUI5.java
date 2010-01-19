@@ -19,21 +19,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class GUI5 extends org.eclipse.swt.widgets.Composite {
-
 	{
 		//Register as a resource user - SWTResourceManager will
 		//handle the obtaining and disposing of resources
@@ -84,7 +70,6 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
-
 		}
 		}
 	
@@ -93,14 +78,13 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI5();
 	}
-
 	
 	
 	private void initGUI5() {
-			
 	
     Listener listener5 = new Listener() {
       public void handleEvent(Event event) {
+    	  // [New Ballot] was pressed
         if (event.widget == Bnew) {
         	System.out.println("You clicked New Ballot");
         	shell.close();
@@ -170,11 +154,11 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 				RchoiseLData.width = 102;
 				RchoiseLData.height = 20;
 				Rchoise = new Button(this, SWT.RADIO | SWT.LEFT);
-				Rchoise.setText(GUI2.getTheChoisen());
+				Rchoise.setText(GUI2.getTheChosen());
 				Rchoise.setLayoutData(RchoiseLData);
 				Rchoise.setBackground(SWTResourceManager.getColor(223, 255, 255));
 			}			
-			
+        // Printing the encryption			
 			FormData list1LData = new FormData();
 			list1LData.left =  new FormAttachment(0, 1000, 118);
 			list1LData.top =  new FormAttachment(0, 1000, 285);
@@ -188,8 +172,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 				 list.add(GUI2.getstr().substring(j*35,(j+1)*35));    
 				 }
 				 list.add(GUI2.getstr().substring(mana*35));
-	    	
-             
+        // Printing the seed             
            {
            FormData listSLData = new FormData();
 			listSLData.left =  new FormAttachment(0, 1000, 90);
@@ -207,6 +190,8 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 	    }
 	    listS.add(str.substring(manaS*30));
         }
+           
+           
 		this.layout();
 			pack();
 		
