@@ -35,25 +35,13 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	private static String cndName;
     private static String str ;
     
-	
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void main(String[] args) {
-        
-        showGUI2();
-	}
-	
-	static void doSelection(Button button) {
+   
+	public static void doSelection(Button button) {
         if (button.getSelection()){
-                System.out.println("do work for selection "+button);
-                strI = button.getData() + "";
-                       
-               } else {
-                System.out.println("do work for deselection "+button);
+                strI = button.getData() + "";                       
+               } 
         }
-	}
+	
 	public  static void showGUI2() {
 		if (InitialGUI.getswStart() == 1){
 		    ballot = new Ballot();
@@ -81,23 +69,21 @@ public class GUI2 extends org.eclipse.swt.widgets.Composite {
 	      public void handleEvent(Event event) {
 	   //Case [Vote] was pressed 
 	        if (event.widget == Bvote) {
-	        	System.out.println("You clicked Vote");
 	        	shell.close();
 	        	InitialGUI.setsw(1);;
 	        	InitialGUI.setezer(3);
 	        } else 
 	   //Case [verify Ballot] was pressed
 	       	if (event.widget == Bverify) {
-	            	System.out.println("You clicked Verify");
-	            	shell.close();
+	               	shell.close();
 	            	InitialGUI.setsw(1);
 	            	InitialGUI.setezer(5);	            	
 	       	}
 	        InitialGUI.setswStart(0); //keep the same ballot
 		    iChosen = Integer.parseInt(strI); //keeping the i of the chosen 
-		    vote = ballot.getVote(iChosen);
-		    TheChosen = vote.getCandidateName();
- 		    str = vote.getEncryptionBase64();
+		    vote = ballot.getVote(iChosen);    //the chosen vote
+		    TheChosen = vote.getCandidateName();//the chosen candidate name
+ 		    str = vote.getEncryptionBase64();//the encryption of the chosen
 		    
 	      }
 	    };
