@@ -40,19 +40,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 	private List list;
 	private static int mone = 0;
 			
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void main(String[] args) {
-		showGUI3();
-	}
-	/**
-	* Overriding checkSubclass allows this class to extend org.eclipse.swt.widgets.Composite
-	*/	
-	protected void checkSubclass() {
-	}
-		
+	
 	public static void showGUI3() {
 		InitialGUI.setsw(0);
 		Display display = Display.getDefault();
@@ -90,8 +78,7 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
       public void handleEvent(Event event) {
     	  //Case [Confirm] was pressed
         if (event.widget == Bconfirm) {
-        	System.out.println("You clicked Confirm");
-        	//Registering the vote
+       	//Registering the vote
 	        PAVShared.addCastVote(GUI2.getVote(), InitialGUI.getvoterID());
 	        mone = mone + 1;//counting the voters
         	shell.close();
@@ -102,7 +89,6 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
         } else 
         	//Case [Back to voting screen] was pressed
        	if (event.widget == Bback) {
-           	System.out.println("You clicked Back");
            	shell.close();
            	InitialGUI.setsw(1);
            	InitialGUI.setezer(2);

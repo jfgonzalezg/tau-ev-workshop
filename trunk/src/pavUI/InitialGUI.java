@@ -66,8 +66,8 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 			break;
 		case 5:
 			GUI5.showGUI5();
-		default:
-			System.out.println("exiting");
+		default:{}
+
 		}
 		}
 		}
@@ -125,7 +125,7 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 	private void shortIDMessage(){
 		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
 		emptyName.setMessage("Please enter your ID number");
-		emptyName.setText("Blank ID number");
+		emptyName.setText("Empty ID number");
 		emptyName.open();
 		idInfo.setText(""); 
 	}
@@ -156,7 +156,6 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
     	}
            	if (isLeg){ 
     		/// If Here Then Legal ID Was Entered.
-    		System.out.println("Entered User ID Is:"+userID);
     		shell.close();
     		sw = 1;
     		ezer = 2;
@@ -169,13 +168,11 @@ public class InitialGUI extends org.eclipse.swt.widgets.Composite {
 		      public void handleEvent(Event event) {
 		    	//Case [Start voting] was pressed     	  
 		        if (event.widget == startVoting) { 
-		        	System.out.println("You clicked Strart Voting");
 		        	userID = idInfo.getText();
 		        	checkAndExecute(userID);
 		        }else
 		        //Case [Exit] was pressed
 		        if (event.widget == BExit){
-		        	System.out.println("You clicked Exit");
 		        	shell.close();
 		        	sw = 0;
 		        }

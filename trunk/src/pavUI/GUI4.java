@@ -24,8 +24,6 @@ import pav.PAVShared;
 
 public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	{
-		//Register as a resource user - SWTResourceManager will
-		//handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
@@ -38,22 +36,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	private List list;
 	
 		
-	/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void main(String[] args) {
-		showGUI4();
-		}
 	
-	/**
-	* Overriding checkSubclass allows this class to extend org.eclipse.swt.widgets.Composite
-	*/	
-	protected void checkSubclass() {
-	}
-	//public class BvoteHandler implements SelectionListener{
-	//	public void widgidSelected()
-	//}
 	/**
 	* Auto-generated method to display this 
 	* org.eclipse.swt.widgets.Composite inside a new Shell.
@@ -103,8 +86,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 	      public void handleEvent(Event event) {
 	    	  //[Done] was pressed
 	        if (event.widget == Bdone) {
-	        	System.out.println("You clicked done");
-	        	if (GUI3.getmone() >= numVote){
+	        	 if (GUI3.getmone() >= numVote){
 	        		maxNumVoters();
 	        		shell.close();
 	           	    InitialGUI.setsw(0);

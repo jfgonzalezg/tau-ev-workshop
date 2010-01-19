@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Listener;
 
 public class GUI5 extends org.eclipse.swt.widgets.Composite {
 	{
-		//Register as a resource user - SWTResourceManager will
-		//handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
@@ -36,14 +34,6 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
 	private static String str;
 	private List list;
  
-	
-		/**
-	* Auto-generated main method to display this 
-	* org.eclipse.swt.widgets.Composite inside a new Shell.
-	*/
-	public static void main(String[] args) {
-			showGUI5();
-		}
 	
 	/**
 	* Auto-generated method to display this 
@@ -86,8 +76,7 @@ public class GUI5 extends org.eclipse.swt.widgets.Composite {
       public void handleEvent(Event event) {
     	  // [New Ballot] was pressed
         if (event.widget == Bnew) {
-        	System.out.println("You clicked New Ballot");
-        	shell.close();
+           	shell.close();
         	InitialGUI.setsw(1);
         	InitialGUI.setezer(1);
             }
