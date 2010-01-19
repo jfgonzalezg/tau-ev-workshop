@@ -13,8 +13,8 @@ public class EDlogTest {
 
 	public static void main(String[] args)
 	{
-		BigIntegerMod gtest = Consts.calculateG();
-		//BigIntegerMod gtest = Consts.getG();
+		//BigIntegerMod gtest = Consts.calculateG();
+		BigIntegerMod gtest = Consts.getG();
 		BigIntegerMod x = new BigIntegerMod(BigInteger.TEN, Consts.getQ());
 		BigIntegerMod h = gtest.pow(x);
 		BigIntegerMod a = gtest.pow(x);
