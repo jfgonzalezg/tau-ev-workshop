@@ -25,8 +25,6 @@ import pav.PAVShared;
 public class GUI3 extends org.eclipse.swt.widgets.Composite {
 
 	{
-		//Register as a resource user - SWTResourceManager will
-		//handle the obtaining and disposing of resources
 		SWTResourceManager.registerResourceUser(this);
 	}
 	
