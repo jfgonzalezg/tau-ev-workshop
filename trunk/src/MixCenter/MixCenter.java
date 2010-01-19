@@ -114,7 +114,7 @@ public class MixCenter implements IMixCenter
 		{
 			if (Consts.mcOutputFile == null)
 			{
-				Consts.mcOutputFile = new BufferedWriter(new FileWriter(Consts.MC_RESULTS_FILE));
+				Consts.mcOutputFile = new BufferedWriter(new FileWriter(Consts.MC_RESULTS_FILE+"MC"+mix_center_id+".txt"));
 			}
 			// print ZKP string
 			Consts.mcOutputFile.write("ZKP:\r\n" + message + "\r\n");
