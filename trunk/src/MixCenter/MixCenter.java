@@ -202,7 +202,7 @@ public class MixCenter implements IMixCenter
 	 */
     private static void write(String f, String s, boolean startNew) 
     {
-    	System.out.println( f);
+    	System.out.println(s);
 	    TimeZone tz = TimeZone.getTimeZone("GMT+2"); // or PST, MID, etc ...
 	    Date now = new Date();
 	    DateFormat df = new SimpleDateFormat ("dd.MM.yyyy HH:mm:ss ");
