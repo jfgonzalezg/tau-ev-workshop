@@ -58,7 +58,7 @@ public class EDlog implements IEDlog {
 			BigIntegerMod b) throws ZkpException
 	{
 		//BigIntegerMod g = Consts.getG();
-		BigInteger q = Consts.getQ();
+		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
 
 		BigIntegerMod u = proof.getU();
 		BigIntegerMod v = proof.getV();
