@@ -319,7 +319,8 @@ public class MixCenter implements IMixCenter
 							return A;
 						} else { //if (check_corected_recv_params(recv_object) == true)
 							this.printToFile("Global parameters were not recieved correctly, communication ends \r\n\r\n", false);
-						}//TODO - alex, don't we need to close communication here as well? 
+							break; //terminate communication
+						}
 						
 					} else {//if (received_votes.getMessage() instanceof SentObject)
 						write(	"ERROR: Mix Center number "+mix_center_id+" : received object that is not of type " +
@@ -351,11 +352,11 @@ public class MixCenter implements IMixCenter
 			recv_obj.get_Q() == null ||
 			recv_obj.get_W() == null){
 			write("ERROR: Some of received parameters are null:\n" +
-					"A "+ ((this.A == null) ? "is" : "is not") + " null\n"+
-					"g "+ ((this.g == null) ? "is" : "is not") + " null\n"+
-					"p "+ ((this.p == null) ? "is" : "is not") + " null\n"+
-					"q "+ ((this.q == null) ? "is" : "is not") + " null\n"+
-					"w "+ ((this.w == null) ? "is" : "is not") + " null\n", this.getId(),false);
+					"A "+ ((recv_obj.get_votes_array() == null) ? "is" : "is not") + " null\n"+
+					"g "+ ((recv_obj.get_G() == null) ? "is" : "is not") + " null\n"+
+					"p "+ ((recv_obj.get_P() == null) ? "is" : "is not") + " null\n"+
+					"q "+ ((recv_obj.get_Q() == null) ? "is" : "is not") + " null\n"+
+					"w "+ ((recv_obj.get_W() == null) ? "is" : "is not") + " null\n", this.getId(),false);
 			return false;
 		}
 		return true;
