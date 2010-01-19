@@ -38,7 +38,7 @@ public class Consts {
 	public static final BigIntegerMod G = calculateG();
 
 	// Mix Centers IPs and ports. First item in the array is Pret a vote data.
-	public static final String[] MIX_CENTERS_IP = {	"192.168.2.107", //Pret a vote
+	public static final String[] MIX_CENTERS_IP = {	"192.168.2.180", //Pret a vote
 													"192.168.2.180", //Mix Center 1
 													"192.168.2.103", //Mix Center 2
 													"192.168.2.107", //Mix Center 3
