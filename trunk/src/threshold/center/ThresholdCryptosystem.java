@@ -69,6 +69,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		keyReady = false;
 		keyExchangeDone = false;
 		ZKP = new EDlog();
+		ZKP.setG(g);
 		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
 		new KeyExchangeThread();
 	}
@@ -208,10 +209,15 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		}
 		Integer[] chosenParties = genRandomTOutOfN(partiesAmount, parties2Use);
 		wait4KeyExchange();
+		Consts.log("threshold center: sending message to decrypt to chosen parties", DebugOutput.STDOUT);
 		sendM2ChosenParties(ciphertext.getA().getValue(), chosenParties);
+		Consts.log("threshold center: computing lambdas", DebugOutput.STDOUT);
 		BigIntegerMod lambdas[] = computeLambdas(chosenParties);
+		Consts.log("threshold center: receiving parties' answers", DebugOutput.STDOUT);
 		BigIntegerMod w_i[] = receiveFromChosenParties(parties2Use, ciphertext.getA());
+		Consts.log("threshold center: computing a^s", DebugOutput.STDOUT);
 		BigIntegerMod c_s = compute_c_s(w_i, lambdas);
+		Consts.log("threshold center: returning decryption", DebugOutput.STDOUT);
 		return ciphertext.getB().multiply(c_s.inverse());
 	}
 
