@@ -22,21 +22,6 @@ import pav.PAVShared;
 
 
 
-
-
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class GUI3 extends org.eclipse.swt.widgets.Composite {
 
 	{
@@ -103,16 +88,19 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 	
     Listener listener2 = new Listener() {
       public void handleEvent(Event event) {
+    	  //Case [Confirm] was pressed
         if (event.widget == Bconfirm) {
         	System.out.println("You clicked Confirm");
+        	//Registering the vote
 	        PAVShared.addCastVote(GUI2.getVote(), InitialGUI.getvoterID());
-	        mone = mone + 1;
+	        mone = mone + 1;//counting the voters
         	shell.close();
            	InitialGUI.setsw(1);
         	InitialGUI.setezer(4);
         	
         	
         } else 
+        	//Case [Back to voting screen] was pressed
        	if (event.widget == Bback) {
            	System.out.println("You clicked Back");
            	shell.close();
@@ -195,10 +183,11 @@ public class GUI3 extends org.eclipse.swt.widgets.Composite {
 				RchoiseLData.width = 102;
 				RchoiseLData.height = 21;
 				Rchoise = new Button(this, SWT.RADIO | SWT.LEFT);
-				Rchoise.setText(GUI2.getTheChoisen());
+				Rchoise.setText(GUI2.getTheChosen());
 				Rchoise.setLayoutData(RchoiseLData);
 				Rchoise.setBackground(SWTResourceManager.getColor(223, 255, 255));
-           	}	
+           	}
+//Printing the encryption
            	{
     			FormData list1LData = new FormData();
     			list1LData.left =  new FormAttachment(0, 1000, 113);

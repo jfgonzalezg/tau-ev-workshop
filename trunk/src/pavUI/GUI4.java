@@ -22,21 +22,7 @@ import org.eclipse.swt.widgets.Listener;
 
 import pav.PAVShared;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class GUI4 extends org.eclipse.swt.widgets.Composite {
-
 	{
 		//Register as a resource user - SWTResourceManager will
 		//handle the obtaining and disposing of resources
@@ -95,7 +81,6 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
-
 		}
 		}
 	
@@ -104,7 +89,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		super(parent, style);
 		initGUI4();
 	}
-
+    // The number of the voters has reached the max number
 	private void maxNumVoters(){
 		MessageBox emptyName = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
 		emptyName.setMessage("The number of voters has reached the max num");
@@ -116,6 +101,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 		
 	    Listener listener3 = new Listener() {
 	      public void handleEvent(Event event) {
+	    	  //[Done] was pressed
 	        if (event.widget == Bdone) {
 	        	System.out.println("You clicked done");
 	        	if (GUI3.getmone() >= numVote){
@@ -185,6 +171,7 @@ public class GUI4 extends org.eclipse.swt.widgets.Composite {
 					Ltenc.setFont(SWTResourceManager.getFont("Arial", 10, 3, false, false));
 					Ltenc.setBackground(SWTResourceManager.getColor(223, 255, 255));
 				}
+           //Printing the encryption				
 				{
 	    			FormData list1LData = new FormData();
 	    			list1LData.left =  new FormAttachment(0, 1000, 65);
