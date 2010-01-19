@@ -29,7 +29,7 @@ public class EDlog implements IEDlog {
 
 		if (g==null)
 			g = Consts.getG();
-		BigInteger q = Consts.getQ();	
+		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
 				
 		//check whether a=g^x and b=h^x
 		if ((a.compareTo(g.pow(x)) != 0) && (b.compareTo(h.pow(x)) != 0))

@@ -2,19 +2,22 @@ package zkp.EDlog;
 
 import global.Consts;
 import global.BigIntegerMod;
+import global.Utils;
+
 import java.math.BigInteger;
+import java.util.Random;
+
 import zkp.ZkpException;
 
 public class EDlogTest {
 
-	
-	
 	public static void main(String[] args)
 	{
-	
+		BigIntegerMod gtest = Consts.calculateG();
+		//BigIntegerMod gtest = Consts.getG();
 		BigIntegerMod x = new BigIntegerMod(BigInteger.TEN, Consts.getQ());
-		BigIntegerMod h = Consts.getG().pow(x);
-		BigIntegerMod a = Consts.getG().pow(x);
+		BigIntegerMod h = gtest.pow(x);
+		BigIntegerMod a = gtest.pow(x);
 		BigIntegerMod b = h.pow(x);
 		
 		System.out.println("x: "+x.toString()+"\n");
@@ -23,7 +26,8 @@ public class EDlogTest {
 	
 		
 		EDlog edlog = new EDlog();
-		edlog.setG(Consts.getG());
+		edlog.setG(gtest);
+	
 		
 		
 		try {
@@ -33,6 +37,8 @@ public class EDlogTest {
 			System.out.println("proofZ: "+proof.getZ().toString()+"\n");
 			if (edlog.verifyEDlogProof(proof, h, a, b))
 				System.out.println("good");
+			else
+				System.out.println("bad");
 		} catch (ZkpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
