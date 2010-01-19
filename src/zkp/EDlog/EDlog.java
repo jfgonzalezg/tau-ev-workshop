@@ -5,7 +5,6 @@ import global.BigIntegerMod;
 import java.math.BigInteger;
 import global.Consts;
 import zkp.ZkpException;
-import zkp.Util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class EDlog implements IEDlog {
 	
 
 		// select r from Zq uniformly at random
-		BigIntegerMod r = new BigIntegerMod(Util.createRandom(q), q);
+		BigIntegerMod r = new BigIntegerMod(q);
 		
 		// Compute u=g^r and v=h^r
 		BigIntegerMod u = g.pow(r);
