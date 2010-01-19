@@ -8,14 +8,13 @@ import java.math.BigInteger;
 import global.Consts;
 import zkp.ZkpException;
 import zkp.OneOutOfL.OneOutOfLTest;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class OneOutOfL implements IOneOutOfL {
 
-	public static final boolean TEST = true;
+	public static final boolean TEST = false;
 	private ArrayList<Ciphertext> pairslist;
 
 	public OneOutOfL(ArrayList<Ciphertext> pairslist) {
@@ -25,15 +24,14 @@ public class OneOutOfL implements IOneOutOfL {
 	public OneOutOfLProof createOneOutOfLProof(CryptObject cryptobj, BigIntegerMod h, int t)
 	throws ZkpException 
 	{
-		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT
+		int l = pairslist.size(); 
 		
 	
 		BigIntegerMod g = Consts.getG();
 		
-		//for test: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		//for test: 
 		//BigIntegerMod g = OneOutOfLTest.g;
 		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
-		//BigInteger q = Consts.getQ();
 		BigIntegerMod x = cryptobj.getCiphertext().getA();
 		BigIntegerMod y = cryptobj.getCiphertext().getB();
 		BigIntegerMod r = cryptobj.getR();
@@ -58,11 +56,11 @@ public class OneOutOfL implements IOneOutOfL {
 		//test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
 		//if ((test.getCiphertext().getA().compareTo(cryptobj.getCiphertext().getA()) !=0) ||
 		//	(test.getCiphertext().getB().compareTo(cryptobj.getCiphertext().getB()) !=0))
-		if ((!(pairslist.get(t).getA().equals(cryptobj.getCiphertext().getA().multiply(g.pow(cryptobj.getR()))))) && 
-			(!(pairslist.get(t).getB().equals(cryptobj.getCiphertext().getB().multiply(h.pow(cryptobj.getR()))))))
+		//if ((!(pairslist.get(t).getA().equals(cryptobj.getCiphertext().getA().multiply(g.pow(cryptobj.getR()))))) && 
+		//	(!(pairslist.get(t).getB().equals(cryptobj.getCiphertext().getB().multiply(h.pow(cryptobj.getR()))))))
 		//if ((!(test.getCiphertext().getA().equals(cryptobj.getCiphertext().getA().multiply(g.pow(cryptobj.getR()))))) && 
 		//	(!(test.getCiphertext().getB().equals(cryptobj.getCiphertext().getB().multiply(h.pow(cryptobj.getR()))))))
-			throw new ZkpException("input CryptObject is not a re-encryption of the CryptObject in index t of the list");
+		//	throw new ZkpException("input CryptObject is not a re-encryption of the CryptObject in index t of the list");
 		
 		
 		// randomly select d_List and r_List with Zq numbers
@@ -71,8 +69,6 @@ public class OneOutOfL implements IOneOutOfL {
 		
 		for (int i=0; i<l; i++) 
 		{
-			//d_List.add(new BigIntegerMod(Util.createRandom(q), q));
-			//r_List.add(new BigIntegerMod(Util.createRandom(q), q));
 			d_List.add(new BigIntegerMod(q));
 			r_List.add(new BigIntegerMod(q));
 		}
@@ -151,13 +147,12 @@ public class OneOutOfL implements IOneOutOfL {
 	public boolean verifyOneOutOfLProof(OneOutOfLProof proof, Ciphertext cipher, BigIntegerMod h) 
 			throws ZkpException 
 	{
-		int l = pairslist.size(); //or Consts.PARTIES_AMOUNT????????
+		int l = pairslist.size(); 
 		
 		BigIntegerMod g = Consts.getG();
-		//for test: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		//for test: 
 		//BigIntegerMod g = OneOutOfLTest.g;
 		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
-		//BigInteger q = Consts.getQ();
 		BigIntegerMod c = proof.getC();
 		ArrayList<BigIntegerMod> d_List = proof.getD_List();
 		ArrayList<BigIntegerMod> r_List = proof.getR_List();
