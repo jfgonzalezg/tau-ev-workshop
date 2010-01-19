@@ -67,10 +67,6 @@ public class MixCenter implements IMixCenter
 	 */
 	public boolean PermutateAndReecncrypt()
 	{
-		//TODO - delete after debug
-		System.out.println("p = " + p);
-		System.out.println("g = " + g);
-		System.out.println("w = " + w);
 		ElGamal gamal=new ElGamal(p,g,w,null);
 		B=new CryptObject[VOTERS_AMOUNT];	
 		
@@ -83,15 +79,16 @@ public class MixCenter implements IMixCenter
 				MixCenter.write("Mix Center No." + mix_center_id + " failed to perform reencryption, this MC will not take part of the elections... goodbye :-( \r\n\r\n", mix_center_id, false);
 				return false;
 			}
+			//Debug check
+			/*
 			else
 			{
-				//TODO - debug. to delete or add to log
 				if ((!(B[pi[i]].getCiphertext().getA().equals(A[i].getA().multiply(g.pow(B[pi[i]].getR())))))
 				&& (!(B[pi[i]].getCiphertext().getB().equals(A[i].getB().multiply(w.pow(B[pi[i]].getR()))))))
 				{
 					write("wrong reencryption for i=" + i, this.getId(), false);
 				}
-			}
+			}*/
 		}
 		return true;
 		
@@ -138,7 +135,7 @@ public class MixCenter implements IMixCenter
 				}
 				Consts.mcOutputFile.write("\r\n");
 			}
-			Consts.mcOutputFile.flush(); // TODO: is it possible the buffer will be full sooner?
+			Consts.mcOutputFile.flush();
 		}
 		catch (IOException e) 
 		{
