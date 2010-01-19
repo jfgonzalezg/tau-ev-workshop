@@ -22,7 +22,7 @@ public class MixCenterProcess {
 		MixCenter.write("Mix Center No." + id + " is working...", id, true);
 		MixCenter.write("Waiting to recieve data from previous MC...", id, false);
 		if (MC.receive_from_prev_mix_center() == null){
-			MixCenter.write("Mix Center No." + id + " didn't succeed to receive data from previus MC, this MC will not take part of the elections... goodbye :-( \r\n\r\n", id, false);
+			MixCenter.write("Mix Center No." + id + " didn't succeed to receive data from previous MC, communication ends \r\n\r\n", id, false);
 			return;
 		}
 		MixCenter.write("Finished recieving data from previous MC, generating new permutation...", id, false);
@@ -32,6 +32,7 @@ public class MixCenterProcess {
 		boolean isValid = isReencryptValid; //this flag indicates several possible problems in the procedure
 		if (isReencryptValid){ //in case reencryption went well
 			MixCenter.write("Finished reencypting and permutating the data, performing ZKP...", id, false);
+			
 			proof = MC.performZKP();
 			
 			if (proof == null){
