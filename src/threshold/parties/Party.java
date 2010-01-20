@@ -120,7 +120,7 @@ public class Party {
 		}
 		
 		private void removeUnnecessaryData() {
-			if (mutualPublicKey == null) { //TODO remove it when ZKP is added
+			if (mutualPublicKey == null) {
 				privatePolynom = null;
 				publicPolynoms = null;
 				publicKeys = null;
@@ -258,7 +258,7 @@ public class Party {
 			for (int i=0; i<threshold; ++i) {
 				packet.Data[0][i] = g.pow(privatePolynom[i]).getValue();
 			}
-			client.send(packet); //TODO check return value
+			client.send(packet);
 			Consts.log("party "+partyNumber+": sent polynom", Consts.DebugOutput.STDOUT);
 		}
 		
@@ -310,7 +310,7 @@ public class Party {
 				c = elGamal.encrypt(m).getCiphertext();
 				packet.Data[0][0] = c.getA().getValue();
 				packet.Data[0][1] = c.getB().getValue();
-				client.send(packet); //TODO check return value
+				client.send(packet);
 			}
 			Consts.log("party "+partyNumber+": finished sending all polynom values", Consts.DebugOutput.STDOUT);
 		}
@@ -375,7 +375,6 @@ public class Party {
 		return client.isConnected();
 	}
 
-	// TODO - find out which command line runs the party as a process, and then call Utils.runProcess(command line)
 	public static void main(String[] args) {
 		if (args.length < 3) {
 			Consts.log("Not enough arguments: " + args.length, Consts.DebugOutput.STDERR);

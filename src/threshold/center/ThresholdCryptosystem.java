@@ -244,7 +244,6 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			}
 			if (!ZKP_OK) {
 				System.out.println("ZKP went wrong");
-				//TODO handle wrong ZKP
 			}
 			w_i[packet.dest] = next_w_i;
 		}
@@ -283,7 +282,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			packet.source = i;
 			packet.Data = new BigInteger[1][1];
 			packet.Data[0][0] = m;
-			server.send(parties[i], packet); //TODO check return value
+			server.send(parties[i], packet);
 			Consts.log("threshold center: sent number to decrypt to party "+parties[i], DebugOutput.STDOUT);
 		}
 		Consts.log("threshold center: sent number to decrypt to all clients", DebugOutput.STDOUT);
@@ -421,7 +420,7 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 					Consts.log("Recieved wrong packet type - " + packet.type, DebugOutput.STDERR);
 					Consts.log((new Exception()).getStackTrace().toString(), DebugOutput.STDERR);
 				}
-				server.send(packet.dest, packet); //TODO check return value
+				server.send(packet.dest, packet);
 				Consts.log("moved packet from "+packet.source+" to "+packet.dest, DebugOutput.STDOUT);
 			}
 			Consts.log("threshold center: finished key exchange", DebugOutput.STDOUT);

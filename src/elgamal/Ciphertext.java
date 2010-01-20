@@ -10,8 +10,8 @@ public class Ciphertext implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -1866867027378671329L;
-	private BigIntegerMod a; // TODO - verify mod p everywhere
-	private BigIntegerMod b; // represents k*m = (public_key^r)*m // TODO - verify mod p everywhere
+	private BigIntegerMod a;
+	private BigIntegerMod b; // represents k*m = (public_key^r)*m
 
 	public Ciphertext(BigIntegerMod a, BigIntegerMod b) {
 		this.a = a;
