@@ -71,17 +71,17 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		ZKP = new EDlog();
 		ZKP.setG(g);
 		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
-		Consts.log("**************************", DebugOutput.FILE);
-		Consts.log("*   global parameters    *", DebugOutput.FILE);
-		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
+		Consts.log("*    global parameters    *", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
 		Consts.log("p = "+this.p, DebugOutput.FILE);
 		Consts.log("g = "+this.g.getValue(), DebugOutput.FILE);
 		Consts.log("Number of parties: "+this.partiesAmount, DebugOutput.FILE);
 		Consts.log("Threshold size: "+this.threshold, DebugOutput.FILE);
 		Consts.log("\r\n", DebugOutput.FILE);
-		Consts.log("**************************", DebugOutput.FILE);
-		Consts.log("*  per-party parameters  *", DebugOutput.FILE);
-		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
+		Consts.log("* key exchange parameters *", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
 		new KeyExchangeThread();
 	}
 
@@ -222,9 +222,9 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		wait4KeyExchange();
 		Consts.log("threshold center: sending message to decrypt to chosen parties", DebugOutput.STDOUT);
 		Consts.log("\r\n\r\n", DebugOutput.FILE);
-		Consts.log("**************************", DebugOutput.FILE);
-		Consts.log("*   mutual decryption    *", DebugOutput.FILE);
-		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
+		Consts.log("*    mutual decryption    *", DebugOutput.FILE);
+		Consts.log("***************************", DebugOutput.FILE);
 		Consts.log("Got ciphertext to decrypt:", DebugOutput.FILE);
 		Consts.log("g^r  : "+ciphertext.getA().getValue(), DebugOutput.FILE);
 		Consts.log("m*h^r: "+ciphertext.getB().getValue(), DebugOutput.FILE);
@@ -398,15 +398,16 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 			Consts.log("threshold center: got polynom from all parties", DebugOutput.STDOUT);
 			Consts.log("\r\n\r\nMutual Generated Polynom Coefficients:", DebugOutput.FILE);
 			for (int i=0; i<threshold; ++i) {
-				Consts.log("Mutual Polynom["+i+"]:"+mutualPolynom[i].getValue(), DebugOutput.FILE);
+				Consts.log("Mutual Polynom["+i+"]: "+mutualPolynom[i].getValue(), DebugOutput.FILE);
 			}
 			Consts.log("\r\n", DebugOutput.FILE);
 			Consts.log("Parties EDlog verifiers:", DebugOutput.FILE);
 			mutualPublicKey = mutualPolynom[0];
 			computePublicKeys();
 			for (int i=0; i<partiesAmount; ++i) {
-				Consts.log("Party "+(i+1)+":"+clientsPublicKeys[i].getValue(), DebugOutput.FILE);
+				Consts.log("Party "+(i+1)+": "+clientsPublicKeys[i].getValue(), DebugOutput.FILE);
 			}
+			Consts.log("\r\nParties Key-Exchange confirmation:", DebugOutput.FILE);
 			synchronized(keyReadyLock) {
 				keyReady = true;
 				keyReadyLock.notifyAll();
