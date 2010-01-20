@@ -10,7 +10,7 @@ import java.util.Random;
 
 import zkp.ZkpException;
 
-import MixCenter.Ran1_test;
+
 
 public class  GItest{
 	
