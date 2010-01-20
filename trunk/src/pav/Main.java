@@ -30,11 +30,13 @@ public class Main {
 		boolean mixNetsFlag = false;
 
 		
-		for (String arg : args) {
-			if (arg.equals("-mix-nets")) mixNetsFlag = true;
-			else if (arg.equals("-gui")) uIMode = UIModeEnum.GRAPHIC;
-			else if(arg.equals("-batch")) uIMode = UIModeEnum.BATCH;
-			else if (arg.equals("-random")) uIMode = UIModeEnum.RANDOM;
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-mix-nets")) mixNetsFlag = true;
+			else if (args[i].equals("-gui")) uIMode = UIModeEnum.GRAPHIC;
+			else if(args[i].equals("-batch")) uIMode = UIModeEnum.BATCH;
+			else if (args[i].equals("-random")) uIMode = UIModeEnum.RANDOM;
+			else if (args[i].equals("-voters")) Consts.VOTERS_AMOUNT = Integer.parseInt(args[++i]);
+			else if (args[i].equals("-parties")) Consts.PARTIES_AMOUNT = Integer.parseInt(args[++i]);
 			else printUsage();
 		}
 		
