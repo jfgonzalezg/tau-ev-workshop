@@ -305,7 +305,7 @@ public class PAVShared {
 		MessageBox emptyName = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_INFORMATION | SWT.OK);
 		emptyName.setMessage(message);
 		emptyName.setText("Election Results");
-		if (emptyName.open() == SWT.OK) System.exit(-1);
+		if (emptyName.open() == SWT.OK) return;
 		
 	}
 	
