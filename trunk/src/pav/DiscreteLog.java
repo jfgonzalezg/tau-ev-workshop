@@ -21,9 +21,6 @@ public class DiscreteLog {
 
 	private static int nVoters = PAVShared.numberOfCastVotes; 
 	private static int nParties = Consts.PARTIES_AMOUNT;
-
-//	private static int nVoters = 4; 
-//	private static int nParties = 4;
 	
 	private static int[] indices = new int[nParties -1];
 	private static Map<Integer, BigInteger> votes = new HashMap<Integer, BigInteger>(); //Plain text votes
@@ -94,7 +91,8 @@ public class DiscreteLog {
 			votes.put(i, PAVShared.getPlaintextVotes().get(i).getValue());
     }
 	
-	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	   /**************************************************************/
