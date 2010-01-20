@@ -93,10 +93,4 @@ public class BigIntegerMod implements Serializable, Comparable<BigIntegerMod> {
 		return (compareTo(other) == 0);
 	}
 
-	static public BigInteger BruteForceDLOG(BigIntegerMod dlogBase, BigIntegerMod dlogResult) {
-		verifyMod(dlogBase, dlogResult, "DLOG");
-		// TODO - implement
-		return null;
-	}
-
 }
