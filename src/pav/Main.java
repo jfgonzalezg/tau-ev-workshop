@@ -35,8 +35,6 @@ public class Main {
 			else if (args[i].equals("-gui")) uIMode = UIModeEnum.GRAPHIC;
 			else if(args[i].equals("-batch")) uIMode = UIModeEnum.BATCH;
 			else if (args[i].equals("-random")) uIMode = UIModeEnum.RANDOM;
-			else if (args[i].equals("-voters")) Consts.VOTERS_AMOUNT = Integer.parseInt(args[++i]);
-			else if (args[i].equals("-parties")) Consts.PARTIES_AMOUNT = Integer.parseInt(args[++i]);
 			else printUsage();
 		}
 		
@@ -105,12 +103,6 @@ public class Main {
 					PAVShared.getPublicKey(),
 					PAVShared.getCastVotes().size());
 			
-			/*boolean mnSend = mixNets.send_to_next_mix_center(((Ciphertext[]) PAVShared.getCastVotes().toArray()), 
-					global.Consts.G,
-					global.Consts.p,
-					global.Consts.q, 
-					PAVShared.getPublicKey(),
-					PAVShared.getCastVotes().size());*/
 			mnRetVotes = mixNets.receive_from_prev_mix_center();
 			
 			if (!mnSend || (mnRetVotes == null)){
