@@ -153,10 +153,10 @@ public class Party {
 					e.printStackTrace();
 				}
 				String to_print = "Party "+(partyNumber+1)+":\r\n";
-				to_print += "Partial decryption:"+mpow+"\r\n";
-				to_print += "ZKP for partial decryption: u:"+sendingPacket.ZKP.getU().getValue()+"\r\n";
-				to_print += "                            v:"+sendingPacket.ZKP.getV().getValue()+"\r\n";
-				to_print += "                            z:"+sendingPacket.ZKP.getZ().getValue()+"\r\n";
+				to_print += "Partial decryption:            "+mpow+"\r\n";
+				to_print += "ZKP for partial decryption: u: "+sendingPacket.ZKP.getU().getValue()+"\r\n";
+				to_print += "                            v: "+sendingPacket.ZKP.getV().getValue()+"\r\n";
+				to_print += "                            z: "+sendingPacket.ZKP.getZ().getValue()+"\r\n";
 				Consts.log(to_print, DebugOutput.FILE);
 				client.send(sendingPacket);
 				Consts.log("party "+partyNumber+": sent decryption. waiting to decrypt another message", Consts.DebugOutput.STDOUT);
