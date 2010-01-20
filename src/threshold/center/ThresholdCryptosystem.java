@@ -71,6 +71,17 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		ZKP = new EDlog();
 		ZKP.setG(g);
 		Consts.log("threshold center: finished initializing values. starting key-exchange.", DebugOutput.STDOUT);
+		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("*   global parameters    *", DebugOutput.FILE);
+		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("p = "+this.p, DebugOutput.FILE);
+		Consts.log("g = "+this.g.getValue(), DebugOutput.FILE);
+		Consts.log("Number of parties: "+this.partiesAmount, DebugOutput.FILE);
+		Consts.log("Threshold size: "+this.threshold, DebugOutput.FILE);
+		Consts.log("\r\n", DebugOutput.FILE);
+		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("*  per-party parameters  *", DebugOutput.FILE);
+		Consts.log("**************************", DebugOutput.FILE);
 		new KeyExchangeThread();
 	}
 
@@ -210,6 +221,20 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		Integer[] chosenParties = genRandomTOutOfN(partiesAmount, parties2Use);
 		wait4KeyExchange();
 		Consts.log("threshold center: sending message to decrypt to chosen parties", DebugOutput.STDOUT);
+		Consts.log("\r\n\r\n", DebugOutput.FILE);
+		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("*   mutual decryption    *", DebugOutput.FILE);
+		Consts.log("**************************", DebugOutput.FILE);
+		Consts.log("Got ciphertext to decrypt:", DebugOutput.FILE);
+		Consts.log("g^r  : "+ciphertext.getA().getValue(), DebugOutput.FILE);
+		Consts.log("m*h^r: "+ciphertext.getB().getValue(), DebugOutput.FILE);
+		String to_print = "[";
+		for (int i=0; i<chosenParties.length; ++i) {
+			if (i!=0) to_print = to_print + ", ";
+			to_print = to_print + (chosenParties[i]+1);
+		}
+		to_print = to_print + "]\r\n";
+		Consts.log("Parties used to decrypt: "+to_print, DebugOutput.FILE);
 		sendM2ChosenParties(ciphertext.getA().getValue(), chosenParties);
 		Consts.log("threshold center: computing lambdas", DebugOutput.STDOUT);
 		BigIntegerMod lambdas[] = computeLambdas(chosenParties);
@@ -218,7 +243,9 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		Consts.log("threshold center: computing a^s", DebugOutput.STDOUT);
 		BigIntegerMod c_s = compute_c_s(w_i, lambdas);
 		Consts.log("threshold center: returning decryption", DebugOutput.STDOUT);
-		return ciphertext.getB().multiply(c_s.inverse());
+		BigIntegerMod result = ciphertext.getB().multiply(c_s.inverse());
+		Consts.log("The decrypted vote: "+result.getValue(), DebugOutput.FILE);
+		return result;
 	}
 
 	private BigIntegerMod compute_c_s(BigIntegerMod w_i[], BigIntegerMod lambdas[]) {
@@ -369,8 +396,17 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 				assignPolynom(packet.source, packet.Data[0]);
 			}
 			Consts.log("threshold center: got polynom from all parties", DebugOutput.STDOUT);
+			Consts.log("\r\n\r\nMutual Generated Polynom Coefficients:", DebugOutput.FILE);
+			for (int i=0; i<threshold; ++i) {
+				Consts.log("Mutual Polynom["+i+"]:"+mutualPolynom[i].getValue(), DebugOutput.FILE);
+			}
+			Consts.log("\r\n", DebugOutput.FILE);
+			Consts.log("Parties EDlog verifiers:", DebugOutput.FILE);
 			mutualPublicKey = mutualPolynom[0];
 			computePublicKeys();
+			for (int i=0; i<partiesAmount; ++i) {
+				Consts.log("Party "+(i+1)+":"+clientsPublicKeys[i].getValue(), DebugOutput.FILE);
+			}
 			synchronized(keyReadyLock) {
 				keyReady = true;
 				keyReadyLock.notifyAll();

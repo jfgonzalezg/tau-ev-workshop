@@ -152,6 +152,12 @@ public class Party {
 				} catch (ZkpException e) {
 					e.printStackTrace();
 				}
+				String to_print = "Party "+(partyNumber+1)+":\r\n";
+				to_print += "Partial decryption:"+mpow+"\r\n";
+				to_print += "ZKP for partial decryption: u:"+sendingPacket.ZKP.getU().getValue()+"\r\n";
+				to_print += "                            v:"+sendingPacket.ZKP.getV().getValue()+"\r\n";
+				to_print += "                            z:"+sendingPacket.ZKP.getZ().getValue()+"\r\n";
+				Consts.log(to_print, DebugOutput.FILE);
 				client.send(sendingPacket);
 				Consts.log("party "+partyNumber+": sent decryption. waiting to decrypt another message", Consts.DebugOutput.STDOUT);
 				receivingPacket = receive();
@@ -178,6 +184,7 @@ public class Party {
 				keyExchangeFinished = true;
 				keyExchangeFinishedLock.notifyAll();
 			}
+			Consts.log("Party "+(partyNumber+1)+": Got partial private key.", DebugOutput.FILE);
 			Consts.log("party "+partyNumber+": finished key exchange", Consts.DebugOutput.STDOUT);
 		}
 		
@@ -197,7 +204,7 @@ public class Party {
 			p = packet.Data[0][0];
 			q = p.subtract(BigInteger.ONE).divide(Consts.TWO);
 			g = new BigIntegerMod(packet.Data[0][1], p);
-			Consts.log("Party "+partyNumber+": got values:\np: "+p+"\ng: "+g, DebugOutput.STDOUT);
+			Consts.log("Party "+partyNumber+": got values:\r\np: "+p+"\r\ng: "+g, DebugOutput.STDOUT);
 			genPrivatePolynom();
 			elGamal = new ElGamal(p, g, null, privatePolynom[0]);
 		}
@@ -255,10 +262,13 @@ public class Party {
 			packet.type = PacketType.POLYNOM;
 			packet.source = partyNumber;
 			packet.Data = new BigInteger[1][threshold];
+			String to_print = "Party "+(partyNumber+1)+": Generated polynom coefficients:\r\n";
 			for (int i=0; i<threshold; ++i) {
 				packet.Data[0][i] = g.pow(privatePolynom[i]).getValue();
+				to_print += "Polynom"+(partyNumber+1)+"["+i+"]: "+packet.Data[0][i]+"\r\n";
 			}
-			client.send(packet);
+			Consts.log(to_print, Consts.DebugOutput.FILE);
+			client.send(packet); //TODO check return value
 			Consts.log("party "+partyNumber+": sent polynom", Consts.DebugOutput.STDOUT);
 		}
 		
