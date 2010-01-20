@@ -98,21 +98,6 @@ public class PAVShared {
 			}
 		}
 		
-		// Start the WBB file
-		try{
-			wbbWriter = new FileWriter(WBBPath,false);
-			wbbWriter.write("<?xml version=\"1.0\"?>\n");
-			wbbWriter.write("<WBB>\n");
-			wbbWriter.write("\t<P>"+toBase64(global.Consts.p)+"</P>\n");
-			wbbWriter.write("\t<Q>"+toBase64(global.Consts.q)+"</Q>\n");
-			wbbWriter.write("\t<G>"+toBase64(global.Consts.G)+"</G>\n");
-			wbbWriter.close();
-		} catch(IOException ioe){
-			System.err.println("Failed when writing to WBB file");
-			ioe.printStackTrace();
-		}
-		
-		
 		// instantiate the ZKP Maker
 		ArrayList<Ciphertext> pairsListForZKP = new ArrayList<Ciphertext>();
 		ElGamal elGamal = new ElGamal(publicKey);
@@ -121,6 +106,27 @@ public class PAVShared {
 			pairsListForZKP.add(encObj.getCiphertext());
 		}
 		zkpMaker = new OneOutOfL(pairsListForZKP);
+		
+		// Start the WBB file
+		try{
+			wbbWriter = new FileWriter(WBBPath,false);
+			wbbWriter.write("<?xml version=\"1.0\"?>\n");
+			wbbWriter.write("<WBB>\n");
+			wbbWriter.write("<P>"+toBase64(global.Consts.p)+"</P>\n");
+			wbbWriter.write("<Q>"+toBase64(global.Consts.q)+"</Q>\n");
+			wbbWriter.write("<G>"+toBase64(global.Consts.G)+"</G>\n");
+			wbbWriter.write("<OneOutOfL_InitList>\n");
+			for (Ciphertext ciphertext : pairsListForZKP) {
+				wbbWriter.write("<InitElem>");
+				wbbWriter.write(toBase64(ciphertext.getA())+"::"+toBase64(ciphertext.getB()));
+				wbbWriter.write("</InitElem>\n");
+			}
+			wbbWriter.write("</OneOutOfL_InitList>\n");
+			wbbWriter.close();
+		} catch(IOException ioe){
+			System.err.println("Failed when writing to WBB file");
+			ioe.printStackTrace();
+		}
 	}
 	
 	/**
@@ -341,31 +347,27 @@ public class PAVShared {
 		
 		String voteBuffer = "";
 		
-		voteBuffer+="\t<vote>\n";
-		voteBuffer+="\t\t<voterID>"+voterID+"</voterID>\n";
-		voteBuffer+="\t\t<encryptedVote>"+vote.getEncryptionBase64()+"</encryptedVote>\n";
-		voteBuffer+="\t\t<oneOutOfLProof>\n";
-		voteBuffer+="\t\t\t<C>"+toBase64(vote.getZKP().getC())+"</C>\t";
-		voteBuffer+="\t\t\t<DList>\n\t\t\t";
-		int i = 0;
+		voteBuffer+="<vote>\n";
+		voteBuffer+="<voterID>"+voterID+"</voterID>\n";
+		voteBuffer+="<encryptedVote>"+vote.getEncryptionBase64()+"</encryptedVote>\n";
+		voteBuffer+="<oneOutOfLProof>\n";
+		voteBuffer+="<C>"+toBase64(vote.getZKP().getC())+"</C>\n";
+		voteBuffer+="<DList>\n";
 		for(BigIntegerMod b : vote.getZKP().getD_List()){
-			voteBuffer+="<DElem"+i+">";
+			voteBuffer+="<DElem>";
 			voteBuffer+=toBase64(b);
-			voteBuffer+="</DElem"+i+">";			
-			i++;
+			voteBuffer+="</DElem>\n";			
 		}
-		voteBuffer+="\n\t\t\t</DList>\n";
-		voteBuffer+="\t\t\t<RList>\n\t\t\t";
-		i=0;
+		voteBuffer+="</DList>\n";
+		voteBuffer+="<RList>\n";
 		for(BigIntegerMod b : vote.getZKP().getR_List()){
-			voteBuffer+="<RElem"+i+">";
+			voteBuffer+="<RElem>";
 			voteBuffer+=toBase64(b);
-			voteBuffer+="</RElem"+i+">";
-			i++;
+			voteBuffer+="</RElem>\n";
 		}
-		voteBuffer+="\n\t\t\t</RList>\n";
-		voteBuffer+="\t\t</oneOutOfLProof>\n";
-		voteBuffer+="\t</vote>\n";
+		voteBuffer+="</RList>\n";
+		voteBuffer+="</oneOutOfLProof>\n";
+		voteBuffer+="</vote>\n";
 		
 		try{
 			wbbWriter = new FileWriter(WBBPath,true);
