@@ -1,6 +1,11 @@
 package pavBallot;
 
 import org.apache.commons.codec.binary.Base64;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 import elgamal.*;
 import global.BigIntegerMod;
 import global.Consts;
@@ -38,10 +43,10 @@ public class Vote {
 		try{
 			zkp = PAVShared.zkpMaker.createOneOutOfLProof(encObj, pKey, (index+offset) % Consts.PARTIES_AMOUNT);
 		} catch (ZkpException ze){
-			System.err.println("Failed To Create ZKP");
-			/*System.err.println(ze);
-			ze.printStackTrace();*/
-			//TODO: Handle ZKP Exception.
+			MessageBox emptyName = new MessageBox(new Shell(Display.getDefault()), SWT.ICON_ERROR| SWT.OK);
+			emptyName.setMessage("Failed creating ZKP. Can't continue the elections.\nClick OK to exit.");
+			emptyName.setText("1-out-of-L ZKP Error");
+			if (emptyName.open() == SWT.OK) System.exit(-1);
 		}
 		
 	}
