@@ -14,7 +14,7 @@ public class Consts {
 		FILE
 	}
 
-	private static final boolean USE_RANDOM_P = true;
+	private static final boolean USE_RANDOM_P = false;
 	private static final boolean DISABLE_LOGGER = false;
 	private static final boolean DEBUG_MODE = true;
 	private static final String LOG_FILE = "c:\\Threshold_Log.txt";
