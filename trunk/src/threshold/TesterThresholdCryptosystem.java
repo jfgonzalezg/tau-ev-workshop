@@ -29,6 +29,7 @@ public class TesterThresholdCryptosystem {
 		//decryptAmount = threshold;
 		//decryptAmount = partiesAmount;
 		
+		System.out.println("p = " + p);
 		System.out.println("g = " + g);
 		
 		/*****************************************

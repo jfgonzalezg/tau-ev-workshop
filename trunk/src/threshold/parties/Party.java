@@ -49,7 +49,6 @@ public class Party {
 		keyExchangeFinished = false;
 		keyExchangeFinishedLock = new Integer(0);
 		ZKP = new EDlog();
-		//waitingLock = new Integer(0);
 		waitToConnect();
 		thread = new PartyThread();
 	}
@@ -268,7 +267,7 @@ public class Party {
 				to_print += "Polynom"+(partyNumber+1)+"["+i+"]: "+packet.Data[0][i]+"\r\n";
 			}
 			Consts.log(to_print, Consts.DebugOutput.FILE);
-			client.send(packet); //TODO check return value
+			client.send(packet);
 			Consts.log("party "+partyNumber+": sent polynom", Consts.DebugOutput.STDOUT);
 		}
 		
