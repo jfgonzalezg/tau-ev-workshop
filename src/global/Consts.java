@@ -14,20 +14,20 @@ public class Consts {
 		FILE
 	}
 
-	private static final boolean USE_RANDOM_P = false;
+	private static final boolean USE_RANDOM_P = true;
 	private static final boolean DISABLE_LOGGER = false;
 	private static final boolean DEBUG_MODE = true;
-	private static final String LOG_FILE = "Elections_Log.txt";
+	private static final String LOG_FILE = "c:\\Threshold_Log.txt";
 	private static BufferedWriter outputFile = null;
 	
 	public static BufferedWriter mcOutputFile = null;
 	public static final String MC_RESULTS_FILE = "c:\\formal_Log_";
 
-	public static final int PARTIES_AMOUNT = 40;
-	public static final int VOTERS_AMOUNT = 400;
+	public static final int PARTIES_AMOUNT = 7;
+	public static final int VOTERS_AMOUNT = 40;
 	public static final int BITS_AMOUNT = 1024;
-	public static final int CERTAINTY = 100;
-	public static final int THRESHOLD = PARTIES_AMOUNT*2/3;
+	public static final int CERTAINTY = 60;
+	public static final int THRESHOLD = 5;
 	public static final String THRESHOLD_CENTER_HOSTNAME = "localhost";
 	public static final int THRESHOLD_CENTER_PORT = 7777;
 	public static final int CONNECTION_TIMEOUT = 1000; // ms = 1sec
