@@ -22,17 +22,17 @@ public class Client {
 		try {
 			socket = new Socket(hostname, port);
 		} catch (Exception e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": Error connectiong to server:" + e, Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": Error connectiong to server:" + e, Consts.DebugOutput.STDERR);
 			return;
 		}
-		// DEBUG Consts.log("Client " + connectionNumber + ": Connection accepted " + socket.getInetAddress() + ":" + socket.getPort(), Consts.DebugOutput.STDOUT);
+		Consts.log("Client " + connectionNumber + ": Connection accepted " + socket.getInetAddress() + ":" + socket.getPort(), Consts.DebugOutput.STDOUT);
 
 		/* Creating both Data Stream */
 		try {
 			Sinput = new ObjectInputStream(socket.getInputStream());
 			Soutput = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": Exception creating new Input/output Streams: " + e, Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": Exception creating new Input/output Streams: " + e, Consts.DebugOutput.STDERR);
 			return;
 		}
 		send(new Integer(connectionNumber)); // predefined handshake
@@ -40,29 +40,29 @@ public class Client {
 
 	public boolean send(Object object) {
 		// send the object to the server
-		// DEBUG Consts.log("Client " + connectionNumber + ": Client sending \"" + object + "\" to server", Consts.DebugOutput.STDOUT);
+		Consts.log("Client " + connectionNumber + ": Client sending \"" + object + "\" to server", Consts.DebugOutput.STDOUT);
 		try {
 			Soutput.writeObject(object);
 			Soutput.flush();
 			return true;
 		} catch (IOException e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": Error writting to the socket: " + e, Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": Error writting to the socket: " + e, Consts.DebugOutput.STDERR);
 			return false;
 		}
 	}
 
 	public Object receive() {
 		// receive an object from the server
-		// DEBUG Consts.log("Client " + connectionNumber + ": trying to receive an object from the server", Consts.DebugOutput.STDOUT);
+		Consts.log("Client " + connectionNumber + ": trying to receive an object from the server", Consts.DebugOutput.STDOUT);
 		Object receivedObject = null;
 		try {
 			receivedObject = Sinput.readObject();
-			// DEBUG Consts.log("Client " + connectionNumber + ": received an object from the server: " + receivedObject, Consts.DebugOutput.STDOUT);
+			Consts.log("Client " + connectionNumber + ": received an object from the server: " + receivedObject, Consts.DebugOutput.STDOUT);
 		} catch (SocketTimeoutException e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": timeout reached in receive function, returning null.", Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": timeout reached in receive function, returning null.", Consts.DebugOutput.STDERR);
 			receivedObject = null;
 		} catch (Exception e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": exception occured in receive(timeout) function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": exception occured in receive(timeout) function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
 			receivedObject = null;
 		}
 		return receivedObject;
@@ -73,7 +73,7 @@ public class Client {
 		try {
 			socket.setSoTimeout(timeout_miliseconds);
 		} catch (SocketException e) {
-			// DEBUG Consts.log("Client " + connectionNumber + ": exception occured in receive() function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
+			Consts.log("Client " + connectionNumber + ": exception occured in receive() function, returning null. exeption:" + e, Consts.DebugOutput.STDERR);
 		}
 		return receive();
 	}
@@ -99,7 +99,7 @@ public class Client {
 			Sinput.close();
 			socket.close();
 		} catch (Exception e) {
-			// DEBUG Consts.log(e.toString(), Consts.DebugOutput.STDERR);
+			Consts.log(e.toString(), Consts.DebugOutput.STDERR);
 		}
 	}
 

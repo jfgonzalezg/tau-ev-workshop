@@ -16,7 +16,7 @@ public class Consts {
 
 	private static final boolean USE_RANDOM_P = false;
 	private static final boolean DISABLE_LOGGER = false;
-	private static final boolean DEBUG_MODE = true;
+	private static final boolean DEBUG_MODE = false;
 	private static final String LOG_FILE = "c:\\Threshold_Log.txt";
 	private static BufferedWriter outputFile = null;
 	
@@ -24,7 +24,7 @@ public class Consts {
 	public static final String MC_RESULTS_FILE = "c:\\formal_Log_";
 
 	public static final int PARTIES_AMOUNT = 7;
-	public static final int VOTERS_AMOUNT = 40;
+	public static final int VOTERS_AMOUNT = 20;
 	public static final int BITS_AMOUNT = 1024;
 	public static final int CERTAINTY = 60;
 	public static final int THRESHOLD = 5;
@@ -66,14 +66,16 @@ public class Consts {
 		if (DISABLE_LOGGER) return;
 		switch (logger) {
 			case STDOUT : {
-				System.out.println(message);
+				if (DEBUG_MODE) {
+					System.out.println(message);
+				}
 				break;
 			}
 			case STDERR : {
 				if (DEBUG_MODE) {
 					System.err.println(message);
-					break;
 				}
+				break;
 			}
 			case FILE : {
 				try {

@@ -177,20 +177,6 @@ public class ThresholdCryptosystem implements IThresholdCryptosystem {
 		return mutualPublicKey;
 	}
 
-	/*
-	public BigIntegerMod[] getMutualPolynom() {
-		wait4Key();
-		return mutualPolynom;
-	}
-	*/
-
-	/*
-	public BigIntegerMod[] getMutualPublicKeys() {
-		wait4Key();
-		return clientsPublicKeys;
-	}
-	*/
-
 	public void wait4Key() {
 		synchronized(keyReadyLock) {
 			if (!keyReady) {

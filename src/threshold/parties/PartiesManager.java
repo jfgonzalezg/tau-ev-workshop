@@ -2,6 +2,7 @@ package threshold.parties;
 
 
 import global.Consts;
+import global.Consts.DebugOutput;
 
 public class PartiesManager extends Thread {
 
@@ -32,7 +33,7 @@ public class PartiesManager extends Thread {
 		for (int i=0; i<partiesAmount; ++i) {
 			parties[i].wait2Finish();
 		}
-		System.out.println("Parties manager: All parties finished");
+		Consts.log("Parties manager: All parties finished", DebugOutput.STDOUT);
 	}
 
 }
