@@ -6,9 +6,6 @@ import global.BigIntegerMod;
 
 public class Ciphertext implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1866867027378671329L;
 	private BigIntegerMod a;
 	private BigIntegerMod b; // represents k*m = (public_key^r)*m
