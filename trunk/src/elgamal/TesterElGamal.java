@@ -13,12 +13,7 @@ public class TesterElGamal {
 		BigInteger P;
 		BigInteger Q;
 		BigIntegerMod G;
-		//P = new BigInteger("23");
-		//Q = P.subtract(BigInteger.ONE).divide(Consts.TWO);
-		//do {
-		//	G = new BigIntegerMod(P).pow(Consts.TWO);
-		//} while ((G.getValue() == BigInteger.ONE) || (G.getValue() == BigInteger.ZERO));
-		
+
 		P = Consts.getP();
 		Q = Consts.getQ();
 		G = Consts.getG();
@@ -29,7 +24,8 @@ public class TesterElGamal {
 		System.out.println("G = " + G.toString());
 		System.out.println("G^Q = " + G.pow(Q).toString());
 		System.out.println("G^(p-1) = " + G.pow(P.subtract(BigInteger.ONE)).toString());
-		ElGamal ElGamal = new ElGamal(P, G, null, new BigIntegerMod(Q));
+		ElGamal ElGamal = new ElGamal(P, G, new BigIntegerMod(P), null);
+		ElGamal = new ElGamal(P, G, null, new BigIntegerMod(Q));
 		boolean equal = false;
 		BigIntegerMod m;
 		CryptObject encrypted;
