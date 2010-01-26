@@ -8,17 +8,26 @@ import global.Consts;
 import zkp.ZkpException;
 import zkp.GI.GIProof;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+
+
+
 public class GI implements IGI 
 {
 	private static int Repetition=40;
+	private static String File_Path = "C:\\ZkpGIProof.txt";
+	
 	
 	public GIProof createGIProof(Ciphertext[] A, CryptObject[] B,int[] pi,int n,BigIntegerMod w,BigIntegerMod g)
-	{	
+	{
 		CryptObject[][] C = new CryptObject[Repetition][n];
 		int[][] lambda = new int[Repetition][n];
 		String hash="";
@@ -63,13 +72,19 @@ public class GI implements IGI
 	
 	public boolean verifyGIProof (GIProof proof, Ciphertext[] A, CryptObject[] B,BigIntegerMod w,BigIntegerMod g)
 	{
+		
+		
+		
+		
 		boolean flag = true;
 
 		for (int i = 0; i < Repetition; i++)
 		{
 			if (proof.getHash().charAt(i) == '0')
 			{
-							
+				writeToFile("");
+				writeToFile("");
+				writeToFile("########## Starting Run number " + i + " ##########");
 				flag = compareMatrix(A, proof.getCi(i), proof.getLambda()[i],w,g);
 				if (flag==false)
 				{
@@ -78,6 +93,9 @@ public class GI implements IGI
 			}
 			else
 			{
+				writeToFile("");
+				writeToFile("");
+				writeToFile("########## Starting Run number " + i + " ##########");
 				flag = compareMatrix(B, proof.getCi(i), proof.getLambda()[i], w, g);
 				if (flag==false)
 				{
@@ -200,6 +218,8 @@ public class GI implements IGI
 
 	private static boolean compareMatrix(Ciphertext[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
+		BigIntegerMod matrix1A,matrix1B,matrix2A,matrix2B;
+		
 		ElGamal gamal=new ElGamal(g.getMod(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
@@ -211,8 +231,21 @@ public class GI implements IGI
 		for (int i = 0; i < matrix1.length; i++)
 		{
 			//if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
-			if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
-					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))
+			/*if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
+					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))*/
+			matrix1A = matrix1[i].getA().multiply(g.pow(matrix2[premutation[i]].getR()));
+			matrix1B = matrix1[i].getB().multiply(w.pow(matrix2[premutation[i]].getR()));
+			matrix2A = matrix2[premutation[i]].getCiphertext().getA();
+			matrix2B = matrix2[premutation[i]].getCiphertext().getB();
+			
+			writeToFile("a of matrix A ["+ i +"] =" + matrix1A.toString());
+			writeToFile("a of matrix C ["+ i +"] =" + matrix2A.toString());
+			writeToFile("b of matrix A ["+ i +"] =" + matrix1B.toString());
+			writeToFile("b of matrix C ["+ i +"] =" + matrix2B.toString());
+			writeToFile("");
+			
+			if ((!(matrix2A.equals(matrix1A)))
+					|| (!(matrix2B.equals(matrix1B))))
 			{
 				return false;
 			}
@@ -224,6 +257,9 @@ public class GI implements IGI
 	
 	private static boolean compareMatrix(CryptObject[] matrix1, CryptObject[] matrix2, int[] premutation, BigIntegerMod w, BigIntegerMod g)
 	{
+		BigIntegerMod matrix1A,matrix1B,matrix2A,matrix2B;
+		
+		
 		ElGamal gamal=new ElGamal(g.getMod(),g,w,null);
 		CryptObject[] tempCipher = new CryptObject[matrix1.length];
 
@@ -231,12 +267,27 @@ public class GI implements IGI
 		{
 
 			tempCipher[premutation[i]] = gamal.reencrypt(matrix1[i].getCiphertext(), matrix2[premutation[i]].getR());
+			
 		}
 		for (int i = 0; i < matrix1.length; i++)
 		{
+		
+			matrix1A = matrix1[i].getCiphertext().getA().multiply(g.pow(matrix2[premutation[i]].getR()));
+			matrix1B = matrix1[i].getCiphertext().getB().multiply(w.pow(matrix2[premutation[i]].getR()));
+			matrix2A = matrix2[premutation[i]].getCiphertext().getA();
+			matrix2B = matrix2[premutation[i]].getCiphertext().getB();
+			
+			writeToFile("a of matrix B ["+ i +"] =" + matrix1A.toString());
+			writeToFile("a of matrix C ["+ i +"] =" + matrix2A.toString());
+			writeToFile("b of matrix B ["+ i +"] =" + matrix1B.toString());
+			writeToFile("b of matrix C ["+ i +"] =" + matrix2B.toString());
+			writeToFile("");
+			
 			//if ((tempCipher[i].getCiphertext().getA().equals(matrix2[i].getCiphertext().getA()) != true) || (tempCipher[i].getCiphertext().getB().equals(matrix2[i].getCiphertext().getB()) != true))
-			if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getCiphertext().getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
-					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getCiphertext().getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))
+			/*if ((!(matrix2[premutation[i]].getCiphertext().getA().equals(matrix1[i].getCiphertext().getA().multiply(g.pow(matrix2[premutation[i]].getR())))))
+					&& (!(matrix2[premutation[i]].getCiphertext().getB().equals(matrix1[i].getCiphertext().getB().multiply(w.pow(matrix2[premutation[i]].getR()))))))*/
+			if ((!(matrix2A.equals(matrix1A)))
+					|| (!(matrix2B.equals(matrix1B))))
 					
 			{
 				return false;
@@ -248,8 +299,37 @@ public class GI implements IGI
 	
 
 	
+
+
 	
 	
+private static void writeToFile(String s) {
+        
+        BufferedWriter bufferedWriter = null;
+        
+        try {
+            
+            bufferedWriter= new BufferedWriter(new FileWriter(File_Path,true));
+            bufferedWriter.append(s);
+            bufferedWriter.newLine();
+            
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            //Close the BufferedWriter
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 	
 	
 }

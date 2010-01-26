@@ -58,7 +58,7 @@ public class  GItest{
 		// TODO Auto-generated method stub
 		BigInteger p = new BigInteger("23");
 		BigIntegerMod g = new BigIntegerMod(new BigInteger("2"),p);
-		BigIntegerMod w = new BigIntegerMod(new BigInteger("7"),p);
+		BigIntegerMod w = new BigIntegerMod(new BigInteger("13"),p);
 		
 		
 		GI gi = new GI();
