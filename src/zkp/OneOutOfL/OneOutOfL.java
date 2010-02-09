@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class OneOutOfL implements IOneOutOfL {
 
-	public static final boolean TEST = false;
+	public static final boolean TEST = true;
 	private ArrayList<Ciphertext> pairslist;
 
 	public OneOutOfL(ArrayList<Ciphertext> pairslist) {
@@ -31,7 +31,8 @@ public class OneOutOfL implements IOneOutOfL {
 		
 		//for test: 
 		//BigIntegerMod g = OneOutOfLTest.g;
-		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
+		//BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
+		BigInteger q = Consts.getQ();
 		BigIntegerMod x = cryptobj.getCiphertext().getA();
 		BigIntegerMod y = cryptobj.getCiphertext().getB();
 		BigIntegerMod r = cryptobj.getR();
@@ -66,7 +67,6 @@ public class OneOutOfL implements IOneOutOfL {
 		// randomly select d_List and r_List with Zq numbers
 		ArrayList<BigIntegerMod> d_List = new ArrayList<BigIntegerMod>();
 		ArrayList<BigIntegerMod> r_List = new ArrayList<BigIntegerMod>();
-		
 		for (int i=0; i<l; i++) 
 		{
 			d_List.add(new BigIntegerMod(q));
@@ -101,8 +101,8 @@ public class OneOutOfL implements IOneOutOfL {
 			BigIntegerMod b_i = null;
 				
 			try{
-				a_i = (((x_i.multiply(x.inverse()))).pow(d_i)).multiply(g.pow(r_i));
-				b_i = (((y_i.multiply(y.inverse()))).pow(d_i)).multiply(h.pow(r_i));
+				a_i = calcAB(x_i, x, d_i, g, r_i);
+				b_i = calcAB(y_i, y, d_i, h, r_i);
 			}
 			catch (ArithmeticException exception){
 				throw new ZkpException(exception.getMessage());
@@ -190,8 +190,8 @@ public class OneOutOfL implements IOneOutOfL {
 			BigIntegerMod b_i = null;
 				
 			try{
-				a_i = (((x_i.multiply(x.inverse()))).pow(d_i)).multiply(g.pow(r_i));
-				b_i = (((y_i.multiply(y.inverse()))).pow(d_i)).multiply(h.pow(r_i));
+				a_i = calcAB(x_i, x, d_i, g, r_i);
+				b_i = calcAB(y_i, y, d_i, h, r_i);
 			}
 			catch (ArithmeticException exception){
 				throw new ZkpException(exception.getMessage());
@@ -259,6 +259,26 @@ public class OneOutOfL implements IOneOutOfL {
 		return challenge.mod(modulo);
 	}
 	
+	/**
+	 * Calculates ai=((xi/x)^di)*g^ri and bi=((yi/y)^di)*h^ri
+	 * @param xi, x, di, g, ri - parameters of the equation
+	 * Used also for calculation of bi 
+	 * @return BigIntegerMod ai or bi
+	 * @throws ArithmeticException
+	 */
+	private static BigIntegerMod calcAB(BigIntegerMod xi, BigIntegerMod x, BigIntegerMod di,
+			BigIntegerMod g, BigIntegerMod ri) throws ArithmeticException {
+
+		BigIntegerMod temp1, temp2, temp3;
 		
+		//temp1 = xi.multiply(x.inverse());
+		temp1 = x.multiply(xi.inverse());
+		temp1 = temp1.pow(di);
+		temp2 = g.pow(ri);
+		temp3 = temp1.multiply(temp2);
+		return temp3;
+
+	}
+
 }
 
