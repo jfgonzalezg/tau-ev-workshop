@@ -23,7 +23,7 @@ public class OneOutOfLTest {
 	public static BigInteger q = Consts.getQ();
 	public static BigInteger p = Consts.getP();
 	public static BigIntegerMod g = Consts.getG();
-	
+	//private static final BigIntegerMod z = Consts.G.pow(new BigIntegerMod(Consts.q));
 	
 	public static void main(String[] args)
 	{
@@ -31,6 +31,15 @@ public class OneOutOfLTest {
 		ArrayList<Ciphertext> plist = new ArrayList<Ciphertext>();
 		
 		BigIntegerMod h = Consts.getG().pow(new BigIntegerMod(q));
+		BigIntegerMod one = new BigIntegerMod(new BigInteger("1"), p);
+		if (g.pow(q).equals(one)) {
+			System.out.println("g is ok\n");
+		}
+		if (h.pow(q).equals(one)) {
+			System.out.println("h is ok\n");
+		}
+		
+		
 		/*
 		BigIntegerMod h = new BigIntegerMod(new BigInteger("7"),p);
 		for (int i = 0; i<3; i++){
@@ -54,18 +63,47 @@ public class OneOutOfLTest {
 		
 		//BigIntegerMod h = new BigIntegerMod(new BigInteger("13"),p);
 		ElGamal gamal=new ElGamal(p,g,h,null);
+		CryptObject encObj = new CryptObject();
 		CryptObject Cobj = new CryptObject();
-		
-		
-		BigIntegerMod a = new BigIntegerMod(new BigInteger("575776767"), p);
-		BigIntegerMod b = new BigIntegerMod(new BigInteger("56654"), p);
-		Ciphertext vote = new Ciphertext(a, b);
-		BigIntegerMod r = new BigIntegerMod(new BigInteger("57744"), q);
-		Cobj = gamal.reencrypt(vote,r);
+		int bitsPerParty = (int) Math.ceil(Math.log(3)/Math.log(2));
+		BigInteger b =  BigInteger.ZERO;
+		//BigIntegerMod a = new BigIntegerMod(new BigInteger("575776767"), p);
+		//BigIntegerMod b = new BigIntegerMod(new BigInteger("56654"), p);
+		//Ciphertext vote = new Ciphertext(a, b);
+		//BigIntegerMod r = new BigIntegerMod(new BigInteger("57744"), q);
+		//Cobj = gamal.reencrypt(vote,r);
 		for (int i = 0; i<3; i++){
-			plist.add(i,Cobj.getCiphertext());
+			BigIntegerMod tempx = new BigIntegerMod(b.flipBit(i*bitsPerParty), Consts.getQ()); 
+			//expPlaintextVotes.put(new Integer(i), z.pow(tempx));
+			encObj = gamal.encrypt(h.pow(tempx), new BigIntegerMod(BigInteger.ZERO, Consts.q));
+			plist.add(i,encObj.getCiphertext());
+			if (encObj.getCiphertext().getA().pow(q).equals(one)) {
+				//System.out.println("xi is ok\n");
+				System.out.println("xi: "+ encObj.getCiphertext().getA().toString()+"\n");
+			}
+			if (encObj.getCiphertext().getB().pow(q).equals(one)) {
+				System.out.println("yi is ok\n");
+				System.out.println("yi: "+ encObj.getCiphertext().getB().toString()+"\n");
+			}
+			if (i==1){
+				Cobj = gamal.encrypt(h.pow(tempx));
+			}
 		}
-		Cobj.setCiphertext(vote);
+		//BigIntegerMod tempx = new BigIntegerMod(b.flipBit(1*bitsPerParty), Consts.getQ());
+	
+		if (Cobj.getCiphertext().getA().pow(q).equals(one)) {
+			System.out.println("x is ok\n");
+			System.out.println("x: "+Cobj.getCiphertext().getA().toString()+"\n");
+		}
+		if (Cobj.getCiphertext().getB().pow(q).equals(one)) {
+			System.out.println("y is ok\n");
+			System.out.println("y: "+Cobj.getCiphertext().getB().toString()+"\n");
+		}
+		//if (Cobj.getR().pow(p).equals(one)) {
+			System.out.println("r: "+Cobj.getR().toString()+"\n");
+		//}
+		
+		//Cobj.setCiphertext(vote);
 		
 		
 		/*BigIntegerMod a = new BigIntegerMod(new BigInteger("6"), p);
@@ -137,6 +175,13 @@ public class OneOutOfLTest {
 		System.out.println("h: "+h.toString()+"\n");
 		System.out.println("plist: "+plist.toString()+"\n");
 		System.out.println("cobj: "+Cobj.toString()+"\n");
+		
+		System.out.println("xt: "+plist.get(1).getA().multiply(g.pow(Cobj.getR())).toString()+"\n");
+		System.out.println("xgr: "+Cobj.getCiphertext().getA().toString()+"\n");
+
+		if (plist.get(1).getA().multiply(Cobj.getCiphertext().getA().inverse())== g.pow(Cobj.getR())) {
+			System.out.println("check1 is OOOOOOKKKKKK\n");
+		}
 		
 		OneOutOfL oneofL = new OneOutOfL(plist);
 			

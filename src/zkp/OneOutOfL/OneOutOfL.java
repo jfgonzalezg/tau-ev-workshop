@@ -26,12 +26,7 @@ public class OneOutOfL implements IOneOutOfL {
 	{
 		int l = pairslist.size(); 
 		
-	
 		BigIntegerMod g = Consts.getG();
-		
-		//for test: 
-		//BigIntegerMod g = OneOutOfLTest.g;
-		//BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
 		BigInteger q = Consts.getQ();
 		BigIntegerMod x = cryptobj.getCiphertext().getA();
 		BigIntegerMod y = cryptobj.getCiphertext().getB();
@@ -50,18 +45,12 @@ public class OneOutOfL implements IOneOutOfL {
 			throw new ZkpException("index input t is <0 or >l");
 		
 		// check whether cryptobj is indeed a re-encryption using r of the pair in index t
-		//CryptObject test = new CryptObject();
-		//ElGamal gamal=new ElGamal(OneOutOfLTest.p,g,h,null);
-		//ElGamal gamal=new ElGamal(h);
-		//test = gamal.encrypt(pairslist.get(t).getB(), cryptobj.getR());
-		//test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
-		//if ((test.getCiphertext().getA().compareTo(cryptobj.getCiphertext().getA()) !=0) ||
-		//	(test.getCiphertext().getB().compareTo(cryptobj.getCiphertext().getB()) !=0))
-		//if ((!(pairslist.get(t).getA().equals(cryptobj.getCiphertext().getA().multiply(g.pow(cryptobj.getR()))))) && 
-		//	(!(pairslist.get(t).getB().equals(cryptobj.getCiphertext().getB().multiply(h.pow(cryptobj.getR()))))))
-		//if ((!(test.getCiphertext().getA().equals(cryptobj.getCiphertext().getA().multiply(g.pow(cryptobj.getR()))))) && 
-		//	(!(test.getCiphertext().getB().equals(cryptobj.getCiphertext().getB().multiply(h.pow(cryptobj.getR()))))))
-		//	throw new ZkpException("input CryptObject is not a re-encryption of the CryptObject in index t of the list");
+		CryptObject test = new CryptObject();
+		ElGamal gamal=new ElGamal(h);
+			test = gamal.reencrypt(pairslist.get(t), cryptobj.getR());
+		if ((test.getCiphertext().getA().compareTo(cryptobj.getCiphertext().getA()) !=0) ||
+			(test.getCiphertext().getB().compareTo(cryptobj.getCiphertext().getB()) !=0))
+			throw new ZkpException("input CryptObject is not a re-encryption of the CryptObject in index t of the list");
 		
 		
 		// randomly select d_List and r_List with Zq numbers
@@ -72,15 +61,6 @@ public class OneOutOfL implements IOneOutOfL {
 			d_List.add(new BigIntegerMod(q));
 			r_List.add(new BigIntegerMod(q));
 		}
-		
-		/*
-		d_List.add(new BigIntegerMod(new BigInteger("1"), q));
-		d_List.add(new BigIntegerMod(new BigInteger("10"), q));
-		d_List.add(new BigIntegerMod(new BigInteger("9"), q));
-		r_List.add(new BigIntegerMod(new BigInteger("5"), q));
-		r_List.add(new BigIntegerMod(new BigInteger("0"), q));
-		r_List.add(new BigIntegerMod(new BigInteger("0"), q));
-		*/
 		
 		if (TEST) {
 			System.out.println("d_List: " + d_List.toString() + "\n");
@@ -121,7 +101,6 @@ public class OneOutOfL implements IOneOutOfL {
 		BigIntegerMod c = new BigIntegerMod(createOneOutOfLHashChallenge(x,y,a_List,b_List,q), q);
 				
 		// compute w=(r*d_List[t])+r_List[t]
-		//r = r.multiply(new BigIntegerMod(new BigInteger("-1"),q));
 		BigIntegerMod w = (r.multiply(d_List.get(t))).add(r_List.get(t));
 		
 		// change d_List[t]=c-sum(d_List[j!=t])
@@ -150,8 +129,6 @@ public class OneOutOfL implements IOneOutOfL {
 		int l = pairslist.size(); 
 		
 		BigIntegerMod g = Consts.getG();
-		//for test: 
-		//BigIntegerMod g = OneOutOfLTest.g;
 		BigInteger q = g.getMod().subtract(BigInteger.ONE).divide(Consts.TWO);
 		BigIntegerMod c = proof.getC();
 		ArrayList<BigIntegerMod> d_List = proof.getD_List();
@@ -180,7 +157,7 @@ public class OneOutOfL implements IOneOutOfL {
 		ArrayList<BigIntegerMod> a_List = new ArrayList<BigIntegerMod>();
 		ArrayList<BigIntegerMod> b_List = new ArrayList<BigIntegerMod>();
 		
-		// let ai=((xi/x)^di)*g^ri and bi=((yi/y)^di)*h^ri
+		// let ai=((x/xi)^di)*g^ri and bi=((y/yi)^di)*h^ri - notice - to use "-r" we simply did x/xi instead of xi/x (same with y)
 		for (int i=0; i<l; i++) {	
 			BigIntegerMod x_i = pairslist.get(i).getA();
 			BigIntegerMod y_i = pairslist.get(i).getB();
@@ -260,7 +237,8 @@ public class OneOutOfL implements IOneOutOfL {
 	}
 	
 	/**
-	 * Calculates ai=((xi/x)^di)*g^ri and bi=((yi/y)^di)*h^ri
+	 * Calculates ai=((x/xi)^di)*g^ri and bi=((y/yi)^di)*h^ri
+	 * Notice - to use "-r" we simply did x/xi instead of xi/x (same with y)
 	 * @param xi, x, di, g, ri - parameters of the equation
 	 * Used also for calculation of bi 
 	 * @return BigIntegerMod ai or bi
@@ -271,7 +249,6 @@ public class OneOutOfL implements IOneOutOfL {
 
 		BigIntegerMod temp1, temp2, temp3;
 		
-		//temp1 = xi.multiply(x.inverse());
 		temp1 = x.multiply(xi.inverse());
 		temp1 = temp1.pow(di);
 		temp2 = g.pow(ri);
