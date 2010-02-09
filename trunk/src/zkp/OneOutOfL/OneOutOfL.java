@@ -7,7 +7,6 @@ import global.BigIntegerMod;
 import java.math.BigInteger;
 import global.Consts;
 import zkp.ZkpException;
-import zkp.OneOutOfL.OneOutOfLTest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
