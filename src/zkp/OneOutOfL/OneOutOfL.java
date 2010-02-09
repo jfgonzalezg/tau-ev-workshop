@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class OneOutOfL implements IOneOutOfL {
 
-	public static final boolean TEST = true;
+	public static final boolean TEST = false;
 	private ArrayList<Ciphertext> pairslist;
 
 	public OneOutOfL(ArrayList<Ciphertext> pairslist) {
